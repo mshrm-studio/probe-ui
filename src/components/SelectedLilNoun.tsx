@@ -3,6 +3,7 @@ import React from 'react'
 import LilNoun from '@/utils/dto/LilNoun'
 import LilNounImage from '@/components/LilNounImage'
 import { startCase } from 'lodash'
+import { XMarkIcon } from '@heroicons/react/24/solid'
 
 type Props = {
     selected: LilNoun
@@ -11,18 +12,15 @@ type Props = {
 
 const SelectedLilNoun: React.FC<Props> = ({ selected, updateSelected }) => {
     return (
-        <div className="space-y-5 mb-6 mx-auto xl:mb-0 xl:ml-6">
+        <div className="space-y-5 mb-6 mx-auto max-w-[269px] xl:mx-0 xl:mb-0 xl:ml-6">
             <div className="relative">
-                <LilNounImage
-                    className="rounded max-h-[269px]"
-                    lilNoun={selected}
-                />
+                <LilNounImage className="rounded" lilNoun={selected} />
 
                 <button
                     className="absolute right-2 top-2"
                     onClick={() => updateSelected(null)}
                 >
-                    x
+                    <XMarkIcon className="h-4 w-4" />
                 </button>
             </div>
 
