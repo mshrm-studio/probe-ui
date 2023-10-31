@@ -24,12 +24,12 @@ const SelectedLilNoun: React.FC<Props> = ({ selected, updateSelected }) => {
                 </button>
             </div>
 
-            <div className="uppercase space-y-3">
+            <div className="space-y-3">
                 <h3 className="text-[34px] font-bold">
                     Lil {selected.token_id}
                 </h3>
 
-                <div className="text-[13px] space-y-2">
+                <div className="uppercase text-[13px] space-y-2">
                     <p>
                         <dt className="inline">Body:</dt>{' '}
                         <dd className="inline font-bold">
