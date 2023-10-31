@@ -6,10 +6,14 @@ import LilNounImage from '@/components/LilNounImage'
 type Props = {
     lilNouns: LilNoun[]
     selected: LilNoun | null
-    setSelected: React.Dispatch<LilNoun>
+    updateSelected: (selected: LilNoun) => void
 }
 
-const LilNounList: React.FC<Props> = ({ lilNouns, selected, setSelected }) => {
+const LilNounList: React.FC<Props> = ({
+    lilNouns,
+    selected,
+    updateSelected,
+}) => {
     return (
         <ul
             className={`grid gap-2 grid-cols-3 md:grid-cols-5 lg:grid-cols-6 ${
@@ -26,7 +30,7 @@ const LilNounList: React.FC<Props> = ({ lilNouns, selected, setSelected }) => {
                             ? 'border-black'
                             : 'border-transparent'
                     }`}
-                    onClick={() => setSelected(lilNoun)}
+                    onClick={() => updateSelected(lilNoun)}
                 >
                     <LilNounImage lilNoun={lilNoun} />
                 </li>

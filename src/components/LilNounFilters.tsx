@@ -6,6 +6,7 @@ import useFilters from '@/utils/services/useFilters'
 import SelectLilNounTrait from '@/components/SelectLilNounTrait'
 import styles from '@/utils/styles/lilNounFilters.module.css'
 import ApiMeta from '@/utils/dto/ApiMeta'
+import LilNounPagination from './LilNounPagination'
 
 interface LilNounFiltersProps {
     meta?: ApiMeta
@@ -95,6 +96,12 @@ const LilNounFilters: React.FC<LilNounFiltersProps> = ({ meta }) => {
                     />
                 </div>
             </div>
+
+            {meta && (
+                <div>
+                    <LilNounPagination meta={meta} />
+                </div>
+            )}
         </div>
     )
 }

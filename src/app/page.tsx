@@ -2,11 +2,11 @@
 import LilNounFilters from '@/components/LilNounFilters'
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { debounce, startCase } from 'lodash'
+import { debounce } from 'lodash'
 import useLilNounList from '@/utils/services/useLilNounList'
 import LilNounList from '@/components/LilNounList'
 import LilNoun from '@/utils/dto/LilNoun'
-import LilNounImage from '@/components/LilNounImage'
+import SelectedLilNoun from '@/components/SelectedLilNoun'
 
 export default function Home() {
     const { error, fetching, fetchLilNounList, lilNounList, meta } =
@@ -26,7 +26,7 @@ export default function Home() {
 
     const [selected, setSelected] = useState<LilNoun | null>(null)
 
-    const updateSelected = (newSelection: LilNoun) => {
+    const updateSelected = (newSelection: LilNoun | null) => {
         setSelected(
             selected?.token_id == newSelection?.token_id ? null : newSelection
         )
@@ -42,83 +42,19 @@ export default function Home() {
                 {error && <p>{error.data.message}</p>}
 
                 {lilNounList && (
-                    <div className="flex flex-column justify-center xl:flex-row-reverse">
+                    <div className="flex flex-col justify-center xl:flex-row-reverse">
                         {selected && (
-                            <div className="space-y-5 xl:ml-6">
-                                <div>
-                                    <LilNounImage
-                                        className="rounded max-h-[269px]"
-                                        lilNoun={selected}
-                                    />
-                                </div>
-
-                                <div className="uppercase space-y-3">
-                                    <h3 className="text-[34px] font-bold">
-                                        Lil {selected.token_id}
-                                    </h3>
-
-                                    <div className="text-[13px] space-y-2">
-                                        <p>
-                                            <dt className="inline">Body:</dt>{' '}
-                                            <dd className="inline font-bold">
-                                                {startCase(
-                                                    selected.body_name.replace(
-                                                        new RegExp(`^body-`),
-                                                        ''
-                                                    )
-                                                )}
-                                            </dd>
-                                        </p>
-
-                                        <p>
-                                            <dt className="inline">
-                                                Accessory:
-                                            </dt>{' '}
-                                            <dd className="inline font-bold">
-                                                {startCase(
-                                                    selected.accessory_name.replace(
-                                                        new RegExp(
-                                                            `^accessory-`
-                                                        ),
-                                                        ''
-                                                    )
-                                                )}
-                                            </dd>
-                                        </p>
-
-                                        <p>
-                                            <dt className="inline">Head:</dt>{' '}
-                                            <dd className="inline font-bold">
-                                                {startCase(
-                                                    selected.head_name.replace(
-                                                        new RegExp(`^head-`),
-                                                        ''
-                                                    )
-                                                )}
-                                            </dd>
-                                        </p>
-
-                                        <p>
-                                            <dt className="inline">Glasses:</dt>{' '}
-                                            <dd className="inline font-bold">
-                                                {startCase(
-                                                    selected.glasses_name.replace(
-                                                        new RegExp(`^glasses-`),
-                                                        ''
-                                                    )
-                                                )}
-                                            </dd>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
+                            <SelectedLilNoun
+                                selected={selected}
+                                updateSelected={updateSelected}
+                            />
                         )}
 
                         <div className="self-auto">
                             <LilNounList
                                 lilNouns={lilNounList}
                                 selected={selected}
-                                setSelected={updateSelected}
+                                updateSelected={updateSelected}
                             />
                         </div>
                     </div>
