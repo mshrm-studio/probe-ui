@@ -30,6 +30,12 @@
     z-index: -1;
 }
 
+.inputLabel {
+    font-size: 13px;
+    font-weight: 700;
+    color: #a1a1a1;
+}
+
 .input {
     height: 51px;
     width: 229px;

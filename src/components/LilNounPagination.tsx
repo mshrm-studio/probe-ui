@@ -2,24 +2,13 @@
 import React from 'react'
 import ApiMeta from '@/utils/dto/ApiMeta'
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/solid'
-import { useRouter, useSearchParams } from 'next/navigation'
 
 type Props = {
     meta: ApiMeta
+    changePage: (page: number) => void
 }
 
-const LilNounPagination: React.FC<Props> = ({ meta }) => {
-    const router = useRouter()
-    const searchParams = useSearchParams()
-
-    const changePage = (page: number) => {
-        const newParams = new URLSearchParams(searchParams.toString())
-
-        newParams.set('page', page.toString())
-
-        router.push(`/?${newParams.toString()}`)
-    }
-
+const LilNounPagination: React.FC<Props> = ({ meta, changePage }) => {
     return (
         <nav className="flex justify-center items-center space-x-2 text-[13px]">
             {meta.current_page > 1 && (

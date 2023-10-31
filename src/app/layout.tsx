@@ -17,6 +17,14 @@ export default function RootLayout({ children }: Props) {
     return (
         <html lang="en">
             <body className={inter.className}>
+                <header className="mb-6">
+                    <img
+                        className="mx-auto h-[45px]"
+                        src={`${process.env.NEXT_PUBLIC_DO_STORAGE_URL}/lils/logo.png`}
+                        alt="Probe Logo"
+                    />
+                </header>
+
                 <main className="w-full overflow-x-hidden px-4">
                     {children}
                 </main>

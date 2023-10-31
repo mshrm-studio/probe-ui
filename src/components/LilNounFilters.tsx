@@ -17,6 +17,10 @@ const LilNounFilters: React.FC<LilNounFiltersProps> = ({ meta }) => {
     const router = useRouter()
     const searchParams = useSearchParams()
 
+    const [searchIsFocused, setSearchIsFocused] = useState(false)
+
+    const [page, setPage] = useState(Number(searchParams.get('page')) || 1)
+
     const [filters, setFilters] = useState<LilNounFiltersDto>({
         accessory: searchParams.get('accessory') ?? undefined,
         background: searchParams.get('background') ?? undefined,
@@ -25,34 +29,52 @@ const LilNounFilters: React.FC<LilNounFiltersProps> = ({ meta }) => {
         head: searchParams.get('head') ?? undefined,
         search: searchParams.get('search') ?? '',
         per_page: Number(searchParams.get('per_page')) || 40,
-        page: Number(searchParams.get('page')) || 1,
     })
+
+    const changePage = (page: number) => {
+        setPage(page)
+    }
 
     const updateFilters = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
     ) => {
+        setPage(1)
+
         setFilters((values) => ({
             ...values,
             [e.target.name]: e.target.value,
         }))
     }
 
-    useEffect(() => {
-        const params = parseFilters(filters)
+    const pushToNewQuery = () => {
+        const params = parseFilters({ ...filters, page: page })
 
         router.push(`/?${params.toString()}`)
-    }, [filters])
+    }
+
+    useEffect(() => {
+        pushToNewQuery()
+    }, [filters, page])
 
     return (
         <div className="space-y-3">
-            <div className="text-center">
+            <div className="text-center relative">
+                {!searchIsFocused && filters.search && (
+                    <label htmlFor="search" className={styles.inputLabel}>
+                        Search:
+                    </label>
+                )}
+
                 <input
+                    id="search"
                     className={styles.input}
                     name="search"
-                    placeholder="Search multiple traits or IDs..."
+                    placeholder="Search multiple traits..."
                     type="text"
                     value={filters.search}
                     onChange={updateFilters}
+                    onFocus={() => setSearchIsFocused(true)}
+                    onBlur={() => setSearchIsFocused(false)}
                 />
             </div>
 
@@ -100,7 +122,7 @@ const LilNounFilters: React.FC<LilNounFiltersProps> = ({ meta }) => {
 
             {meta && (
                 <div>
-                    <LilNounPagination meta={meta} />
+                    <LilNounPagination meta={meta} changePage={changePage} />
                 </div>
             )}
         </div>
