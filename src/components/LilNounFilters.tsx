@@ -25,6 +25,7 @@ const LilNounFilters: React.FC<LilNounFiltersProps> = ({ meta }) => {
         head: searchParams.get('head') ?? undefined,
         search: searchParams.get('search') ?? '',
         per_page: Number(searchParams.get('per_page')) || 40,
+        page: Number(searchParams.get('page')) || 1,
     })
 
     const updateFilters = (

@@ -32,13 +32,21 @@ const LilNounPagination: React.FC<Props> = ({ meta }) => {
 
             <div>Page</div>
 
-            {meta.current_page > 1 && (
+            {meta.current_page > 2 && (
                 <div className="font-bold">
                     <button onClick={() => changePage(1)}>1</button>
                 </div>
             )}
 
-            {meta.current_page > 1 && <div>...</div>}
+            {meta.current_page > 3 && <div>...</div>}
+
+            {meta.current_page > 1 && (
+                <div className="font-bold">
+                    <button onClick={() => changePage(meta.current_page - 1)}>
+                        {meta.current_page - 1}
+                    </button>
+                </div>
+            )}
 
             <div className="underline font-bold">{meta.current_page}</div>
 
@@ -50,17 +58,9 @@ const LilNounPagination: React.FC<Props> = ({ meta }) => {
                 </div>
             )}
 
-            {meta.current_page < meta.last_page - 2 && (
-                <div className="font-bold">
-                    <button onClick={() => changePage(meta.current_page + 2)}>
-                        {meta.current_page + 2}
-                    </button>
-                </div>
-            )}
+            {meta.current_page < meta.last_page - 2 && <div>...</div>}
 
-            {meta.current_page < meta.last_page - 4 && <div>...</div>}
-
-            {meta.current_page < meta.last_page - 3 && (
+            {meta.current_page < meta.last_page && (
                 <div className="font-bold">
                     <button onClick={() => changePage(meta.last_page)}>
                         {meta.last_page}
