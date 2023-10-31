@@ -1,5 +1,6 @@
 import useApi from '@/utils/services/useApi'
 import { useState } from 'react'
+import ApiMeta, { isApiMeta } from '@/utils/dto/ApiMeta'
 
 const useFetcher = () => {
     const {
@@ -12,6 +13,7 @@ const useFetcher = () => {
     } = useApi()
 
     const [response, setResponse] = useState<any>()
+    const [meta, setMeta] = useState<ApiMeta>()
 
     const fetchData = (
         path: string,
@@ -29,6 +31,14 @@ const useFetcher = () => {
 
             api.get(fullPath)
                 .then((response) => {
+                    if (
+                        'data' in response &&
+                        'meta' in response.data &&
+                        isApiMeta(response.data.meta)
+                    ) {
+                        setMeta(response.data.meta)
+                    }
+
                     setResponse(response)
                     resolve(response)
                 })
@@ -46,6 +56,7 @@ const useFetcher = () => {
         error,
         fetchData,
         fetching: processing,
+        meta,
         response,
     }
 }

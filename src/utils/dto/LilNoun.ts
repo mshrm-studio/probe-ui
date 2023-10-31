@@ -4,6 +4,7 @@ export default interface LilNoun {
     token_id: number
     token_uri: string
     background_name: string
+    head_name: string
     glasses_name: string
     body_name: string
     accessory_name: string

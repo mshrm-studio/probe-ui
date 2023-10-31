@@ -3,7 +3,7 @@ import { isLilNounList } from '@/utils/dto/LilNoun'
 import useFetcher from '@/utils/services/useFetcher'
 
 const useLilNounList = () => {
-    const { error, fetchData, fetching, response } = useFetcher()
+    const { error, fetchData, fetching, meta, response } = useFetcher()
 
     const list = useMemo(() => {
         const data = response?.data?.data
@@ -15,7 +15,7 @@ const useLilNounList = () => {
         fetchData(`/lil-nouns`, params)
     }
 
-    return { error, fetching, fetchLilNounList, lilNounList: list }
+    return { error, fetching, fetchLilNounList, lilNounList: list, meta }
 }
 
 export default useLilNounList

@@ -5,8 +5,13 @@ import LilNounFiltersDto from '@/utils/dto/LilNounFilters'
 import useFilters from '@/utils/services/useFilters'
 import SelectLilNounTrait from '@/components/SelectLilNounTrait'
 import styles from '@/utils/styles/lilNounFilters.module.css'
+import ApiMeta from '@/utils/dto/ApiMeta'
 
-const LilNounFilters: React.FC = () => {
+interface LilNounFiltersProps {
+    meta?: ApiMeta
+}
+
+const LilNounFilters: React.FC<LilNounFiltersProps> = ({ meta }) => {
     const { parseFilters } = useFilters()
     const router = useRouter()
     const searchParams = useSearchParams()
@@ -18,6 +23,7 @@ const LilNounFilters: React.FC = () => {
         glasses: searchParams.get('glasses') ?? undefined,
         head: searchParams.get('head') ?? undefined,
         search: searchParams.get('search') ?? '',
+        per_page: Number(searchParams.get('per_page')) || 40,
     })
 
     const updateFilters = (
@@ -37,7 +43,7 @@ const LilNounFilters: React.FC = () => {
 
     return (
         <div className="space-y-3">
-            <div>
+            <div className="text-center">
                 <input
                     className={styles.input}
                     name="search"
@@ -48,36 +54,46 @@ const LilNounFilters: React.FC = () => {
                 />
             </div>
 
-            <div className="flex space-x-3">
-                <SelectLilNounTrait
-                    layer="accessory"
-                    selected={filters.accessory}
-                    updateSelected={updateFilters}
-                />
+            <div className="flex space-x-6 items-center justify-center">
+                <div>
+                    {meta && (
+                        <p className="font-bold text-[13px] text-[#959595]">
+                            {meta.total} Lil Nouns
+                        </p>
+                    )}
+                </div>
 
-                <SelectLilNounTrait
-                    layer="background"
-                    selected={filters.background}
-                    updateSelected={updateFilters}
-                />
+                <div className="flex space-x-3">
+                    <SelectLilNounTrait
+                        layer="accessory"
+                        selected={filters.accessory}
+                        updateSelected={updateFilters}
+                    />
 
-                <SelectLilNounTrait
-                    layer="body"
-                    selected={filters.body}
-                    updateSelected={updateFilters}
-                />
+                    <SelectLilNounTrait
+                        layer="background"
+                        selected={filters.background}
+                        updateSelected={updateFilters}
+                    />
 
-                <SelectLilNounTrait
-                    layer="glasses"
-                    selected={filters.glasses}
-                    updateSelected={updateFilters}
-                />
+                    <SelectLilNounTrait
+                        layer="body"
+                        selected={filters.body}
+                        updateSelected={updateFilters}
+                    />
 
-                <SelectLilNounTrait
-                    layer="head"
-                    selected={filters.head}
-                    updateSelected={updateFilters}
-                />
+                    <SelectLilNounTrait
+                        layer="glasses"
+                        selected={filters.glasses}
+                        updateSelected={updateFilters}
+                    />
+
+                    <SelectLilNounTrait
+                        layer="head"
+                        selected={filters.head}
+                        updateSelected={updateFilters}
+                    />
+                </div>
             </div>
         </div>
     )
