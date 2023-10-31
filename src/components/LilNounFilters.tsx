@@ -54,10 +54,10 @@ const LilNounFilters: React.FC<LilNounFiltersProps> = ({ meta }) => {
                 />
             </div>
 
-            <div className="flex space-x-6 items-center justify-center">
+            <div className="flex space-x-6 items-center overflow-x-auto px-4 xl:justify-center">
                 <div>
                     {meta && (
-                        <p className="font-bold text-[13px] text-[#959595]">
+                        <p className="font-bold text-[13px] text-[#959595] whitespace-nowrap">
                             {meta.total} Lil Nouns
                         </p>
                     )}

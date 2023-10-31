@@ -33,9 +33,11 @@ export default function Home() {
     }
 
     return (
-        <main className="flex justify-center">
-            <div className="space-y-3">
-                <LilNounFilters meta={meta} />
+        <div className="flex xl:justify-center">
+            <div className="space-y-3 w-full">
+                <div className="-mx-4">
+                    <LilNounFilters meta={meta} />
+                </div>
 
                 {error && <p>{error.data.message}</p>}
 
@@ -122,6 +124,6 @@ export default function Home() {
                     </div>
                 )}
             </div>
-        </main>
+        </div>
     )
 }

@@ -16,7 +16,11 @@ type Props = {
 export default function RootLayout({ children }: Props) {
     return (
         <html lang="en">
-            <body className={inter.className}>{children}</body>
+            <body className={inter.className}>
+                <main className="w-full overflow-x-hidden px-4">
+                    {children}
+                </main>
+            </body>
         </html>
     )
 }
