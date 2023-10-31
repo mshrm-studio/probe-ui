@@ -32,6 +32,14 @@ const LilNounPagination: React.FC<Props> = ({ meta }) => {
 
             <div>Page</div>
 
+            {meta.current_page > 1 && (
+                <div className="font-bold">
+                    <button onClick={() => changePage(1)}>1</button>
+                </div>
+            )}
+
+            {meta.current_page > 1 && <div>...</div>}
+
             <div className="underline font-bold">{meta.current_page}</div>
 
             {meta.current_page < meta.last_page - 1 && (
