@@ -1,32 +1,15 @@
 import { useState } from 'react'
 import ApiError from '@/utils/dto/ApiError'
 import axios from 'axios'
-import { isBoolean, isNumber, isObject, isString } from 'lodash'
-import LilNounFilters from '@/utils/dto/LilNounFilters'
+import { isObject } from 'lodash'
 import { isRawLaravelApiError } from '@/utils/dto/RawLaravelApiError'
 
-const useApiService = () => {
+const useApi = () => {
     const api = axios.create({
         baseURL: process.env.NEXT_PUBLIC_API_URL,
     })
 
-    const parseFilters = (filters: LilNounFilters): URLSearchParams => {
-        const params = new URLSearchParams()
-
-        for (const [key, value] of Object.entries(filters)) {
-            if (value !== undefined && value !== null) {
-                if (isString(value) && value) {
-                    params.append(key, value)
-                } else if (isNumber(value) || isBoolean(value)) {
-                    params.append(key, value.toString())
-                }
-            }
-        }
-
-        return params
-    }
-
-    const [processing, setProcessing] = useState<boolean>(false)
+    const [processing, setProcessing] = useState(false)
 
     const [error, setError] = useState<ApiError | null>(null)
 
@@ -60,7 +43,6 @@ const useApiService = () => {
         api,
         error,
         internalError,
-        parseFilters,
         parseRawApiError,
         processing,
         setError,
@@ -68,4 +50,4 @@ const useApiService = () => {
     }
 }
 
-export default useApiService
+export default useApi
