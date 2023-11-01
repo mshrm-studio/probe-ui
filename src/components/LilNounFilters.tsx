@@ -6,20 +6,23 @@ import useFilters from '@/utils/services/useFilters'
 import SelectLilNounTrait from '@/components/SelectLilNounTrait'
 import styles from '@/utils/styles/lilNounFilters.module.css'
 import ApiMeta from '@/utils/dto/ApiMeta'
-import LilNounPagination from './LilNounPagination'
 
 interface LilNounFiltersProps {
     meta?: ApiMeta
+    page: number
+    setPage: React.Dispatch<React.SetStateAction<number>>
 }
 
-const LilNounFilters: React.FC<LilNounFiltersProps> = ({ meta }) => {
+const LilNounFilters: React.FC<LilNounFiltersProps> = ({
+    meta,
+    page,
+    setPage,
+}) => {
     const { parseFilters } = useFilters()
     const router = useRouter()
     const searchParams = useSearchParams()
 
     const [searchIsFocused, setSearchIsFocused] = useState(false)
-
-    const [page, setPage] = useState(Number(searchParams.get('page')) || 1)
 
     const [filters, setFilters] = useState<LilNounFiltersDto>({
         accessory: searchParams.get('accessory') ?? undefined,
@@ -28,12 +31,8 @@ const LilNounFilters: React.FC<LilNounFiltersProps> = ({ meta }) => {
         glasses: searchParams.get('glasses') ?? undefined,
         head: searchParams.get('head') ?? undefined,
         search: searchParams.get('search') ?? '',
-        per_page: Number(searchParams.get('per_page')) || 40,
+        per_page: Number(searchParams.get('per_page')) || 120,
     })
-
-    const changePage = (page: number) => {
-        setPage(page)
-    }
 
     const updateFilters = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -58,7 +57,7 @@ const LilNounFilters: React.FC<LilNounFiltersProps> = ({ meta }) => {
 
     return (
         <div className="space-y-3">
-            <div className="text-center relative">
+            {/* <div className="text-center relative">
                 {!searchIsFocused && filters.search && (
                     <label htmlFor="search" className={styles.inputLabel}>
                         Search:
@@ -76,7 +75,7 @@ const LilNounFilters: React.FC<LilNounFiltersProps> = ({ meta }) => {
                     onFocus={() => setSearchIsFocused(true)}
                     onBlur={() => setSearchIsFocused(false)}
                 />
-            </div>
+            </div> */}
 
             <div className="flex space-x-6 items-center overflow-x-auto px-4 xl:justify-center">
                 <div>
@@ -119,12 +118,6 @@ const LilNounFilters: React.FC<LilNounFiltersProps> = ({ meta }) => {
                     />
                 </div>
             </div>
-
-            {meta && (
-                <div>
-                    <LilNounPagination meta={meta} changePage={changePage} />
-                </div>
-            )}
         </div>
     )
 }

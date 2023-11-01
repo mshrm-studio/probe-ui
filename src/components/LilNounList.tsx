@@ -16,7 +16,7 @@ const LilNounList: React.FC<Props> = ({
 }) => {
     return (
         <ul
-            className={`grid gap-2 grid-cols-3 md:grid-cols-5 lg:grid-cols-6 ${
+            className={`grid gap-2 grid-cols-3 md:grid-cols-6 lg:grid-cols-8 ${
                 selected
                     ? 'xl:grid-cols-8 xl:max-w-[936px]'
                     : 'xl:grid-cols-10 xl:max-w-[1159px]'

@@ -7,6 +7,7 @@ import useLilNounList from '@/utils/services/useLilNounList'
 import LilNounList from '@/components/LilNounList'
 import LilNoun from '@/utils/dto/LilNoun'
 import SelectedLilNoun from '@/components/SelectedLilNoun'
+import LilNounPagination from '@/components/LilNounPagination'
 
 export default function Home() {
     const { error, fetching, fetchLilNounList, lilNounList, meta } =
@@ -32,11 +33,19 @@ export default function Home() {
         )
     }
 
+    const [page, setPage] = useState(Number(searchParams.get('page')) || 1)
+
+    useEffect(() => {
+        if (meta && page !== meta.current_page) {
+            setPage(meta.current_page)
+        }
+    }, [meta])
+
     return (
         <div className="flex xl:justify-center">
             <div className="space-y-3 w-full">
                 <div className="-mx-4">
-                    <LilNounFilters meta={meta} />
+                    <LilNounFilters meta={meta} page={page} setPage={setPage} />
                 </div>
 
                 {error && <p>{error.data.message}</p>}
@@ -57,6 +66,12 @@ export default function Home() {
                                 updateSelected={updateSelected}
                             />
                         </div>
+                    </div>
+                )}
+
+                {meta && (
+                    <div>
+                        <LilNounPagination meta={meta} setPage={setPage} />
                     </div>
                 )}
             </div>
