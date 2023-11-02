@@ -1,6 +1,7 @@
 import useApi from '@/utils/services/useApi'
 import { useState } from 'react'
 import ApiMeta, { isApiMeta } from '@/utils/dto/ApiMeta'
+import { ReadonlyURLSearchParams } from 'next/navigation'
 
 const useFetcher = () => {
     const {
@@ -17,7 +18,7 @@ const useFetcher = () => {
 
     const fetchData = (
         path: string,
-        params?: URLSearchParams
+        params?: ReadonlyURLSearchParams | URLSearchParams | null
     ): Promise<any> => {
         return new Promise<any>((resolve, reject) => {
             setProcessing(true)

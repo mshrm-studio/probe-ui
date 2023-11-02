@@ -33,7 +33,7 @@ export default function Home() {
         )
     }
 
-    const [page, setPage] = useState(Number(searchParams.get('page')) || 1)
+    const [page, setPage] = useState(Number(searchParams?.get('page')) || 1)
 
     useEffect(() => {
         if (meta && page !== meta.current_page) {

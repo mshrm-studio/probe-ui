@@ -25,13 +25,13 @@ const LilNounFilters: React.FC<LilNounFiltersProps> = ({
     // const [searchIsFocused, setSearchIsFocused] = useState(false)
 
     const [filters, setFilters] = useState<LilNounFiltersDto>({
-        accessory: searchParams.get('accessory') ?? undefined,
-        background: searchParams.get('background') ?? undefined,
-        body: searchParams.get('body') ?? undefined,
-        glasses: searchParams.get('glasses') ?? undefined,
-        head: searchParams.get('head') ?? undefined,
-        search: searchParams.get('search') ?? '',
-        per_page: Number(searchParams.get('per_page')) || 40,
+        accessory: searchParams?.get('accessory') ?? undefined,
+        background: searchParams?.get('background') ?? undefined,
+        body: searchParams?.get('body') ?? undefined,
+        glasses: searchParams?.get('glasses') ?? undefined,
+        head: searchParams?.get('head') ?? undefined,
+        search: searchParams?.get('search') ?? '',
+        per_page: Number(searchParams?.get('per_page')) || 40,
     })
 
     const updateFilters = (
