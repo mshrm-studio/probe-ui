@@ -12,7 +12,7 @@ const useLilNounList = () => {
     }, [response])
 
     const fetchLilNounTraitList = (params?: URLSearchParams): void => {
-        fetchData(`/traits`, params)
+        fetchData(`/lil-nouns-traits`, params)
     }
 
     return { error, fetching, fetchLilNounTraitList, lilNounTraitList: list }
