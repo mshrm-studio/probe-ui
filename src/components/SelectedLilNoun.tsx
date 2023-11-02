@@ -77,6 +77,16 @@ const SelectedLilNoun: React.FC<Props> = ({ selected, updateSelected }) => {
                             )}
                         </dd>
                     </p>
+
+                    <p>
+                        <a
+                            href={`https://lilnouns.wtf/lilnoun/${selected.token_id}`}
+                            target="_blank"
+                            className="text-[#2B83F6] font-bold underline"
+                        >
+                            View Activity
+                        </a>
+                    </p>
                 </div>
             </div>
         </div>
