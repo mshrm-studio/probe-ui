@@ -1,10 +1,11 @@
 'use client'
 import React from 'react'
 import LilNoun from '@/utils/dto/LilNoun'
-import LilNounImage from '@/components/LilNounImage'
+import LilNounImage from '@/components/LilNoun/Image'
 import { startCase } from 'lodash'
 import { XMarkIcon } from '@heroicons/react/24/solid'
 import { DateTime } from 'luxon'
+import TextLink from '@/components/TextLink'
 
 type Props = {
     selected: LilNoun
@@ -89,13 +90,11 @@ const SelectedLilNoun: React.FC<Props> = ({ selected, updateSelected }) => {
                     </p>
 
                     <p>
-                        <a
+                        <TextLink
                             href={`https://lilnouns.wtf/lilnoun/${selected.token_id}`}
-                            target="_blank"
-                            className="text-[#2B83F6] font-bold underline"
                         >
                             View Activity
-                        </a>
+                        </TextLink>
                     </p>
                 </div>
             </div>

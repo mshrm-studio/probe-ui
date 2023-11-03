@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* body {
-    cursor: url('https://probewtf.fra1.cdn.digitaloceanspaces.com/lils/cursor-probe.png'),
+body {
+    cursor: url('https://probewtf.fra1.cdn.digitaloceanspaces.com/cursor-probe.png'),
         auto;
-} */
+}

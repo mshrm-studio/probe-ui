@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import Footer from '@/components/Footer'
+import { usePathname } from 'next/navigation'
+import { useEffect } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,13 +22,7 @@ export default function RootLayout({ children }: Props) {
             <body className={`${inter.className} p-4`}>
                 <main className="w-full overflow-x-hidden">{children}</main>
 
-                <footer className="mt-6">
-                    <img
-                        className="h-[45px]"
-                        src={`${process.env.NEXT_PUBLIC_DO_STORAGE_URL}/lils/logo.png`}
-                        alt="Probe Logo"
-                    />
-                </footer>
+                <Footer />
             </body>
         </html>
     )

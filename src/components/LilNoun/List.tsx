@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
 import LilNoun from '@/utils/dto/LilNoun'
-import LilNounImage from '@/components/LilNounImage'
+import LilNounImage from '@/components/LilNoun/Image'
 
 type Props = {
     lilNouns: LilNoun[]

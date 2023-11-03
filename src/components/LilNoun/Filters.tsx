@@ -3,8 +3,8 @@ import React, { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import LilNounFiltersDto from '@/utils/dto/LilNounFilters'
 import useFilters from '@/utils/services/useFilters'
-import SelectLilNounTrait from '@/components/SelectLilNounTrait'
-import styles from '@/utils/styles/lilNounFilters.module.css'
+import SelectLilNounTrait from '@/components/Select/LilNounTrait'
+// import styles from '@/utils/styles/lilNounFilters.module.css'
 import ApiMeta from '@/utils/dto/ApiMeta'
 
 interface LilNounFiltersProps {
@@ -48,7 +48,13 @@ const LilNounFilters: React.FC<LilNounFiltersProps> = ({
     const pushToNewQuery = () => {
         const params = parseFilters({ ...filters, page: page })
 
-        router.push(`/?${params.toString()}`)
+        const basePath = '/lils'
+
+        const fullPath = params.toString()
+            ? `${basePath}?${params.toString()}`
+            : basePath
+
+        router.push(fullPath)
     }
 
     useEffect(() => {
