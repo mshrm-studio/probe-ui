@@ -1,6 +1,7 @@
 'use client'
 import NounSwitcher from '@/components/NounsSwitcher'
 import SpacesImage from '@/components/SpacesImage'
+import Link from 'next/link'
 
 export default function Footer() {
     return (
@@ -9,11 +10,13 @@ export default function Footer() {
                 <NounSwitcher />
 
                 <div>
-                    <SpacesImage
-                        className="h-[45px]"
-                        src="logo.png"
-                        alt="Probe Logo"
-                    />
+                    <Link href="/">
+                        <SpacesImage
+                            className="h-[45px]"
+                            src="logo.png"
+                            alt="Probe Logo"
+                        />
+                    </Link>
                 </div>
             </div>
         </footer>

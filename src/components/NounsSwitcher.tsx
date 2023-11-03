@@ -2,13 +2,15 @@
 import { usePathname, useRouter } from 'next/navigation'
 import SpacesImage from '@/components/SpacesImage'
 import { MouseEventHandler } from 'react'
+import useHref from '@/utils/services/useHref'
 
 export default function NounSwitcher() {
+    const { lilsLink, nounsLink } = useHref()
     const pathname = usePathname()
     const router = useRouter()
 
     const switchProject: MouseEventHandler<HTMLButtonElement> = (_e) => {
-        router.push(pathname === '/lils' ? '/nouns' : '/lils')
+        router.push(pathname === '/lils' ? nounsLink : lilsLink)
     }
 
     return (
