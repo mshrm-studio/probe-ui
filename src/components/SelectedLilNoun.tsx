@@ -4,6 +4,7 @@ import LilNoun from '@/utils/dto/LilNoun'
 import LilNounImage from '@/components/LilNounImage'
 import { startCase } from 'lodash'
 import { XMarkIcon } from '@heroicons/react/24/solid'
+import { DateTime } from 'luxon'
 
 type Props = {
     selected: LilNoun
@@ -24,12 +25,21 @@ const SelectedLilNoun: React.FC<Props> = ({ selected, updateSelected }) => {
                 </button>
             </div>
 
-            <div className="space-y-3">
-                <h3 className="text-[34px] font-bold">
-                    Lil {selected.token_id}
-                </h3>
+            <div className="space-y-5">
+                <div>
+                    <h3 className="text-[34px] font-bold">
+                        Lil {selected.token_id}
+                    </h3>
 
-                <div className="uppercase text-[13px] space-y-2">
+                    <p className="uppercase text-[11px] text-[#6C6C6C] font-bold">
+                        Born{' '}
+                        {DateTime.fromISO(selected.minted_at, { zone: 'utc' })
+                            .toLocal()
+                            .toFormat('MMMM dd, yyyy h:mm a Z')}
+                    </p>
+                </div>
+
+                <div className="uppercase text-[13px] text-[#6C6C6C] space-y-3">
                     <p>
                         <dt className="inline">Body:</dt>{' '}
                         <dd className="inline font-bold">

@@ -8,6 +8,8 @@ export default interface LilNoun {
     glasses_name: string
     body_name: string
     accessory_name: string
+    block_number: string
+    minted_at: string
 }
 
 export const isLilNoun = (input: unknown): input is LilNoun => {
