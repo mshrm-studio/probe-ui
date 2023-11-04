@@ -1,8 +1,8 @@
 import { isBoolean, isNumber, isString } from 'lodash'
-import LilNounFilters from '@/utils/dto/LilNounFilters'
+import NounFilters from '@/utils/dto/NounFilters'
 
 const useFilters = () => {
-    const parseFilters = (filters: LilNounFilters): URLSearchParams => {
+    const parseFilters = (filters: NounFilters): URLSearchParams => {
         const params = new URLSearchParams()
 
         for (const [key, value] of Object.entries(filters)) {

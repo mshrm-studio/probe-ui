@@ -8,7 +8,7 @@ type Props = {
     setPage: React.Dispatch<React.SetStateAction<number>>
 }
 
-const LilNounPagination: React.FC<Props> = ({ meta, setPage }) => {
+const NounPagination: React.FC<Props> = ({ meta, setPage }) => {
     return (
         <nav className="flex justify-center items-center space-x-2 text-[13px]">
             {meta.current_page > 1 && (
@@ -68,4 +68,4 @@ const LilNounPagination: React.FC<Props> = ({ meta, setPage }) => {
     )
 }
 
-export default LilNounPagination
+export default NounPagination

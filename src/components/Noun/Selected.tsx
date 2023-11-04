@@ -1,22 +1,28 @@
 'use client'
 import React from 'react'
-import LilNoun from '@/utils/dto/LilNoun'
-import LilNounImage from '@/components/LilNoun/Image'
+import Noun from '@/utils/dto/Noun'
+import NounImage from '@/components/Noun/Image'
 import { startCase } from 'lodash'
 import { XMarkIcon } from '@heroicons/react/24/solid'
 import { DateTime } from 'luxon'
 import TextLink from '@/components/TextLink'
+import Project from '@/utils/dto/Project'
 
 type Props = {
-    selected: LilNoun
+    project: Project
+    selected: Noun
     updateSelected: (selected: null) => void
 }
 
-const SelectedLilNoun: React.FC<Props> = ({ selected, updateSelected }) => {
+const SelectedNoun: React.FC<Props> = ({
+    project,
+    selected,
+    updateSelected,
+}) => {
     return (
         <div className="space-y-5 mb-6 mx-auto max-w-[269px] xl:mx-0 xl:mb-0 xl:ml-6">
             <div className="relative">
-                <LilNounImage className="rounded" lilNoun={selected} />
+                <NounImage className="rounded" noun={selected} />
 
                 <button
                     className="absolute right-2 top-2"
@@ -29,7 +35,8 @@ const SelectedLilNoun: React.FC<Props> = ({ selected, updateSelected }) => {
             <div className="space-y-5">
                 <div>
                     <h3 className="text-[34px] font-bold">
-                        Lil {selected.token_id}
+                        {project === 'Nouns' ? 'Noun' : 'Lil'}{' '}
+                        {selected.token_id}
                     </h3>
 
                     <p className="uppercase text-[11px] text-[#6C6C6C] font-bold">
@@ -91,7 +98,11 @@ const SelectedLilNoun: React.FC<Props> = ({ selected, updateSelected }) => {
 
                     <p>
                         <TextLink
-                            href={`https://lilnouns.wtf/lilnoun/${selected.token_id}`}
+                            href={
+                                project === 'Nouns'
+                                    ? `https://nouns.wtf/noun/${selected.token_id}`
+                                    : `https://lilnouns.wtf/lilnoun/${selected.token_id}`
+                            }
                         >
                             View Activity
                         </TextLink>
@@ -102,4 +113,4 @@ const SelectedLilNoun: React.FC<Props> = ({ selected, updateSelected }) => {
     )
 }
 
-export default SelectedLilNoun
+export default SelectedNoun

@@ -41,7 +41,7 @@ export default function NounSwitcher() {
                         pathname === '/lils' ? '-ml-3' : '-mr-3'
                     }`}
                 >
-                    {pathname === '/lils' ? 'Nouns' : 'Lils'}
+                    {pathname === '/lils' ? 'Lils' : 'Nouns'}
                 </div>
             </button>
 

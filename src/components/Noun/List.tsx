@@ -1,19 +1,15 @@
 'use client'
 import React from 'react'
-import LilNoun from '@/utils/dto/LilNoun'
-import LilNounImage from '@/components/LilNoun/Image'
+import Noun from '@/utils/dto/Noun'
+import NounImage from '@/components/Noun/Image'
 
 type Props = {
-    lilNouns: LilNoun[]
-    selected: LilNoun | null
-    updateSelected: (selected: LilNoun) => void
+    nouns: Noun[]
+    selected: Noun | null
+    updateSelected: (selected: Noun) => void
 }
 
-const LilNounList: React.FC<Props> = ({
-    lilNouns,
-    selected,
-    updateSelected,
-}) => {
+const NounList: React.FC<Props> = ({ nouns, selected, updateSelected }) => {
     return (
         <ul
             className={`grid gap-2 grid-cols-3 md:grid-cols-6 lg:grid-cols-8 ${
@@ -22,21 +18,21 @@ const LilNounList: React.FC<Props> = ({
                     : 'xl:grid-cols-10 xl:max-w-[1159px]'
             }`}
         >
-            {lilNouns.map((lilNoun) => (
+            {nouns.map((noun) => (
                 <li
-                    key={lilNoun.token_id}
+                    key={noun.token_id}
                     className={`border-2 rounded ${
-                        selected?.token_id == lilNoun.token_id
+                        selected?.token_id == noun.token_id
                             ? 'border-black'
                             : 'border-transparent'
                     }`}
-                    onClick={() => updateSelected(lilNoun)}
+                    onClick={() => updateSelected(noun)}
                 >
-                    <LilNounImage lilNoun={lilNoun} />
+                    <NounImage noun={noun} />
                 </li>
             ))}
         </ul>
     )
 }
 
-export default LilNounList
+export default NounList

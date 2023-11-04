@@ -1,5 +1,6 @@
 'use client'
+import NounPage from '@/components/Noun/Page'
 
 export default function Page() {
-    return <div className="text-center">fuck you. pay me.</div>
+    return <NounPage project="Nouns" />
 }

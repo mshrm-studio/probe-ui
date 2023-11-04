@@ -1,24 +1,25 @@
 import { useMemo } from 'react'
-import { isLilNounList } from '@/utils/dto/LilNoun'
+import { isNounList } from '@/utils/dto/Noun'
 import useFetcher from '@/utils/services/useFetcher'
 import { ReadonlyURLSearchParams } from 'next/navigation'
+import Project from '@/utils/dto/Project'
 
-const useLilNounList = () => {
+const useNounList = (project: Project) => {
     const { error, fetchData, fetching, meta, response } = useFetcher()
 
     const list = useMemo(() => {
         const data = response?.data?.data
 
-        return isLilNounList(data) ? data : null
+        return isNounList(data) ? data : null
     }, [response])
 
-    const fetchLilNounList = (
+    const fetchNounList = (
         params?: ReadonlyURLSearchParams | URLSearchParams | null
     ): void => {
-        fetchData(`/lil-nouns`, params)
+        fetchData(project === 'Nouns' ? '/nouns' : '/lil-nouns', params)
     }
 
-    return { error, fetching, fetchLilNounList, lilNounList: list, meta }
+    return { error, fetching, fetchNounList, nounList: list, meta }
 }
 
-export default useLilNounList
+export default useNounList

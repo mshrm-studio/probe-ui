@@ -1,4 +1,4 @@
-export default interface LilNounFilters {
+export default interface NounFilters {
     search?: string
     page?: number
     per_page?: number

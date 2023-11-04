@@ -1,28 +1,31 @@
 'use client'
 import React, { ChangeEvent, useEffect, useMemo } from 'react'
-import { LilNounTraitLayer } from '@/utils/dto/LilNounTraitLayer'
-import useLilNounTraitList from '@/utils/services/useLilNounTraitList'
+import { NounTraitLayer } from '@/utils/dto/NounTraitLayer'
+import useNounTraitList from '@/utils/services/useNounTraitList'
 import { debounce, startCase } from 'lodash'
-import styles from '@/utils/styles/lilNounFilters.module.css'
+import styles from '@/utils/styles/nounFilters.module.css'
+import Project from '@/utils/dto/Project'
 
 type Props = {
-    layer: LilNounTraitLayer
+    project: Project
+    layer: NounTraitLayer
     selected?: string
     updateSelected: (e: ChangeEvent<HTMLSelectElement>) => void
 }
 
-const SelectLilNounTrait: React.FC<Props> = ({
+const SelectNounTrait: React.FC<Props> = ({
+    project,
     layer,
     selected,
     updateSelected,
 }) => {
-    const { fetchLilNounTraitList, lilNounTraitList } = useLilNounTraitList()
+    const { fetchNounTraitList, nounTraitList } = useNounTraitList(project)
 
     useEffect(() => {
         const debouncedFetch = debounce(() => {
             const params = new URLSearchParams()
             params.set('layer', layer)
-            fetchLilNounTraitList(params)
+            fetchNounTraitList(params)
         }, 500)
 
         debouncedFetch()
@@ -31,8 +34,8 @@ const SelectLilNounTrait: React.FC<Props> = ({
     }, [layer])
 
     const filteredList = useMemo(() => {
-        return lilNounTraitList
-            ? lilNounTraitList
+        return nounTraitList
+            ? nounTraitList
                   .map((item) => ({
                       label:
                           item.layer === 'background'
@@ -50,8 +53,9 @@ const SelectLilNounTrait: React.FC<Props> = ({
                           ? unique
                           : [...unique, item]
                   }, [] as { label: string; value: string }[])
+                  .sort((a, b) => a.label.localeCompare(b.label))
             : []
-    }, [lilNounTraitList])
+    }, [nounTraitList])
 
     return (
         <div className={styles.container}>
@@ -78,4 +82,4 @@ const SelectLilNounTrait: React.FC<Props> = ({
     )
 }
 
-export default SelectLilNounTrait
+export default SelectNounTrait

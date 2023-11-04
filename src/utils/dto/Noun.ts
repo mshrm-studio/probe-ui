@@ -1,6 +1,6 @@
 import { isObject } from 'lodash'
 
-export default interface LilNoun {
+export default interface Noun {
     token_id: number
     token_uri: string
     background_name: string
@@ -12,10 +12,10 @@ export default interface LilNoun {
     minted_at: string
 }
 
-export const isLilNoun = (input: unknown): input is LilNoun => {
+export const isNoun = (input: unknown): input is Noun => {
     return isObject(input) && 'token_id' in input
 }
 
-export const isLilNounList = (input: unknown): input is LilNoun[] => {
-    return Array.isArray(input) && input.every((item) => isLilNoun(item))
+export const isNounList = (input: unknown): input is Noun[] => {
+    return Array.isArray(input) && input.every((item) => isNoun(item))
 }

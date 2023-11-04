@@ -7,7 +7,7 @@ type Props = {
     href: string
 }
 
-const LilNounImage: React.FC<Props> = ({ children, href }) => {
+const TextLink: React.FC<Props> = ({ children, href }) => {
     const className = 'text-[#2B83F6] font-bold underline'
 
     const cleanedHref = useMemo(() => {
@@ -30,4 +30,4 @@ const LilNounImage: React.FC<Props> = ({ children, href }) => {
     )
 }
 
-export default LilNounImage
+export default TextLink

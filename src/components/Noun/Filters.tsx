@@ -1,19 +1,23 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import LilNounFiltersDto from '@/utils/dto/LilNounFilters'
+import NounFiltersDto from '@/utils/dto/NounFilters'
 import useFilters from '@/utils/services/useFilters'
-import SelectLilNounTrait from '@/components/Select/LilNounTrait'
-// import styles from '@/utils/styles/lilNounFilters.module.css'
+import SelectNounTrait from '@/components/Select/NounTrait'
+// import styles from '@/utils/styles/nounFilters.module.css'
 import ApiMeta from '@/utils/dto/ApiMeta'
+import { startCase } from 'lodash'
+import Project from '@/utils/dto/Project'
 
-interface LilNounFiltersProps {
+interface NounFiltersProps {
+    project: Project
     meta?: ApiMeta
     page: number
     setPage: React.Dispatch<React.SetStateAction<number>>
 }
 
-const LilNounFilters: React.FC<LilNounFiltersProps> = ({
+const NounFilters: React.FC<NounFiltersProps> = ({
+    project,
     meta,
     page,
     setPage,
@@ -24,7 +28,7 @@ const LilNounFilters: React.FC<LilNounFiltersProps> = ({
 
     // const [searchIsFocused, setSearchIsFocused] = useState(false)
 
-    const [filters, setFilters] = useState<LilNounFiltersDto>({
+    const [filters, setFilters] = useState<NounFiltersDto>({
         accessory: searchParams?.get('accessory') ?? undefined,
         background: searchParams?.get('background') ?? undefined,
         body: searchParams?.get('body') ?? undefined,
@@ -48,7 +52,7 @@ const LilNounFilters: React.FC<LilNounFiltersProps> = ({
     const pushToNewQuery = () => {
         const params = parseFilters({ ...filters, page: page })
 
-        const basePath = '/lils'
+        const basePath = project === 'Nouns' ? '/nouns' : '/lils'
 
         const fullPath = params.toString()
             ? `${basePath}?${params.toString()}`
@@ -87,37 +91,42 @@ const LilNounFilters: React.FC<LilNounFiltersProps> = ({
                 <div>
                     {meta && (
                         <p className="font-bold text-[13px] text-[#959595] whitespace-nowrap">
-                            {meta.total} Lil Nouns
+                            {meta.total} {startCase(project)}
                         </p>
                     )}
                 </div>
 
                 <div className="flex space-x-3">
-                    <SelectLilNounTrait
+                    <SelectNounTrait
+                        project={project}
                         layer="accessory"
                         selected={filters.accessory}
                         updateSelected={updateFilters}
                     />
 
-                    <SelectLilNounTrait
+                    <SelectNounTrait
+                        project={project}
                         layer="background"
                         selected={filters.background}
                         updateSelected={updateFilters}
                     />
 
-                    <SelectLilNounTrait
+                    <SelectNounTrait
+                        project={project}
                         layer="body"
                         selected={filters.body}
                         updateSelected={updateFilters}
                     />
 
-                    <SelectLilNounTrait
+                    <SelectNounTrait
+                        project={project}
                         layer="glasses"
                         selected={filters.glasses}
                         updateSelected={updateFilters}
                     />
 
-                    <SelectLilNounTrait
+                    <SelectNounTrait
+                        project={project}
                         layer="head"
                         selected={filters.head}
                         updateSelected={updateFilters}
@@ -128,4 +137,4 @@ const LilNounFilters: React.FC<LilNounFiltersProps> = ({
     )
 }
 
-export default LilNounFilters
+export default NounFilters

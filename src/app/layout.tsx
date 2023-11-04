@@ -8,8 +8,8 @@ import { useEffect } from 'react'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-    title: 'Lil Nouns Explorer',
-    description: 'Built by the MSHRM.studio team',
+    title: 'probe.wtf',
+    description: 'built by the MSHRM.studio team',
 }
 
 type Props = {
