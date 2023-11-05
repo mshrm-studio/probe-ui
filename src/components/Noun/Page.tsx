@@ -61,21 +61,23 @@ const NounPage: React.FC<Props> = ({ project }) => {
                 {error && <p>{error.data.message}</p>}
 
                 {nounList && (
-                    <div className="flex flex-col justify-center xl:flex-row-reverse">
-                        {selected && (
-                            <SelectedNoun
-                                project={project}
-                                selected={selected}
-                                updateSelected={updateSelected}
-                            />
-                        )}
+                    <div className="flex justify-center">
+                        <div className="border-t pt-3 border-[#E0E0E0] flex flex-col justify-center xl:flex-row-reverse">
+                            {selected && (
+                                <SelectedNoun
+                                    project={project}
+                                    selected={selected}
+                                    updateSelected={updateSelected}
+                                />
+                            )}
 
-                        <div className="self-auto">
-                            <NounList
-                                nouns={nounList}
-                                selected={selected}
-                                updateSelected={updateSelected}
-                            />
+                            <div className="self-auto">
+                                <NounList
+                                    nouns={nounList}
+                                    selected={selected}
+                                    updateSelected={updateSelected}
+                                />
+                            </div>
                         </div>
                     </div>
                 )}

@@ -28,7 +28,7 @@ const NounList: React.FC<Props> = ({ nouns, selected, updateSelected }) => {
                     }`}
                     onClick={() => updateSelected(noun)}
                 >
-                    <NounImage noun={noun} />
+                    <NounImage className="rounded" noun={noun} />
                 </li>
             ))}
         </ul>

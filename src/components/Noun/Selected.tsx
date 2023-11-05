@@ -22,7 +22,7 @@ const SelectedNoun: React.FC<Props> = ({
     return (
         <div className="space-y-5 mb-6 mx-auto max-w-[269px] xl:mx-0 xl:mb-0 xl:ml-6">
             <div className="relative">
-                <NounImage className="rounded" noun={selected} />
+                <NounImage className="rounded-xl" noun={selected} />
 
                 <button
                     className="absolute right-2 top-2"
