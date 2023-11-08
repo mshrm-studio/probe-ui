@@ -1,11 +1,11 @@
 'use client'
-import NounSwitcher from '@/components/NounsSwitcher'
+import NounSwitch from '@/components/Noun/Switch'
 
 export default function Header() {
     return (
         <header>
             <div className="inline-block">
-                <NounSwitcher />
+                <NounSwitch />
             </div>
         </header>
     )
