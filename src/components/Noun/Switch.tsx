@@ -46,7 +46,7 @@ export default function NounSwitch() {
 
                 <button
                     className={`absolute top-1/2 -translate-y-1/2 left-0 text-[7px] font-bold text-white uppercase -z-1 ${
-                        pathname === '/lils' ? 'translate-x-4' : 'translate-x-1'
+                        isOn ? 'translate-x-1' : 'translate-x-4'
                     }`}
                     onClick={switchProject}
                 >
