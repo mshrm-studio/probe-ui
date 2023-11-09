@@ -1,16 +1,23 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import Noun from '@/utils/dto/Noun'
 import NounImage from '@/components/Noun/Image'
 import { motion, useAnimation } from 'framer-motion'
+import styles from '@/utils/styles/nounList.module.css'
 
 type Props = {
+    fetching: boolean
     nouns: Noun[]
     selected: Noun | null
     updateSelected: (selected: Noun) => void
 }
 
-const NounList: React.FC<Props> = ({ nouns, selected, updateSelected }) => {
+const NounList: React.FC<Props> = ({
+    fetching,
+    nouns,
+    selected,
+    updateSelected,
+}) => {
     const controls = useAnimation()
 
     useEffect(() => {
@@ -18,25 +25,32 @@ const NounList: React.FC<Props> = ({ nouns, selected, updateSelected }) => {
     }, [nouns, controls])
 
     return (
-        <motion.ul
-            className={`grid gap-2 grid-cols-3 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 xl:max-w-[1159px]`}
-            initial="hidden"
-            animate={controls}
-            variants={ulVariants}
-        >
-            {nouns.map((noun) => (
-                <motion.li
-                    variants={liVariants}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    key={noun.token_id}
-                    className={`rounded`}
-                    onClick={() => updateSelected(noun)}
-                >
-                    <NounImage className="rounded" noun={noun} />
-                </motion.li>
-            ))}
-        </motion.ul>
+        <div className={styles.listWrapper}>
+            <motion.ul
+                className={`grid gap-2 grid-cols-3 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 xl:max-w-[1159px]`}
+                initial="hidden"
+                animate={controls}
+                variants={ulVariants}
+            >
+                {nouns.map((noun) => (
+                    <motion.li
+                        variants={liVariants}
+                        whileTap={{ scale: 0.95 }}
+                        key={noun.token_id}
+                        className={`rounded`}
+                        onClick={() => updateSelected(noun)}
+                    >
+                        <NounImage className="rounded" noun={noun} />
+                    </motion.li>
+                ))}
+            </motion.ul>
+
+            {fetching && (
+                <div className={styles.listFetchingIndicator}>
+                    <p className="font-bold text-[13px]">Probing...</p>
+                </div>
+            )}
+        </div>
     )
 }
 

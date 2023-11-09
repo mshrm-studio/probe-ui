@@ -24,17 +24,22 @@ export default function NounSwitch() {
 
     return (
         <div className="flex items-center space-x-2">
-            <Link href={nounsLink}>
-                <SpacesImage
-                    className={`h-[20px]`}
-                    src={
-                        pathname === '/nouns'
-                            ? 'nouns/glasses-square-red.png'
-                            : 'lils/glasses-square-red.png'
-                    }
-                    alt="Glasses Square Red"
-                />
-            </Link>
+            <div className="h-[28px] w-[54px]">
+                <Link
+                    href={nounsLink}
+                    className="flex items-center justify-center w-full h-full"
+                >
+                    <SpacesImage
+                        className={`mx-auto`}
+                        src={
+                            pathname === '/nouns'
+                                ? 'nouns/glasses-square-red.png'
+                                : 'lils/glasses-square-red.png'
+                        }
+                        alt="Glasses Square Red"
+                    />
+                </Link>
+            </div>
 
             <div className="relative">
                 <Switch
