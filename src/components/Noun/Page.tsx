@@ -73,6 +73,7 @@ const NounPage: React.FC<Props> = ({ project }) => {
 
                             <div className="self-auto">
                                 <NounList
+                                    fetching={fetching}
                                     nouns={nounList}
                                     selected={selected}
                                     updateSelected={updateSelected}
