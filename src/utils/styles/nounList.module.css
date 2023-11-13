@@ -1,11 +1,10 @@
 .listWrapper {
     cursor: url('https://probewtf.fra1.cdn.digitaloceanspaces.com/cursor-probe.png'),
         auto;
-    position: relative;
 }
 
 .listFetchingIndicator {
-    position: absolute;
+    position: fixed;
     background: rgba(255, 255, 255, 0.6);
     backdrop-filter: blur(12.5px);
     z-index: 1;
