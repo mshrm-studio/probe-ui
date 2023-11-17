@@ -50,8 +50,8 @@ export default function NounSwitch() {
                 />
 
                 <button
-                    className={`absolute top-1/2 -translate-y-1/2 left-0 text-[7px] font-bold text-white uppercase -z-1 ${
-                        isOn ? 'translate-x-1' : 'translate-x-4'
+                    className={`absolute top-1/2 -translate-y-1/2 left-0 text-[10px] font-bold text-white uppercase -z-1 ${
+                        isOn ? 'translate-x-2' : 'translate-x-6'
                     }`}
                     onClick={switchProject}
                 >
