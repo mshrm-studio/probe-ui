@@ -12,7 +12,7 @@ export default function NounSwitch() {
     const pathname = usePathname()
     const router = useRouter()
 
-    const [isOn, setIsOn] = useState(false)
+    const [isOn, setIsOn] = useState(true)
 
     useEffect(() => {
         router.push(pathname === '/lils' ? nounsLink : lilsLink)
