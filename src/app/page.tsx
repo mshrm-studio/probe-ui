@@ -4,12 +4,12 @@ import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
 export default function Page() {
-    const { lilsLink } = useHref()
+    const { nounsLink } = useHref()
 
     const router = useRouter()
 
     useEffect(() => {
-        router.push(lilsLink)
+        router.push(nounsLink)
     }, [])
 
     return <div></div>

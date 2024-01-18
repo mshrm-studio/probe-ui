@@ -10,11 +10,7 @@ import SelectedNoun from '@/components/Noun/Selected'
 import NounPagination from '@/components/Noun/Pagination'
 import Project from '@/utils/dto/Project'
 
-type Props = {
-    project: Project
-}
-
-const NounPage: React.FC<Props> = ({ project }) => {
+const NounPage: React.FC<{ project: Project }> = ({ project }) => {
     const { error, fetching, fetchNounList, nounList, meta } =
         useNounList(project)
 
