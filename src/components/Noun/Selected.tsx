@@ -105,6 +105,24 @@ const SelectedNoun: React.FC<Props> = ({
                                     </dd>
                                 </p>
 
+                                {selected.area && (
+                                    <p>
+                                        <dt className="inline">Area:</dt>{' '}
+                                        <dd className="inline font-bold">
+                                            {selected.area}
+                                        </dd>
+                                    </p>
+                                )}
+
+                                {selected.weight && (
+                                    <p>
+                                        <dt className="inline">Weight:</dt>{' '}
+                                        <dd className="inline font-bold">
+                                            {selected.weight}
+                                        </dd>
+                                    </p>
+                                )}
+
                                 <p>
                                     <TextLink
                                         href={
