@@ -41,6 +41,31 @@ const NounList: React.FC<Props> = ({
                         onClick={() => updateSelected(noun)}
                     >
                         <NounImage className="rounded" noun={noun} />
+
+                        {noun.color_histogram && (
+                            <ul className="flex flex-wrap mt-2">
+                                {Object.entries(noun.color_histogram).map(
+                                    ([color, weight], index) => (
+                                        <li
+                                            key={`${color}-${index}`}
+                                            style={{ backgroundColor: color }}
+                                            className="h-3 w-3"
+                                            title={`${color} (${weight})`}
+                                        ></li>
+                                    )
+                                )}
+                            </ul>
+                        )}
+
+                        {noun.area && (
+                            <p className="text-xs mt-2">Area: {noun.area}</p>
+                        )}
+
+                        {noun.weight && (
+                            <p className="text-xs mt-2">
+                                Weight: {noun.weight}
+                            </p>
+                        )}
                     </motion.li>
                 ))}
             </motion.ul>
