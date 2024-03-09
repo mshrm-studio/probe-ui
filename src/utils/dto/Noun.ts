@@ -13,6 +13,8 @@ export default interface Noun {
     area: number | null
     weight: number | null
     color_histogram: Record<string, number> | null
+    svg_path: string | null
+    svg_url: string | null
 }
 
 export const isNoun = (input: unknown): input is Noun => {

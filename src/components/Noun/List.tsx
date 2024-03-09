@@ -4,6 +4,7 @@ import Noun from '@/utils/dto/Noun'
 import NounImage from '@/components/Noun/Image'
 import { motion, useAnimation } from 'framer-motion'
 import styles from '@/utils/styles/nounList.module.css'
+import SpacesImage from '@/components/SpacesImage'
 
 type Props = {
     fetching: boolean
@@ -40,7 +41,14 @@ const NounList: React.FC<Props> = ({
                         className={`rounded`}
                         onClick={() => updateSelected(noun)}
                     >
-                        <NounImage className="rounded" noun={noun} />
+                        {noun.svg_url ? (
+                            <SpacesImage
+                                className="rounded"
+                                src={noun.svg_url}
+                            />
+                        ) : (
+                            <NounImage className="rounded" noun={noun} />
+                        )}
 
                         {noun.color_histogram && (
                             <ul className="flex flex-wrap mt-2">
@@ -49,7 +57,7 @@ const NounList: React.FC<Props> = ({
                                         <li
                                             key={`${color}-${index}`}
                                             style={{ backgroundColor: color }}
-                                            className="h-3 w-3"
+                                            className="h-4 w-4"
                                             title={`${color} (${weight})`}
                                         ></li>
                                     )

@@ -4,7 +4,7 @@ const nextConfig = {
         remotePatterns: [
             {
                 protocol: 'https',
-                hostname: 'tetris.ams3.cdn.digitaloceanspaces.com',
+                hostname: 'probewtf.fra1.cdn.digitaloceanspaces.com',
             },
         ],
     },
