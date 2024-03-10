@@ -9,19 +9,12 @@ import ApiMeta from '@/utils/dto/ApiMeta'
 import { startCase } from 'lodash'
 import Project from '@/utils/dto/Project'
 
-interface NounFiltersProps {
+const NounListPageFilters: React.FC<{
     project: Project
     meta?: ApiMeta
     page: number
     setPage: React.Dispatch<React.SetStateAction<number>>
-}
-
-const NounFilters: React.FC<NounFiltersProps> = ({
-    project,
-    meta,
-    page,
-    setPage,
-}) => {
+}> = ({ project, meta, page, setPage }) => {
     const { parseFilters } = useFilters()
     const router = useRouter()
     const searchParams = useSearchParams()
@@ -137,4 +130,4 @@ const NounFilters: React.FC<NounFiltersProps> = ({
     )
 }
 
-export default NounFilters
+export default NounListPageFilters

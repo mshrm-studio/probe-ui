@@ -18,7 +18,7 @@ const Switch: React.FC<Props> = ({
     const toggleSwitch = () => setIsOn(!isOn)
 
     return (
-        <div className={className} data-isOn={isOn} onClick={toggleSwitch}>
+        <div className={className} data-ison={isOn} onClick={toggleSwitch}>
             <motion.div
                 className={handleClassName}
                 layout

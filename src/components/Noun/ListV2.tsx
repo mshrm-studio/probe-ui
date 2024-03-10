@@ -1,0 +1,99 @@
+'use client'
+
+import React, { useEffect, useMemo } from 'react'
+import Noun from '@/utils/dto/Noun'
+import NounImage from '@/components/Noun/Image'
+import { motion, useAnimation } from 'framer-motion'
+import styles from '@/utils/styles/nounListV2.module.css'
+import Link from 'next/link'
+import Project from '@/utils/dto/Project'
+import { Londrina_Solid } from 'next/font/google'
+
+const londrinaSolid = Londrina_Solid({
+    subsets: ['latin'],
+    weight: '900',
+})
+
+type Props = {
+    project: Project
+    fetching: boolean
+    nouns: Noun[]
+}
+
+const NounList: React.FC<Props> = ({ project, fetching, nouns }) => {
+    const controls = useAnimation()
+
+    const linkPrefix = useMemo(() => {
+        return project === 'LilNouns' ? `/lils` : `/nouns`
+    }, [project])
+
+    useEffect(() => {
+        controls.start('visible')
+    }, [nouns, controls])
+
+    return (
+        <div className={styles.listWrapper}>
+            <motion.ul
+                className={`grid gap-2 grid-cols-2 md:grid-cols-5 xl:max-w-[1280px] xl:mx-auto`}
+                initial="hidden"
+                animate={controls}
+                variants={ulVariants}
+            >
+                {nouns.map((noun) => (
+                    <motion.li
+                        variants={liVariants}
+                        whileTap={{ scale: 0.95 }}
+                        key={noun.token_id}
+                    >
+                        <Link
+                            href={`${linkPrefix}/${noun.token_id}`}
+                            className="block relative group"
+                        >
+                            <NounImage noun={noun} />
+
+                            <div
+                                className={`opacity-0 group-hover:opacity-100 ${londrinaSolid.className} bg-black/50 absolute bottom-0 left-1/2 -translate-x-1/2 rounded-t-2xl py-1 px-4 text-center uppercase whitespace-nowrap`}
+                            >
+                                <span className="text-white text-2xl">
+                                    Noun {noun.token_id}
+                                </span>
+
+                                <span className="ml-2 leading-loose text-[#33DAFF] text-sm">
+                                    Probe?
+                                </span>
+                            </div>
+                        </Link>
+                    </motion.li>
+                ))}
+            </motion.ul>
+
+            {fetching && (
+                <div className={styles.listFetchingIndicator}>
+                    <p className="font-bold text-[13px]">Probing...</p>
+                </div>
+            )}
+        </div>
+    )
+}
+
+const ulVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: { staggerChildren: 0.1, delayChildren: 0.2 },
+    },
+}
+
+const liVariants = {
+    hidden: { x: 50, opacity: 0 },
+    visible: {
+        x: 0,
+        opacity: 1,
+        transition: {
+            x: { stiffness: 1000, velocity: -100 },
+            duration: 0.5,
+        },
+    },
+}
+
+export default NounList

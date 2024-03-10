@@ -1,0 +1,56 @@
+.detailsWrapper {
+    padding: 1.5rem;
+}
+
+.detailsWrapper > *:not(:last-child) {
+    margin-bottom: 1.5rem;
+}
+
+.dlItemInline > dt {
+    margin-right: 0.25rem;
+}
+
+.dt {
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #9a9a9a;
+    font-size: 14px;
+    display: inline-block;
+}
+
+.dd {
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 14px;
+    display: inline-block;
+}
+
+.colorList {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+}
+
+@media screen and (min-width: 768px) and (orientation: landscape) {
+    .pageWrapper {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .detailsWrapper {
+        text-align: right;
+        grid-column: span 2 / span 2;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .imageWrapper {
+        grid-column: span 3 / span 3;
+        order: 2;
+    }
+
+    .colorList {
+        justify-content: flex-end;
+    }
+}

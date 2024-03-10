@@ -1,4 +1,5 @@
 'use client'
+
 import { usePathname, useRouter } from 'next/navigation'
 import SpacesImage from '@/components/SpacesImage'
 import { MouseEventHandler, useEffect, useState } from 'react'
