@@ -34,7 +34,7 @@ const NounList: React.FC<Props> = ({ project, fetching, nouns }) => {
     return (
         <div className={styles.listWrapper}>
             <motion.ul
-                className={`grid gap-2 grid-cols-2 md:grid-cols-5 xl:max-w-[1280px] xl:mx-auto`}
+                className={`grid gap-2 grid-cols-5 md:grid-cols-10 xl:grid-cols-18`}
                 initial="hidden"
                 animate={controls}
                 variants={ulVariants}
@@ -52,15 +52,9 @@ const NounList: React.FC<Props> = ({ project, fetching, nouns }) => {
                             <NounImage noun={noun} />
 
                             <div
-                                className={`opacity-0 group-hover:opacity-100 ${londrinaSolid.className} bg-black/50 absolute bottom-0 left-1/2 -translate-x-1/2 rounded-t-2xl py-1 px-4 text-center uppercase whitespace-nowrap`}
+                                className={`opacity-0 group-hover:opacity-100 ${londrinaSolid.className} bg-black/50 absolute bottom-0 inset-x-0 py-1 px-2 text-center uppercase whitespace-nowrap text-white text-xs`}
                             >
-                                <span className="text-white text-2xl">
-                                    Noun {noun.token_id}
-                                </span>
-
-                                <span className="ml-2 leading-loose text-[#33DAFF] text-sm">
-                                    Probe?
-                                </span>
+                                Noun {noun.token_id}
                             </div>
                         </Link>
                     </motion.li>
