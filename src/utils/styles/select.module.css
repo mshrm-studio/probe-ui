@@ -1,0 +1,79 @@
+.select {
+    position: relative;
+    z-index: 2;
+}
+
+.select > .heading {
+    position: relative;
+    height: 72px;
+    width: 266px;
+}
+
+.select > .heading:after {
+    content: ' ';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 3;
+    transform: translate(-10px, 10px);
+}
+
+.select[data-state='closed'] > .heading:after {
+    background-color: #dfdfdf;
+}
+
+.select[data-state='open'] > .heading:after {
+    background-color: transparent;
+}
+
+.select > .heading > .button {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    border: 1px solid #d5d7e1;
+    background: #fff;
+    z-index: 4;
+    text-align: left;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.select > .heading > .button > .label {
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #838383;
+    position: absolute;
+    left: 1rem;
+    top: 0.25rem;
+}
+
+.select > .heading > .button > .selected,
+.select > .heading > .button > .placeholder {
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 26px;
+    position: absolute;
+    left: 1rem;
+    top: 1.5rem;
+    width: calc(100% - 2rem);
+}
+
+.select > .heading > .button > .selected {
+    display: flex;
+    align-items: center;
+}
+
+.select > .options {
+    position: absolute;
+    border: 1px solid #d5d7e1;
+    background: #fff;
+    top: calc(100% + 0.5rem);
+    z-index: 4;
+    width: calc(100% + 1rem);
+    margin-left: -0.5rem;
+    max-height: 350px;
+    overflow-y: auto;
+}

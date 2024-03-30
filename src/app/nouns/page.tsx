@@ -1,7 +1,12 @@
 'use client'
 
 import NounListPage from '@/components/NounListPage/NounListPage'
+import DimensionsProvider from '@/components/DimensionsProvider'
 
 export default function Page() {
-    return <NounListPage project="Nouns" />
+    return (
+        <DimensionsProvider>
+            <NounListPage project="Nouns" />
+        </DimensionsProvider>
+    )
 }

@@ -2,6 +2,7 @@
 import React, { useEffect, useRef } from 'react'
 import styles from '@/utils/styles/modal.module.css'
 import { motion } from 'framer-motion'
+import useOutsideClick from '@/utils/services/useClickOutside'
 
 type Props = {
     children: React.ReactNode
@@ -11,21 +12,7 @@ type Props = {
 const Modal: React.FC<Props> = ({ children, onClickOutside }) => {
     const modalRef = useRef<HTMLDivElement>(null)
 
-    const handleClickOutside = (event: MouseEvent) => {
-        if (
-            modalRef.current &&
-            !modalRef.current.contains(event.target as Node)
-        ) {
-            onClickOutside()
-        }
-    }
-
-    useEffect(() => {
-        document.addEventListener('mousedown', handleClickOutside)
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside)
-        }
-    }, [])
+    useOutsideClick(modalRef, onClickOutside)
 
     return (
         <motion.div

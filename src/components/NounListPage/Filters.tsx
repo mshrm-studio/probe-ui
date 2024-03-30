@@ -4,9 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import NounFiltersDto from '@/utils/dto/NounFilters'
 import useFilters from '@/utils/services/useFilters'
 import SelectNounTrait from '@/components/Select/NounTrait'
-// import styles from '@/utils/styles/nounFilters.module.css'
 import ApiMeta from '@/utils/dto/ApiMeta'
-import { startCase } from 'lodash'
 import Project from '@/utils/dto/Project'
 
 const NounListPageFilters: React.FC<{
@@ -28,11 +26,13 @@ const NounListPageFilters: React.FC<{
         glasses: searchParams?.get('glasses') ?? undefined,
         head: searchParams?.get('head') ?? undefined,
         search: searchParams?.get('search') ?? '',
-        per_page: Number(searchParams?.get('per_page')) || 40,
+        per_page: Number(searchParams?.get('per_page')) || 300,
     })
 
     const updateFilters = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+        e:
+            | React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+            | { target: { name: string; value: string } }
     ) => {
         setPage(1)
 
@@ -80,51 +80,41 @@ const NounListPageFilters: React.FC<{
                 />
             </div> */}
 
-            <div className="flex space-x-6 items-center overflow-x-auto px-4 xl:justify-center">
-                <div>
-                    {meta && (
-                        <p className="font-bold text-[13px] text-[#959595] whitespace-nowrap">
-                            {meta.total} {startCase(project)}
-                        </p>
-                    )}
-                </div>
+            <div className="flex space-x-6 items-center py-4 px-4 xl:justify-center">
+                <SelectNounTrait
+                    project={project}
+                    layer="accessory"
+                    selected={filters.accessory}
+                    updateSelected={updateFilters}
+                />
 
-                <div className="flex space-x-3">
-                    <SelectNounTrait
-                        project={project}
-                        layer="accessory"
-                        selected={filters.accessory}
-                        updateSelected={updateFilters}
-                    />
+                <SelectNounTrait
+                    project={project}
+                    layer="background"
+                    selected={filters.background}
+                    updateSelected={updateFilters}
+                />
 
-                    <SelectNounTrait
-                        project={project}
-                        layer="background"
-                        selected={filters.background}
-                        updateSelected={updateFilters}
-                    />
+                <SelectNounTrait
+                    project={project}
+                    layer="body"
+                    selected={filters.body}
+                    updateSelected={updateFilters}
+                />
 
-                    <SelectNounTrait
-                        project={project}
-                        layer="body"
-                        selected={filters.body}
-                        updateSelected={updateFilters}
-                    />
+                <SelectNounTrait
+                    project={project}
+                    layer="glasses"
+                    selected={filters.glasses}
+                    updateSelected={updateFilters}
+                />
 
-                    <SelectNounTrait
-                        project={project}
-                        layer="glasses"
-                        selected={filters.glasses}
-                        updateSelected={updateFilters}
-                    />
-
-                    <SelectNounTrait
-                        project={project}
-                        layer="head"
-                        selected={filters.head}
-                        updateSelected={updateFilters}
-                    />
-                </div>
+                <SelectNounTrait
+                    project={project}
+                    layer="head"
+                    selected={filters.head}
+                    updateSelected={updateFilters}
+                />
             </div>
         </div>
     )

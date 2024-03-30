@@ -1,25 +1,31 @@
 'use client'
-import React, { useEffect } from 'react'
+
+import React, { useEffect, useMemo } from 'react'
 import Noun from '@/utils/dto/Noun'
 import NounImage from '@/components/Noun/Image'
 import { motion, useAnimation } from 'framer-motion'
-import styles from '@/utils/styles/nounList.module.css'
-import SpacesImage from '@/components/SpacesImage'
+import styles from '@/utils/styles/nounListV2.module.css'
+import Link from 'next/link'
+import Project from '@/utils/dto/Project'
+import { Londrina_Solid } from 'next/font/google'
+
+const londrinaSolid = Londrina_Solid({
+    subsets: ['latin'],
+    weight: '900',
+})
 
 type Props = {
+    project: Project
     fetching: boolean
     nouns: Noun[]
-    selected: Noun | null
-    updateSelected: (selected: Noun) => void
 }
 
-const NounList: React.FC<Props> = ({
-    fetching,
-    nouns,
-    selected,
-    updateSelected,
-}) => {
+const NounList: React.FC<Props> = ({ project, fetching, nouns }) => {
     const controls = useAnimation()
+
+    const linkPrefix = useMemo(() => {
+        return project === 'LilNouns' ? `/lils` : `/nouns`
+    }, [project])
 
     useEffect(() => {
         controls.start('visible')
@@ -28,7 +34,7 @@ const NounList: React.FC<Props> = ({
     return (
         <div className={styles.listWrapper}>
             <motion.ul
-                className={`grid gap-2 grid-cols-3 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 xl:max-w-[1159px]`}
+                className={`grid gap-2 grid-cols-5 md:grid-cols-10 xl:grid-cols-18`}
                 initial="hidden"
                 animate={controls}
                 variants={ulVariants}
@@ -38,17 +44,19 @@ const NounList: React.FC<Props> = ({
                         variants={liVariants}
                         whileTap={{ scale: 0.95 }}
                         key={noun.token_id}
-                        className={`rounded`}
-                        onClick={() => updateSelected(noun)}
                     >
-                        {noun.svg_url ? (
-                            <SpacesImage
-                                className="rounded"
-                                src={noun.svg_url}
-                            />
-                        ) : (
-                            <NounImage className="rounded" noun={noun} />
-                        )}
+                        <Link
+                            href={`${linkPrefix}/${noun.token_id}`}
+                            className="block relative group"
+                        >
+                            <NounImage noun={noun} />
+
+                            <div
+                                className={`opacity-0 group-hover:opacity-100 ${londrinaSolid.className} bg-black/50 absolute bottom-0 inset-x-0 py-1 px-2 text-center uppercase whitespace-nowrap text-white text-xs`}
+                            >
+                                Noun {noun.token_id}
+                            </div>
+                        </Link>
                     </motion.li>
                 ))}
             </motion.ul>
@@ -66,7 +74,7 @@ const ulVariants = {
     hidden: { opacity: 0 },
     visible: {
         opacity: 1,
-        transition: { staggerChildren: 0.1, delayChildren: 0.2 },
+        transition: { staggerChildren: 0.01, delayChildren: 0.02 },
     },
 }
 
@@ -77,7 +85,7 @@ const liVariants = {
         opacity: 1,
         transition: {
             x: { stiffness: 1000, velocity: -100 },
-            duration: 0.5,
+            duration: 0.05,
         },
     },
 }

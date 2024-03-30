@@ -7,14 +7,14 @@ const useNounList = (project: Project) => {
     const { error, fetchData, fetching, response } = useFetcher()
 
     const list = useMemo(() => {
-        const data = response?.data
+        const data = response?.data?.data
 
         return isNounTraitList(data) ? data : null
     }, [response])
 
     const fetchNounTraitList = (params?: URLSearchParams): void => {
         fetchData(
-            project === 'Nouns' ? '/nouns-traits' : '/lil-nouns-traits',
+            project === 'Nouns' ? '/noun-traits' : '/lil-noun-traits',
             params
         )
     }

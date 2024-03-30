@@ -1,18 +1,23 @@
 'use client'
 import NounFilters from '@/components/NounListPage/Filters'
 import { useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { debounce } from 'lodash'
 import useNounList from '@/utils/services/useNounList'
 import NounList from '@/components/Noun/List'
-import NounListV2 from '@/components/Noun/ListV2'
 import Noun from '@/utils/dto/Noun'
-import SelectedNoun from '@/components/Noun/Selected'
 import NounPagination from '@/components/NounListPage/Pagination'
 import Project from '@/utils/dto/Project'
 import NounSwitch from '@/components/NounListPage/Switch'
+import DimensionsContext from '@/utils/contexts/DimensionsContext'
 
 const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
+    const { dimensions } = useContext(DimensionsContext)
+
+    const minHeight = useMemo(() => {
+        return dimensions.viewportHeight - dimensions.headerHeight
+    }, [dimensions.viewportHeight, dimensions.headerHeight])
+
     const { error, fetching, fetchNounList, nounList, meta } =
         useNounList(project)
 
@@ -45,7 +50,7 @@ const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
     }, [meta])
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6" style={{ minHeight: minHeight }}>
             <div>
                 <NounSwitch />
             </div>
@@ -63,31 +68,8 @@ const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
 
                     {error && <p>{error.data.message}</p>}
 
-                    {project === 'LilNouns' && nounList && (
-                        <div className="flex justify-center">
-                            <div className="border-t pt-3 border-[#E0E0E0] flex flex-col justify-center xl:flex-row-reverse">
-                                {selected && (
-                                    <SelectedNoun
-                                        project={project}
-                                        selected={selected}
-                                        updateSelected={updateSelected}
-                                    />
-                                )}
-
-                                <div className="self-auto">
-                                    <NounList
-                                        fetching={fetching}
-                                        nouns={nounList}
-                                        selected={selected}
-                                        updateSelected={updateSelected}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {project === 'Nouns' && nounList && (
-                        <NounListV2
+                    {nounList && (
+                        <NounList
                             fetching={fetching}
                             nouns={nounList}
                             project={project}
