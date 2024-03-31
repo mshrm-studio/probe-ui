@@ -1,10 +1,12 @@
 'use client'
-import React, { ChangeEvent, useRef, useState } from 'react'
+
+import React, { useMemo, useRef, useState } from 'react'
 import SpacesImage from '@/components/SpacesImage'
 import SelectOption from '@/utils/dto/SelectOption'
 import styles from '@/utils/styles/select.module.css'
 import { Londrina_Solid } from 'next/font/google'
 import useOutsideClick from '@/utils/services/useClickOutside'
+import { ChevronDownIcon } from '@heroicons/react/24/solid'
 
 const londrinaSolid = Londrina_Solid({
     subsets: ['latin'],
@@ -15,7 +17,6 @@ type Props = {
     label: string
     options: SelectOption[]
     placeholder?: string
-    selectedImgSrc?: string
     selected?: number | string | null
     updateSelected: (value: number | string) => void
 }
@@ -24,7 +25,6 @@ const Select: React.FC<Props> = ({
     label,
     options,
     placeholder = 'Any',
-    selectedImgSrc,
     selected,
     updateSelected,
 }) => {
@@ -48,6 +48,10 @@ const Select: React.FC<Props> = ({
         updateSelected(value)
     }
 
+    const selectedOption = useMemo(() => {
+        return options.find((option) => option.value == selected)
+    }, [options, selected])
+
     return (
         <div
             ref={selectRef}
@@ -68,9 +72,19 @@ const Select: React.FC<Props> = ({
 
                     {selected ? (
                         <div className={styles.selected}>
-                            {selectedImgSrc && (
+                            {selectedOption?.colorHex && (
+                                <div
+                                    className="w-[50px] h-[22px] mr-2"
+                                    style={{
+                                        backgroundColor:
+                                            selectedOption?.colorHex,
+                                    }}
+                                ></div>
+                            )}
+
+                            {selectedOption?.imgSrc && (
                                 <SpacesImage
-                                    src={selectedImgSrc}
+                                    src={selectedOption.imgSrc}
                                     className="max-h-[22px] max-w-[32px] mr-2"
                                 />
                             )}
@@ -78,7 +92,9 @@ const Select: React.FC<Props> = ({
                             <span
                                 className={`${londrinaSolid.className} truncate`}
                             >
-                                {selected}
+                                {selectedOption
+                                    ? selectedOption.label
+                                    : selected}
                             </span>
                         </div>
                     ) : (
@@ -88,6 +104,10 @@ const Select: React.FC<Props> = ({
                             {placeholder}
                         </div>
                     )}
+
+                    <div className={styles.iconWrapper}>
+                        <ChevronDownIcon className="h-5 w-5" />
+                    </div>
                 </button>
             </div>
 
@@ -97,9 +117,18 @@ const Select: React.FC<Props> = ({
                         <li key={option.value}>
                             <button
                                 type="button"
-                                className="flex items-center py-1 px-3 w-full"
+                                className={styles.optionsButton}
                                 onClick={() => handleSelect(option.value)}
                             >
+                                {option.colorHex && (
+                                    <div
+                                        className="w-[50px] h-[22px] mr-2"
+                                        style={{
+                                            backgroundColor: option.colorHex,
+                                        }}
+                                    ></div>
+                                )}
+
                                 {option.imgSrc && (
                                     <div className="w-[37px]">
                                         <SpacesImage

@@ -1,18 +1,19 @@
 'use client'
+
 import NounFilters from '@/components/NounListPage/Filters'
 import { useSearchParams } from 'next/navigation'
 import { useContext, useEffect, useMemo, useState } from 'react'
 import { debounce } from 'lodash'
 import useNounList from '@/utils/services/useNounList'
 import NounList from '@/components/Noun/List'
-import Noun from '@/utils/dto/Noun'
 import NounPagination from '@/components/NounListPage/Pagination'
 import Project from '@/utils/dto/Project'
-import NounSwitch from '@/components/NounListPage/Switch'
 import DimensionsContext from '@/utils/contexts/DimensionsContext'
+import ShowExplorePageFiltersContext from '@/utils/contexts/ShowExplorePageFiltersContext'
 
 const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
     const { dimensions } = useContext(DimensionsContext)
+    const { show: showFilters } = useContext(ShowExplorePageFiltersContext)
 
     const minHeight = useMemo(() => {
         return dimensions.viewportHeight - dimensions.headerHeight
@@ -33,14 +34,6 @@ const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
         return () => debouncedFetch.cancel()
     }, [searchParams])
 
-    const [selected, setSelected] = useState<Noun | null>(null)
-
-    const updateSelected = (newSelection: Noun | null) => {
-        setSelected(
-            selected?.token_id == newSelection?.token_id ? null : newSelection
-        )
-    }
-
     const [page, setPage] = useState(Number(searchParams?.get('page')) || 1)
 
     useEffect(() => {
@@ -50,38 +43,33 @@ const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
     }, [meta])
 
     return (
-        <div className="space-y-6" style={{ minHeight: minHeight }}>
-            <div>
-                <NounSwitch />
-            </div>
+        <div
+            className="flex xl:justify-center"
+            style={{ minHeight: minHeight }}
+        >
+            <div className="space-y-3 w-full">
+                {(showFilters || dimensions.viewportWidth >= 1280) && (
+                    <NounFilters
+                        project={project}
+                        meta={meta}
+                        page={page}
+                        setPage={setPage}
+                    />
+                )}
 
-            <div className="flex xl:justify-center">
-                <div className="space-y-3 w-full">
-                    <div className="-mx-4">
-                        <NounFilters
-                            project={project}
-                            meta={meta}
-                            page={page}
-                            setPage={setPage}
-                        />
+                {error && <p>{error.data.message}</p>}
+                {nounList && (
+                    <NounList
+                        fetching={fetching}
+                        nouns={nounList}
+                        project={project}
+                    />
+                )}
+                {meta && (
+                    <div>
+                        <NounPagination meta={meta} setPage={setPage} />
                     </div>
-
-                    {error && <p>{error.data.message}</p>}
-
-                    {nounList && (
-                        <NounList
-                            fetching={fetching}
-                            nouns={nounList}
-                            project={project}
-                        />
-                    )}
-
-                    {meta && (
-                        <div>
-                            <NounPagination meta={meta} setPage={setPage} />
-                        </div>
-                    )}
-                </div>
+                )}
             </div>
         </div>
     )

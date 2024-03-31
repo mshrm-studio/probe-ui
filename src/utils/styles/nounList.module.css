@@ -1,4 +1,4 @@
-.listWrapper {
+.listWrapper :global(a) {
     cursor: url('https://probewtf.fra1.cdn.digitaloceanspaces.com/cursor-probe.png'),
         auto;
 }

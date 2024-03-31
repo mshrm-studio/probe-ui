@@ -7,4 +7,5 @@ export default interface NounFilters {
     body?: string
     accessory?: string
     head?: string
+    color?: string
 }

@@ -1,4 +1,5 @@
-// DimensionsProvider.js
+'use client'
+
 import React, { useState, useEffect } from 'react'
 import DimensionsContext, {
     Dimensions,
@@ -8,14 +9,14 @@ const DimensionsProvider: React.FC<{
     children: React.ReactNode
 }> = ({ children }) => {
     const [dimensions, setDimensions] = useState<Dimensions>({
-        viewportHeight: window.innerHeight,
-        viewportWidth: window.innerWidth,
+        viewportHeight: 0,
+        viewportWidth: 0,
         headerHeight: 0,
         viewportOrientation: 'Portrait',
     })
 
     // Function to update dimensions
-    const updateDimensions = () => {
+    function updateDimensions() {
         setDimensions({
             viewportHeight: window.innerHeight,
             viewportWidth: window.innerWidth,

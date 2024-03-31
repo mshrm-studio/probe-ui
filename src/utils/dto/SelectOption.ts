@@ -4,12 +4,14 @@ export interface SelectOptionStringValue {
     label: string
     value: string
     imgSrc?: string | null
+    colorHex?: string | null
 }
 
 export interface SelectOptionNumberValue {
     label: string
     value: number
     imgSrc?: string | null
+    colorHex?: string | null
 }
 
 type SelectOption = SelectOptionStringValue | SelectOptionNumberValue

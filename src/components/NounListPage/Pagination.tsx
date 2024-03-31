@@ -1,4 +1,5 @@
 'use client'
+
 import React from 'react'
 import ApiMeta from '@/utils/dto/ApiMeta'
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/solid'

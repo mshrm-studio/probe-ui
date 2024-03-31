@@ -1,5 +1,6 @@
 'use client'
-import React, { ChangeEvent, useEffect, useMemo } from 'react'
+
+import React, { useEffect, useMemo } from 'react'
 import { NounTraitLayer } from '@/utils/dto/NounTraitLayer'
 import useNounTraitList from '@/utils/services/useNounTraitList'
 import { debounce, startCase } from 'lodash'

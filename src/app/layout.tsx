@@ -3,12 +3,14 @@ import { Inter } from 'next/font/google'
 import '@/app/globals.css'
 import Header from '@/components/Header'
 import { Analytics } from '@vercel/analytics/react'
+import DimensionsProvider from '@/components/DimensionsProvider'
+import ShowExplorePageFiltersProvider from '@/components/ShowExplorePageFiltersProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
     title: 'probe.wtf',
-    description: 'built by the MSHRM.studio team',
+    description: 'Probing Nouns',
 }
 
 type Props = {
@@ -16,14 +18,28 @@ type Props = {
 }
 
 export default function RootLayout({ children }: Props) {
+    const spacesStorageUrl = process.env.NEXT_PUBLIC_DO_STORAGE_URL
+
     return (
         <html lang="en">
+            <link
+                rel="icon"
+                href={`${spacesStorageUrl}/Probe_Logo.svg`}
+                type="image/svg"
+            />
+
             <body className={inter.className}>
-                <Header />
+                <DimensionsProvider>
+                    <ShowExplorePageFiltersProvider>
+                        <Header />
 
-                <main className="w-full overflow-x-hidden">{children}</main>
+                        <main className="w-full overflow-x-hidden">
+                            {children}
+                        </main>
 
-                <Analytics />
+                        <Analytics />
+                    </ShowExplorePageFiltersProvider>
+                </DimensionsProvider>
             </body>
         </html>
     )

@@ -1,11 +1,17 @@
 'use client'
-import React, { useState, useEffect } from 'react'
+
+import React, { useState, useEffect, useContext, use } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import NounFiltersDto from '@/utils/dto/NounFilters'
 import useFilters from '@/utils/services/useFilters'
+import SelectNounColor from '@/components/Select/NounColor'
 import SelectNounTrait from '@/components/Select/NounTrait'
 import ApiMeta from '@/utils/dto/ApiMeta'
 import Project from '@/utils/dto/Project'
+import styles from '@/utils/styles/nounListPageFilters.module.css'
+import { XMarkIcon } from '@heroicons/react/24/solid'
+import ShowExplorePageFiltersContext from '@/utils/contexts/ShowExplorePageFiltersContext'
+import DimensionsContext from '@/utils/contexts/DimensionsContext'
 
 const NounListPageFilters: React.FC<{
     project: Project
@@ -13,16 +19,27 @@ const NounListPageFilters: React.FC<{
     page: number
     setPage: React.Dispatch<React.SetStateAction<number>>
 }> = ({ project, meta, page, setPage }) => {
+    const { dimensions } = useContext(DimensionsContext)
+    const { setShow } = useContext(ShowExplorePageFiltersContext)
     const { parseFilters } = useFilters()
     const router = useRouter()
     const searchParams = useSearchParams()
 
-    // const [searchIsFocused, setSearchIsFocused] = useState(false)
+    useEffect(() => {
+        if (dimensions.viewportWidth < 1280) {
+            document.body.style.overflowY = 'hidden'
+        }
+
+        return () => {
+            document.body.style.overflowY = 'auto'
+        }
+    }, [dimensions.viewportWidth])
 
     const [filters, setFilters] = useState<NounFiltersDto>({
         accessory: searchParams?.get('accessory') ?? undefined,
         background: searchParams?.get('background') ?? undefined,
         body: searchParams?.get('body') ?? undefined,
+        color: searchParams?.get('color') ?? undefined,
         glasses: searchParams?.get('glasses') ?? undefined,
         head: searchParams?.get('head') ?? undefined,
         search: searchParams?.get('search') ?? '',
@@ -59,62 +76,70 @@ const NounListPageFilters: React.FC<{
     }, [filters, page])
 
     return (
-        <div className="space-y-3">
-            {/* <div className="text-center relative">
-                {!searchIsFocused && filters.search && (
-                    <label htmlFor="search" className={styles.inputLabel}>
-                        Search:
-                    </label>
-                )}
+        <div className={styles.wrapper}>
+            <div className={styles.content}>
+                <button
+                    type="button"
+                    className={styles.closeButton}
+                    onClick={() => setShow(false)}
+                >
+                    <XMarkIcon className="h-7 w-7 text-[#4a4545]" />
+                </button>
 
-                <input
-                    id="search"
-                    className={styles.input}
-                    name="search"
-                    placeholder="Search multiple traits..."
-                    type="text"
-                    value={filters.search}
-                    onChange={updateFilters}
-                    onFocus={() => setSearchIsFocused(true)}
-                    onBlur={() => setSearchIsFocused(false)}
-                />
-            </div> */}
+                <div className={styles.filters}>
+                    <div className={styles.filter}>
+                        <SelectNounColor
+                            project={project}
+                            selected={filters.color}
+                            updateSelected={updateFilters}
+                        />
+                    </div>
 
-            <div className="flex space-x-6 items-center py-4 px-4 xl:justify-center">
-                <SelectNounTrait
-                    project={project}
-                    layer="accessory"
-                    selected={filters.accessory}
-                    updateSelected={updateFilters}
-                />
+                    <div className={styles.filter}>
+                        <SelectNounTrait
+                            project={project}
+                            layer="accessory"
+                            selected={filters.accessory}
+                            updateSelected={updateFilters}
+                        />
+                    </div>
 
-                <SelectNounTrait
-                    project={project}
-                    layer="background"
-                    selected={filters.background}
-                    updateSelected={updateFilters}
-                />
+                    <div className={styles.filter}>
+                        <SelectNounTrait
+                            project={project}
+                            layer="background"
+                            selected={filters.background}
+                            updateSelected={updateFilters}
+                        />
+                    </div>
 
-                <SelectNounTrait
-                    project={project}
-                    layer="body"
-                    selected={filters.body}
-                    updateSelected={updateFilters}
-                />
+                    <div className={styles.filter}>
+                        <SelectNounTrait
+                            project={project}
+                            layer="body"
+                            selected={filters.body}
+                            updateSelected={updateFilters}
+                        />
+                    </div>
 
-                <SelectNounTrait
-                    project={project}
-                    layer="glasses"
-                    selected={filters.glasses}
-                    updateSelected={updateFilters}
-                />
+                    <div className={styles.filter}>
+                        <SelectNounTrait
+                            project={project}
+                            layer="glasses"
+                            selected={filters.glasses}
+                            updateSelected={updateFilters}
+                        />
+                    </div>
 
-                <SelectNounTrait
-                    project={project}
-                    layer="head"
-                    selected={filters.head}
-                    updateSelected={updateFilters}
-                />
+                    <div className={styles.filter}>
+                        <SelectNounTrait
+                            project={project}
+                            layer="head"
+                            selected={filters.head}
+                            updateSelected={updateFilters}
+                        />
+                    </div>
+                </div>
             </div>
         </div>
     )

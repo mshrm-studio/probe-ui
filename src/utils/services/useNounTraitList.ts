@@ -3,7 +3,7 @@ import { isNounTraitList } from '@/utils/dto/NounTrait'
 import useFetcher from '@/utils/services/useFetcher'
 import Project from '@/utils/dto/Project'
 
-const useNounList = (project: Project) => {
+const useNounTraitList = (project: Project) => {
     const { error, fetchData, fetching, response } = useFetcher()
 
     const list = useMemo(() => {
@@ -22,4 +22,4 @@ const useNounList = (project: Project) => {
     return { error, fetching, fetchNounTraitList, nounTraitList: list }
 }
 
-export default useNounList
+export default useNounTraitList
