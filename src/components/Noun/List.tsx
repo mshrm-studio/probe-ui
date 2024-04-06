@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Noun from '@/utils/dto/Noun'
 import NounImage from '@/components/Noun/Image'
 import { motion, useAnimation } from 'framer-motion'
@@ -27,9 +27,34 @@ const NounList: React.FC<Props> = ({ project, fetching, nouns }) => {
         return project === 'LilNouns' ? `/lils` : `/nouns`
     }, [project])
 
+    const [loadedImages, setLoadedImages] = useState(0)
+
+    const nounsWithSvgUrl = useMemo(() => {
+        return nouns.filter(
+            (noun): noun is Noun & { svg_url: string } =>
+                typeof noun.svg_url === 'string'
+        )
+    }, [nouns])
+
     useEffect(() => {
-        controls.start('visible')
-    }, [nouns, controls])
+        setLoadedImages(0) // Reset the counter on nouns change
+
+        nounsWithSvgUrl.forEach((noun) => {
+            const img = new Image()
+
+            img.src = noun.svg_url
+
+            img.onload = () => {
+                setLoadedImages((prevLoadedImages) => prevLoadedImages + 1)
+            }
+        })
+    }, [nounsWithSvgUrl])
+
+    useEffect(() => {
+        if (loadedImages >= nounsWithSvgUrl.length) {
+            controls.start('visible')
+        }
+    }, [controls, loadedImages, nounsWithSvgUrl])
 
     return (
         <div className={styles.listWrapper}>
@@ -39,7 +64,7 @@ const NounList: React.FC<Props> = ({ project, fetching, nouns }) => {
                 animate={controls}
                 variants={ulVariants}
             >
-                {nouns.map((noun) => (
+                {nounsWithSvgUrl.map((noun) => (
                     <motion.li
                         variants={liVariants}
                         whileTap={{ scale: 0.95 }}

@@ -1,3 +1,7 @@
+.listWrapper {
+    min-height: 75vh;
+}
+
 .listWrapper :global(a) {
     cursor: url('https://probewtf.fra1.cdn.digitaloceanspaces.com/cursor-probe.png'),
         auto;

@@ -1,5 +1,8 @@
 .select {
     position: relative;
+    /* padding for the shadow */
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 .select > .heading {
@@ -18,15 +21,16 @@
     height: 100%;
     width: 100%;
     z-index: -1;
-    transform: translate(-10px, 10px);
+    background-color: #dfdfdf;
+    transition: transform 0.1s ease-out;
 }
 
 .select[data-state='closed'] > .heading:after {
-    background-color: #dfdfdf;
+    transform: translate(-5px, 5px);
 }
 
 .select[data-state='open'] > .heading:after {
-    background-color: transparent;
+    transform: translate(0, 0);
 }
 
 .select > .heading > .button {
@@ -39,6 +43,15 @@
     text-align: left;
     padding-left: 1rem;
     padding-right: 1rem;
+    transition: transform 0.1s ease-out;
+}
+
+.select[data-state='closed'] > .heading > .button {
+    transform: translate(5px, -5px);
+}
+
+.select[data-state='open'] > .heading > .button {
+    transform: translate(0, 0);
 }
 
 .select > .heading > .button > .label {

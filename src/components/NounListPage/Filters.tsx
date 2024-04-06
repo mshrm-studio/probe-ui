@@ -43,7 +43,7 @@ const NounListPageFilters: React.FC<{
         glasses: searchParams?.get('glasses') ?? undefined,
         head: searchParams?.get('head') ?? undefined,
         search: searchParams?.get('search') ?? '',
-        per_page: Number(searchParams?.get('per_page')) || 300,
+        per_page: Number(searchParams?.get('per_page')) || 180,
     })
 
     const updateFilters = (

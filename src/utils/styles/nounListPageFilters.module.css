@@ -49,8 +49,6 @@
         display: grid;
         grid-template-columns: repeat(6, minmax(0, 1fr));
         gap: 1.5rem;
-        padding-top: 1rem;
-        padding-bottom: 1rem;
     }
 
     .wrapper > .content > .filters > .filter:not(:last-child) {
