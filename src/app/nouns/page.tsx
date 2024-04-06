@@ -3,5 +3,9 @@
 import NounListPage from '@/components/NounListPage/NounListPage'
 
 export default function Page() {
-    return <NounListPage project="Nouns" />
+    return (
+        <div className="px-2">
+            <NounListPage project="Nouns" />
+        </div>
+    )
 }

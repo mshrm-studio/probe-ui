@@ -1,0 +1,23 @@
+.filterSortBtn {
+    font-size: 13px;
+    text-transform: uppercase;
+    color: #6c6c6c;
+}
+
+.filterSortBtnIcon {
+    height: 0.75rem;
+    width: 0.75rem;
+}
+
+.projectSwitcherLink {
+    font-size: 13px;
+    text-transform: uppercase;
+}
+
+.projectSwitcherLink[data-state='active'] {
+    color: rgba(108, 108, 108, 0.3);
+}
+
+.projectSwitcherLink[data-state='inactive'] {
+    color: #6c6c6c;
+}

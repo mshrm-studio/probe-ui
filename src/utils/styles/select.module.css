@@ -1,8 +1,7 @@
 .select {
     position: relative;
     /* padding for the shadow */
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding: 5px;
 }
 
 .select > .heading {
@@ -22,11 +21,15 @@
     width: 100%;
     z-index: -1;
     background-color: #dfdfdf;
-    transition: transform 0.1s ease-out;
+    transition: transform 0.1s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 .select[data-state='closed'] > .heading:after {
     transform: translate(-5px, 5px);
+}
+
+.select[data-state='closed']:hover > .heading:after {
+    transform: translate(-2.5px, 2.5px);
 }
 
 .select[data-state='open'] > .heading:after {
@@ -43,11 +46,15 @@
     text-align: left;
     padding-left: 1rem;
     padding-right: 1rem;
-    transition: transform 0.1s ease-out;
+    transition: transform 0.1s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 .select[data-state='closed'] > .heading > .button {
     transform: translate(5px, -5px);
+}
+
+.select[data-state='closed']:hover > .heading > .button {
+    transform: translate(2.5px, -2.5px);
 }
 
 .select[data-state='open'] > .heading > .button {

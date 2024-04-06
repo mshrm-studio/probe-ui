@@ -48,6 +48,10 @@ const NounList: React.FC<Props> = ({ project, fetching, nouns }) => {
                 setLoadedImages((prevLoadedImages) => prevLoadedImages + 1)
             }
         })
+
+        return () => {
+            setLoadedImages(0)
+        }
     }, [nounsWithSvgUrl])
 
     useEffect(() => {
@@ -72,15 +76,15 @@ const NounList: React.FC<Props> = ({ project, fetching, nouns }) => {
                     >
                         <Link
                             href={`${linkPrefix}/${noun.token_id}`}
-                            className="block relative group"
+                            className={styles.nounLink}
                         >
                             <NounImage noun={noun} />
 
-                            <div
-                                className={`opacity-0 group-hover:opacity-100 ${londrinaSolid.className} bg-black/50 absolute bottom-0 inset-x-0 py-1 px-2 text-center uppercase whitespace-nowrap text-white text-xs`}
+                            <label
+                                className={`${londrinaSolid.className} ${styles.nounLinkLabel}`}
                             >
                                 Noun {noun.token_id}
-                            </div>
+                            </label>
                         </Link>
                     </motion.li>
                 ))}

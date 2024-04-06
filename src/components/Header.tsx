@@ -1,14 +1,15 @@
 'use client'
 
 import SpacesImage from '@/components/SpacesImage'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import useHref from '@/utils/services/useHref'
 import { useContext, useMemo } from 'react'
 import Link from 'next/link'
 import { Londrina_Solid } from 'next/font/google'
-import { ChevronDownIcon } from '@heroicons/react/24/solid'
+import { ChevronDownIcon, ChevronRightIcon } from '@heroicons/react/24/solid'
 import DimensionsContext from '@/utils/contexts/DimensionsContext'
 import ShowExplorePageFiltersContext from '@/utils/contexts/ShowExplorePageFiltersContext'
+import styles from '@/utils/styles/header.module.css'
 
 const londrinaSolid = Londrina_Solid({
     subsets: ['latin'],
@@ -17,13 +18,38 @@ const londrinaSolid = Londrina_Solid({
 
 export default function Header() {
     const { lilsLink, nounsLink } = useHref()
+    const router = useRouter()
     const pathname = usePathname()
     const { dimensions } = useContext(DimensionsContext)
     const { setShow } = useContext(ShowExplorePageFiltersContext)
+    const searchParams = useSearchParams()
 
-    const homeHref = useMemo(() => {
+    const explorePageLink = useMemo(() => {
         return pathname.includes('/lils') ? lilsLink : nounsLink
     }, [pathname])
+
+    const tokenIdSortLabel = useMemo(() => {
+        return searchParams?.get('sort_property') !== 'token_id'
+            ? 'Most Recent'
+            : searchParams?.get('sort_method') === 'asc'
+            ? 'Most Recent'
+            : 'Oldest'
+    }, [searchParams])
+
+    const weightSortLabel = useMemo(() => {
+        return searchParams?.get('sort_property') !== 'weight'
+            ? 'Heaviest'
+            : searchParams?.get('sort_method') === 'asc'
+            ? 'Heaviest'
+            : 'Lightest'
+    }, [searchParams])
+
+    const showExplorePageFilters = useMemo(() => {
+        return (
+            dimensions.viewportWidth >= 1280 &&
+            (pathname.includes('/lils') || pathname.includes('/nouns'))
+        )
+    }, [dimensions.viewportWidth])
 
     const showFiltersButton = useMemo(() => {
         return (
@@ -32,34 +58,146 @@ export default function Header() {
         )
     }, [dimensions.viewportWidth, pathname])
 
+    const showProjectSwitcher = useMemo(() => {
+        return pathname.includes('/lils') || pathname.includes('/nouns')
+            ? true
+            : false
+    }, [pathname])
+
+    function updateSort(label: string) {
+        const params = new URLSearchParams(searchParams)
+
+        params.set(
+            'sort_property',
+            label === 'Heaviest' || label === 'Lightest' ? 'weight' : 'token_id'
+        )
+
+        params.set(
+            'sort_method',
+            label === 'Heaviest' || label === 'Most Recent' ? 'desc' : 'asc'
+        )
+
+        router.push(`${pathname}?${params.toString()}`)
+    }
+
+    function resetFilters() {
+        router.push(explorePageLink)
+    }
+
     return (
-        <header className={`${londrinaSolid.className} p-3`}>
-            <div className="flex items-center space-x-6">
-                <div>
-                    <Link href={homeHref}>
-                        <SpacesImage
-                            src="Probe_Logo.svg"
-                            alt="Probe Logo"
-                            className="h-[48px] w-[48px]"
-                        />
-                    </Link>
+        <header className={`${londrinaSolid.className} py-4 px-2`}>
+            <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-6">
+                    <div>
+                        <Link href={explorePageLink}>
+                            <SpacesImage
+                                src="Probe_Logo.svg"
+                                alt="Probe Logo"
+                                className="h-[48px] w-[48px]"
+                            />
+                        </Link>
+                    </div>
+
+                    {showFiltersButton && (
+                        <div>
+                            <button
+                                type="button"
+                                className="flex items-center"
+                                onClick={() => setShow((prev) => !prev)}
+                            >
+                                <span
+                                    className={`${londrinaSolid.className} ${styles.filterSortBtn}`}
+                                >
+                                    Filters
+                                </span>
+
+                                <ChevronDownIcon
+                                    className={styles.filterSortBtnIcon}
+                                />
+                            </button>
+                        </div>
+                    )}
+
+                    {showExplorePageFilters && (
+                        <div className="flex items-center space-x-6">
+                            <div>
+                                <button
+                                    type="button"
+                                    className="flex items-center"
+                                    onClick={resetFilters}
+                                >
+                                    <span
+                                        className={`${londrinaSolid.className} ${styles.filterSortBtn}`}
+                                    >
+                                        Reset
+                                    </span>
+
+                                    <ChevronRightIcon
+                                        className={styles.filterSortBtnIcon}
+                                    />
+                                </button>
+                            </div>
+
+                            <div>
+                                <button
+                                    type="button"
+                                    className="flex items-center"
+                                    onClick={() => updateSort(tokenIdSortLabel)}
+                                >
+                                    <span
+                                        className={`${londrinaSolid.className} ${styles.filterSortBtn}`}
+                                    >
+                                        {tokenIdSortLabel}
+                                    </span>
+
+                                    <ChevronRightIcon
+                                        className={styles.filterSortBtnIcon}
+                                    />
+                                </button>
+                            </div>
+
+                            <div>
+                                <button
+                                    type="button"
+                                    className="flex items-center"
+                                    onClick={() => updateSort(weightSortLabel)}
+                                >
+                                    <span
+                                        className={`${londrinaSolid.className} ${styles.filterSortBtn}`}
+                                    >
+                                        {weightSortLabel}
+                                    </span>
+
+                                    <ChevronRightIcon
+                                        className={styles.filterSortBtnIcon}
+                                    />
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
-                {showFiltersButton && (
-                    <div>
-                        <button
-                            type="button"
-                            className="flex items-center space-x-1"
-                            onClick={() => setShow((prev) => !prev)}
+                {showProjectSwitcher && (
+                    <div className="flex items-center space-x-6 pr-6">
+                        <Link
+                            href={`/nouns?${searchParams.toString()}`}
+                            className={styles.projectSwitcherLink}
+                            data-state={
+                                pathname === '/nouns' ? 'active' : 'inactive'
+                            }
                         >
-                            <span
-                                className={`${londrinaSolid.className} text-[13px] uppercase text-[#6C6C6C]`}
-                            >
-                                Filters
-                            </span>
+                            Nouns
+                        </Link>
 
-                            <ChevronDownIcon className="h-4 w-4" />
-                        </button>
+                        <Link
+                            href={`/lils?${searchParams.toString()}`}
+                            className={styles.projectSwitcherLink}
+                            data-state={
+                                pathname === '/lils' ? 'active' : 'inactive'
+                            }
+                        >
+                            Lils
+                        </Link>
                     </div>
                 )}
             </div>

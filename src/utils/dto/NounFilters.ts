@@ -1,4 +1,6 @@
-export default interface NounFilters {
+import SortFilters from '@/utils/dto/SortFilters'
+
+export default interface NounFilters extends SortFilters {
     search?: string
     page?: number
     per_page?: number
