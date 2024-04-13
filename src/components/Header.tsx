@@ -47,21 +47,19 @@ export default function Header() {
     const showExplorePageFilters = useMemo(() => {
         return (
             dimensions.viewportWidth >= 1280 &&
-            (pathname.includes('/lils') || pathname.includes('/nouns'))
+            (pathname === '/lils' || pathname === '/nouns')
         )
     }, [dimensions.viewportWidth])
 
     const showFiltersButton = useMemo(() => {
         return (
             dimensions.viewportWidth < 1280 &&
-            (pathname.includes('/lils') || pathname.includes('/nouns'))
+            (pathname === '/lils' || pathname === '/nouns')
         )
     }, [dimensions.viewportWidth, pathname])
 
     const showProjectSwitcher = useMemo(() => {
-        return pathname.includes('/lils') || pathname.includes('/nouns')
-            ? true
-            : false
+        return pathname === '/lils' || pathname === '/nouns' ? true : false
     }, [pathname])
 
     function updateSort(label: string) {
@@ -177,7 +175,7 @@ export default function Header() {
                     )}
                 </div>
 
-                {showProjectSwitcher && (
+                {showProjectSwitcher ? (
                     <div className="flex items-center space-x-6 pr-6">
                         <Link
                             href={`/nouns?${searchParams.toString()}`}
@@ -197,6 +195,15 @@ export default function Header() {
                             }
                         >
                             Lils
+                        </Link>
+                    </div>
+                ) : (
+                    <div>
+                        <Link
+                            href={explorePageLink}
+                            className={styles.projectSwitcherLink}
+                        >
+                            Explore
                         </Link>
                     </div>
                 )}

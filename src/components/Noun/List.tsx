@@ -83,7 +83,8 @@ const NounList: React.FC<Props> = ({ project, fetching, nouns }) => {
                             <label
                                 className={`${londrinaSolid.className} ${styles.nounLinkLabel}`}
                             >
-                                Noun {noun.token_id}
+                                {project === 'LilNouns' ? 'Lil' : 'Noun'}{' '}
+                                {noun.token_id}
                             </label>
                         </Link>
                     </motion.li>
