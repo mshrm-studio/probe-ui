@@ -84,7 +84,7 @@ const NounListPageFilters: React.FC<{
     function updateFilters(
         e:
             | React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-            | { target: { name: string; value: string } }
+            | { target: { name: string; value?: string } }
     ) {
         setPage(1)
 

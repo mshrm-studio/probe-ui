@@ -9,7 +9,7 @@ import Select from '@/components/Select/Select'
 type Props = {
     project: Project
     selected?: string
-    updateSelected: (e: { target: { name: string; value: string } }) => void
+    updateSelected: (e: { target: { name: string; value?: string } }) => void
 }
 
 const SelectNounColor: React.FC<Props> = ({
@@ -30,7 +30,7 @@ const SelectNounColor: React.FC<Props> = ({
     }, [])
 
     function handleSelect(value?: number | string | null) {
-        if (typeof value === 'string') {
+        if (typeof value === 'string' || value === undefined) {
             updateSelected({ target: { name: 'color', value } })
         }
     }

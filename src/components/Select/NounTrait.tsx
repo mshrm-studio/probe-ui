@@ -11,7 +11,7 @@ type Props = {
     project: Project
     layer: NounTraitLayer
     selected?: string
-    updateSelected: (e: { target: { name: string; value: string } }) => void
+    updateSelected: (e: { target: { name: string; value?: string } }) => void
 }
 
 const SelectNounTrait: React.FC<Props> = ({
@@ -36,7 +36,7 @@ const SelectNounTrait: React.FC<Props> = ({
     }, [layer])
 
     function handleSelect(value?: number | string | null) {
-        if (typeof value === 'string') {
+        if (typeof value === 'string' || value === undefined) {
             updateSelected({ target: { name: layer, value } })
         }
     }
