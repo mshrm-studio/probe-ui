@@ -120,7 +120,7 @@ const Select: React.FC<Props> = ({
                             onClick={() => handleSelect(undefined)}
                         >
                             <span
-                                className={`${londrinaSolid.className} text-xl truncate`}
+                                className={`${londrinaSolid.className} text-xl uppercase truncate`}
                             >
                                 {placeholder}
                             </span>
@@ -152,7 +152,7 @@ const Select: React.FC<Props> = ({
                                 )}
 
                                 <span
-                                    className={`${londrinaSolid.className} text-xl truncate`}
+                                    className={`${londrinaSolid.className} text-xl uppercase truncate`}
                                 >
                                     {option.label}
                                 </span>
