@@ -35,7 +35,7 @@ const SelectNounTrait: React.FC<Props> = ({
         return () => debouncedFetch.cancel()
     }, [layer])
 
-    function handleSelect(value: number | string) {
+    function handleSelect(value?: number | string | null) {
         if (typeof value === 'string') {
             updateSelected({ target: { name: layer, value } })
         }

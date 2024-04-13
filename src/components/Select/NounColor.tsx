@@ -29,7 +29,7 @@ const SelectNounColor: React.FC<Props> = ({
         return () => debouncedFetch.cancel()
     }, [])
 
-    function handleSelect(value: number | string) {
+    function handleSelect(value?: number | string | null) {
         if (typeof value === 'string') {
             updateSelected({ target: { name: 'color', value } })
         }

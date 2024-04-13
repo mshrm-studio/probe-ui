@@ -93,7 +93,7 @@ export default function Header() {
                             <SpacesImage
                                 src="Probe_Logo.svg"
                                 alt="Probe Logo"
-                                className="h-[48px] w-[48px]"
+                                className="h-[24px] w-[24px]"
                             />
                         </Link>
                     </div>

@@ -18,7 +18,7 @@ type Props = {
     options: SelectOption[]
     placeholder?: string
     selected?: number | string | null
-    updateSelected: (value: number | string) => void
+    updateSelected: (value?: number | string) => void
 }
 
 const Select: React.FC<Props> = ({
@@ -42,7 +42,7 @@ const Select: React.FC<Props> = ({
         setOptionsVisible((prev) => !prev)
     }
 
-    function handleSelect(value: number | string) {
+    function handleSelect(value?: number | string) {
         setOptionsVisible(false)
 
         updateSelected(value)
@@ -113,6 +113,19 @@ const Select: React.FC<Props> = ({
 
             {optionsVisible && (
                 <ul className={styles.options}>
+                    <li>
+                        <button
+                            type="button"
+                            className={styles.optionsButton}
+                            onClick={() => handleSelect(undefined)}
+                        >
+                            <span
+                                className={`${londrinaSolid.className} text-xl truncate`}
+                            >
+                                {placeholder}
+                            </span>
+                        </button>
+                    </li>
                     {options.map((option) => (
                         <li key={option.value}>
                             <button
