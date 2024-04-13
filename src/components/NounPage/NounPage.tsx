@@ -64,121 +64,156 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
             </div>
 
             <div className={styles.detailsWrapper}>
-                <h1>
-                    <span className="font-bold uppercase text-sm">Noun</span>
+                <h1 className={`${londrinaSolid.className} ${styles.heading}`}>
+                    Noun
                     <br />
-                    <span className={`${londrinaSolid.className} text-8xl`}>
-                        {noun.token_id}
-                    </span>
+                    {noun.token_id}
                 </h1>
 
-                <p className="uppercase text-sm text-[#6C6C6C] font-bold">
-                    Born{' '}
-                    {DateTime.fromISO(noun.minted_at, {
-                        zone: 'utc',
-                    })
-                        .toLocal()
-                        .toFormat('MMMM d, yyyy h:mm a (z)')}
-                </p>
+                <div className={styles.body}>
+                    <div className={styles.content}>
+                        <p className={styles.dob}>
+                            Born{' '}
+                            {DateTime.fromISO(noun.minted_at, {
+                                zone: 'utc',
+                            })
+                                .toLocal()
+                                .toFormat('MMMM d, yyyy h:mm a (z)')}
+                        </p>
 
-                <dl className="space-y-1">
-                    {noun.color_histogram && (
-                        <div className="space-y-1 mb-6">
-                            <dt className={styles.dt}>Colors</dt>
+                        <div>
+                            {noun.color_histogram && (
+                                <section className="mb-6">
+                                    <h3 className={styles.sectionTitle}>
+                                        Colors
+                                    </h3>
 
-                            <dd>
-                                <ul className={styles.colorList}>
-                                    {Object.entries(noun.color_histogram).map(
-                                        ([color, weight], index) => (
-                                            <li
-                                                key={`${color}-${index}`}
-                                                style={{
-                                                    backgroundColor: color,
-                                                }}
-                                                className="h-6 w-6"
-                                                title={`${color} (${weight})`}
-                                            ></li>
-                                        )
+                                    <ul className={styles.colorList}>
+                                        {Object.entries(
+                                            noun.color_histogram
+                                        ).map(([color, weight], index) => (
+                                            <li key={`${color}-${index}`}>
+                                                <Link
+                                                    href={`${listHref}&color=${encodeURIComponent(
+                                                        color
+                                                    )}`}
+                                                    className="block h-6 w-6"
+                                                    style={{
+                                                        backgroundColor: color,
+                                                    }}
+                                                    title={`${color} (${weight})`}
+                                                ></Link>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </section>
+                            )}
+
+                            <section>
+                                <h3 className={styles.sectionTitle}>
+                                    Noun Stats
+                                </h3>
+
+                                <dl className="space-y-1">
+                                    <div className={styles.dlItemInline}>
+                                        <dt className={styles.dt}>Body:</dt>{' '}
+                                        <dd className={styles.dd}>
+                                            <Link
+                                                href={`${listHref}&body=${noun.body_name}`}
+                                                className={styles.attributeLink}
+                                            >
+                                                {startCase(
+                                                    noun.body_name.replace(
+                                                        new RegExp(`^body-`),
+                                                        ''
+                                                    )
+                                                )}
+                                            </Link>
+                                        </dd>
+                                    </div>
+
+                                    <div className={styles.dlItemInline}>
+                                        <dt className={styles.dt}>
+                                            Accessory:
+                                        </dt>{' '}
+                                        <dd className={styles.dd}>
+                                            <Link
+                                                href={`${listHref}&accessory=${noun.accessory_name}`}
+                                                className={styles.attributeLink}
+                                            >
+                                                {startCase(
+                                                    noun.accessory_name.replace(
+                                                        new RegExp(
+                                                            `^accessory-`
+                                                        ),
+                                                        ''
+                                                    )
+                                                )}
+                                            </Link>
+                                        </dd>
+                                    </div>
+
+                                    <div className={styles.dlItemInline}>
+                                        <dt className={styles.dt}>Head:</dt>{' '}
+                                        <dd className={styles.dd}>
+                                            <Link
+                                                href={`${listHref}&head=${noun.head_name}`}
+                                                className={styles.attributeLink}
+                                            >
+                                                {startCase(
+                                                    noun.head_name.replace(
+                                                        new RegExp(`^head-`),
+                                                        ''
+                                                    )
+                                                )}
+                                            </Link>
+                                        </dd>
+                                    </div>
+
+                                    <div className={styles.dlItemInline}>
+                                        <dt className={styles.dt}>Glasses:</dt>{' '}
+                                        <dd className={styles.dd}>
+                                            <Link
+                                                href={`${listHref}&glasses=${noun.glasses_name}`}
+                                                className={styles.attributeLink}
+                                            >
+                                                {startCase(
+                                                    noun.glasses_name.replace(
+                                                        new RegExp(`^glasses-`),
+                                                        ''
+                                                    )
+                                                )}
+                                            </Link>
+                                        </dd>
+                                    </div>
+
+                                    {noun.area && (
+                                        <div className={styles.dlItemInline}>
+                                            <dt className={styles.dt}>Area:</dt>
+                                            <dd className={styles.dd}>
+                                                {noun.area}
+                                            </dd>
+                                        </div>
                                     )}
-                                </ul>
-                            </dd>
+
+                                    {noun.weight && (
+                                        <div className={styles.dlItemInline}>
+                                            <dt className={styles.dt}>
+                                                Weight:
+                                            </dt>
+                                            <dd className={styles.dd}>
+                                                {noun.weight}
+                                                <span className="lowercase">
+                                                    gg
+                                                </span>
+                                            </dd>
+                                        </div>
+                                    )}
+                                </dl>
+                            </section>
                         </div>
-                    )}
-
-                    {noun.area && (
-                        <div className={styles.dlItemInline}>
-                            <dt className={styles.dt}>Area:</dt>
-                            <dd className={styles.dd}>{noun.area}</dd>
-                        </div>
-                    )}
-
-                    {noun.weight && (
-                        <div className={styles.dlItemInline}>
-                            <dt className={styles.dt}>Weight:</dt>
-                            <dd className={styles.dd}>{noun.weight}</dd>
-                        </div>
-                    )}
-
-                    <div className={styles.dlItemInline}>
-                        <dt className={styles.dt}>Body:</dt>{' '}
-                        <dd className={styles.dd}>
-                            <Link href={`${listHref}&body=${noun.body_name}`}>
-                                {startCase(
-                                    noun.body_name.replace(
-                                        new RegExp(`^body-`),
-                                        ''
-                                    )
-                                )}
-                            </Link>
-                        </dd>
                     </div>
-
-                    <div className={styles.dlItemInline}>
-                        <dt className={styles.dt}>Accessory:</dt>{' '}
-                        <dd className={styles.dd}>
-                            <Link
-                                href={`${listHref}&accessory=${noun.accessory_name}`}
-                            >
-                                {startCase(
-                                    noun.accessory_name.replace(
-                                        new RegExp(`^accessory-`),
-                                        ''
-                                    )
-                                )}
-                            </Link>
-                        </dd>
-                    </div>
-
-                    <div className={styles.dlItemInline}>
-                        <dt className={styles.dt}>Head:</dt>{' '}
-                        <dd className={styles.dd}>
-                            <Link href={`${listHref}&head=${noun.head_name}`}>
-                                {startCase(
-                                    noun.head_name.replace(
-                                        new RegExp(`^head-`),
-                                        ''
-                                    )
-                                )}
-                            </Link>
-                        </dd>
-                    </div>
-
-                    <div className={styles.dlItemInline}>
-                        <dt className={styles.dt}>Glasses:</dt>{' '}
-                        <dd className={styles.dd}>
-                            <Link
-                                href={`${listHref}&glasses=${noun.glasses_name}`}
-                            >
-                                {startCase(
-                                    noun.glasses_name.replace(
-                                        new RegExp(`^glasses-`),
-                                        ''
-                                    )
-                                )}
-                            </Link>
-                        </dd>
-                    </div>
-                </dl>
+                </div>
             </div>
         </div>
     )

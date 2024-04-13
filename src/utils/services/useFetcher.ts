@@ -21,6 +21,7 @@ const useFetcher = () => {
         params?: ReadonlyURLSearchParams | URLSearchParams | null
     ): Promise<any> => {
         return new Promise<any>((resolve, reject) => {
+            setResponse(undefined)
             setProcessing(true)
             setError(null)
 

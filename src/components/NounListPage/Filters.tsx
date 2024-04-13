@@ -49,20 +49,23 @@ const NounListPageFilters: React.FC<{
         sort_method: searchParams?.get('sort_method') || 'desc',
     })
 
-    const updateFilters = (
-        e:
-            | React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-            | { target: { name: string; value: string } }
-    ) => {
-        setPage(1)
+    useEffect(() => {
+        setFilters({
+            accessory: searchParams.get('accessory') ?? undefined,
+            background: searchParams.get('background') ?? undefined,
+            body: searchParams.get('body') ?? undefined,
+            color: searchParams.get('color') ?? undefined,
+            glasses: searchParams.get('glasses') ?? undefined,
+            head: searchParams.get('head') ?? undefined,
+            search: searchParams.get('search') ?? '',
+            page: Number(searchParams.get('page')) || 1,
+            per_page: Number(searchParams.get('per_page')) || 180,
+            sort_property: searchParams.get('sort_property') || 'token_id',
+            sort_method: searchParams.get('sort_method') || 'desc',
+        })
+    }, [searchParams])
 
-        setFilters((values) => ({
-            ...values,
-            [e.target.name]: e.target.value,
-        }))
-    }
-
-    const pushToNewQuery = () => {
+    function pushToNewQuery() {
         const params = parseFilters({ ...filters, page: page })
 
         const basePath = project === 'Nouns' ? '/nouns' : '/lils'
@@ -77,6 +80,19 @@ const NounListPageFilters: React.FC<{
     useEffect(() => {
         pushToNewQuery()
     }, [filters, page])
+
+    function updateFilters(
+        e:
+            | React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+            | { target: { name: string; value: string } }
+    ) {
+        setPage(1)
+
+        setFilters((values) => ({
+            ...values,
+            [e.target.name]: e.target.value,
+        }))
+    }
 
     return (
         <div className={styles.wrapper}>

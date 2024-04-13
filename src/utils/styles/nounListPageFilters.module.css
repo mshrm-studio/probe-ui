@@ -29,10 +29,12 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
 }
 
 .wrapper > .content > .filters > .filter:not(:last-child) {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 @media screen and (min-width: theme('screens.xl')) {
@@ -47,6 +49,8 @@
         display: grid;
         grid-template-columns: repeat(6, minmax(0, 1fr));
         gap: 1.5rem;
+        padding-left: 0;
+        padding-right: 0;
     }
 
     .wrapper > .content > .filters > .filter:not(:last-child) {

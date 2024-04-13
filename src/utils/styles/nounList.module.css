@@ -1,7 +1,3 @@
-.listWrapper {
-    min-height: 75vh;
-}
-
 .listWrapper :global(a) {
     cursor: url('https://probewtf.fra1.cdn.digitaloceanspaces.com/cursor-probe.png'),
         auto;
@@ -39,7 +35,7 @@
     white-space: nowrap;
     font-size: theme('fontSize.xs');
     opacity: 0;
-    transform: translateY(100%);
+    transform: translateY(10px);
     transition: all 0.2s ease;
 }
 
