@@ -117,8 +117,8 @@ const NounListPageFilters: React.FC<{
                     <div className={styles.filter}>
                         <SelectNounTrait
                             project={project}
-                            layer="accessory"
-                            selected={filters.accessory}
+                            layer="glasses"
+                            selected={filters.glasses}
                             updateSelected={updateFilters}
                         />
                     </div>
@@ -126,8 +126,17 @@ const NounListPageFilters: React.FC<{
                     <div className={styles.filter}>
                         <SelectNounTrait
                             project={project}
-                            layer="background"
-                            selected={filters.background}
+                            layer="head"
+                            selected={filters.head}
+                            updateSelected={updateFilters}
+                        />
+                    </div>
+
+                    <div className={styles.filter}>
+                        <SelectNounTrait
+                            project={project}
+                            layer="accessory"
+                            selected={filters.accessory}
                             updateSelected={updateFilters}
                         />
                     </div>
@@ -144,17 +153,8 @@ const NounListPageFilters: React.FC<{
                     <div className={styles.filter}>
                         <SelectNounTrait
                             project={project}
-                            layer="glasses"
-                            selected={filters.glasses}
-                            updateSelected={updateFilters}
-                        />
-                    </div>
-
-                    <div className={styles.filter}>
-                        <SelectNounTrait
-                            project={project}
-                            layer="head"
-                            selected={filters.head}
+                            layer="background"
+                            selected={filters.background}
                             updateSelected={updateFilters}
                         />
                     </div>
