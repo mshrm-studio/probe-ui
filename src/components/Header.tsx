@@ -49,7 +49,7 @@ export default function Header() {
             dimensions.viewportWidth >= 1280 &&
             (pathname === '/lils' || pathname === '/nouns')
         )
-    }, [dimensions.viewportWidth])
+    }, [dimensions.viewportWidth, pathname])
 
     const showFiltersButton = useMemo(() => {
         return (
@@ -83,7 +83,7 @@ export default function Header() {
     }
 
     return (
-        <header className={`${londrinaSolid.className} py-4 px-2`}>
+        <header className={`${londrinaSolid.className} p-4`}>
             <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-6">
                     <div>
@@ -176,7 +176,7 @@ export default function Header() {
                 </div>
 
                 {showProjectSwitcher ? (
-                    <div className="flex items-center space-x-6 pr-6">
+                    <div className="flex items-center space-x-6">
                         <Link
                             href={`/nouns?${searchParams.toString()}`}
                             className={styles.projectSwitcherLink}
