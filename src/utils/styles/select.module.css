@@ -117,3 +117,9 @@
 .select > .options > li > .optionsButton:hover {
     background-color: rgba(213, 215, 225, 0.29);
 }
+
+@media screen and (min-width: theme('screens.sm')) {
+    .select {
+        max-width: 350px;
+    }
+}
