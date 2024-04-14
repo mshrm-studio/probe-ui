@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import '@/app/globals.css'
-import Header from '@/components/Header'
+import Header from '@/components/Header/Header'
 import { Analytics } from '@vercel/analytics/react'
 import DimensionsProvider from '@/components/DimensionsProvider'
 import ShowExplorePageFiltersProvider from '@/components/ShowExplorePageFiltersProvider'
@@ -33,9 +33,7 @@ export default function RootLayout({ children }: Props) {
                     <ShowExplorePageFiltersProvider>
                         <Header />
 
-                        <main className="w-full overflow-x-hidden">
-                            {children}
-                        </main>
+                        <main className="w-full">{children}</main>
 
                         <Analytics />
                     </ShowExplorePageFiltersProvider>

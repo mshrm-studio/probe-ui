@@ -65,9 +65,12 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
 
             <div className={styles.detailsWrapper}>
                 <h1 className={`${londrinaSolid.className} ${styles.heading}`}>
-                    Noun
-                    <br />
-                    {noun.token_id}
+                    <span className="block text-[85px] leading-[.66] xl:text-[126px]">
+                        {project === 'LilNouns' ? 'Lil' : 'Noun'}
+                    </span>
+                    <span className="block text-[105px] leading-[.66] xl:text-[156px]">
+                        {noun.token_id}
+                    </span>
                 </h1>
 
                 <div className={styles.body}>

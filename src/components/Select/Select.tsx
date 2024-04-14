@@ -8,9 +8,14 @@ import { Londrina_Solid } from 'next/font/google'
 import useOutsideClick from '@/utils/services/useClickOutside'
 import { ChevronDownIcon } from '@heroicons/react/24/solid'
 
-const londrinaSolid = Londrina_Solid({
+const londrinaSolidBlack = Londrina_Solid({
     subsets: ['latin'],
     weight: '900',
+})
+
+const londrinaSolidNormal = Londrina_Solid({
+    subsets: ['latin'],
+    weight: '400',
 })
 
 type Props = {
@@ -65,7 +70,7 @@ const Select: React.FC<Props> = ({
                     onClick={toggleOptions}
                 >
                     <label
-                        className={`${londrinaSolid.className} ${styles.label}`}
+                        className={`${londrinaSolidBlack.className} ${styles.label}`}
                     >
                         {label}
                     </label>
@@ -90,7 +95,7 @@ const Select: React.FC<Props> = ({
                             )}
 
                             <span
-                                className={`${londrinaSolid.className} truncate`}
+                                className={`${londrinaSolidNormal.className} truncate`}
                             >
                                 {selectedOption
                                     ? selectedOption.label
@@ -99,7 +104,7 @@ const Select: React.FC<Props> = ({
                         </div>
                     ) : (
                         <div
-                            className={`${londrinaSolid.className} ${styles.placeholder}`}
+                            className={`${londrinaSolidNormal.className} ${styles.placeholder}`}
                         >
                             {placeholder}
                         </div>
@@ -120,12 +125,13 @@ const Select: React.FC<Props> = ({
                             onClick={() => handleSelect(undefined)}
                         >
                             <span
-                                className={`${londrinaSolid.className} text-xl uppercase truncate`}
+                                className={`${londrinaSolidNormal.className} text-xl uppercase truncate`}
                             >
                                 {placeholder}
                             </span>
                         </button>
                     </li>
+
                     {options.map((option) => (
                         <li key={option.value}>
                             <button
@@ -152,7 +158,7 @@ const Select: React.FC<Props> = ({
                                 )}
 
                                 <span
-                                    className={`${londrinaSolid.className} text-xl uppercase truncate`}
+                                    className={`${londrinaSolidNormal.className} text-xl uppercase truncate`}
                                 >
                                     {option.label}
                                 </span>

@@ -45,15 +45,19 @@
         overflow: visible;
     }
 
+    .wrapper > .content > .closeButton {
+        display: none;
+    }
+
     .wrapper > .content > .filters {
-        display: grid;
-        grid-template-columns: repeat(6, minmax(0, 1fr));
-        gap: 1.5rem;
+        flex-direction: row;
+        justify-content: center;
         padding-left: 0;
         padding-right: 0;
     }
 
     .wrapper > .content > .filters > .filter:not(:last-child) {
+        margin-right: 1.5rem;
         margin-bottom: 0;
     }
 }

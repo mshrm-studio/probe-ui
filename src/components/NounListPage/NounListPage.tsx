@@ -57,7 +57,12 @@ const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
                     />
                 )}
 
-                {error && <p>{error.data.message}</p>}
+                {error && (
+                    <p className="text-center text-red-500 font-bold">
+                        {error.data.message}
+                    </p>
+                )}
+
                 {nounList && (
                     <NounList
                         fetching={fetching}
@@ -65,6 +70,7 @@ const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
                         project={project}
                     />
                 )}
+
                 {meta && (
                     <div>
                         <NounPagination meta={meta} setPage={setPage} />

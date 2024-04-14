@@ -8,8 +8,10 @@ import Select from '@/components/Select/Select'
 
 type Props = {
     project: Project
-    selected?: string
-    updateSelected: (e: { target: { name: string; value?: string } }) => void
+    selected?: string | null
+    updateSelected: (e: {
+        target: { name: string; value?: string | null }
+    }) => void
 }
 
 const SelectNounColor: React.FC<Props> = ({
