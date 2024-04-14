@@ -2,8 +2,8 @@
     position: relative;
     /* padding for the shadow */
     padding: 5px;
-    min-width: 150px;
-    max-width: 200px;
+    min-width: 160px;
+    max-width: 260px;
 }
 
 .select > .heading {
