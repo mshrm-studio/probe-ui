@@ -2,7 +2,8 @@
     position: relative;
     /* padding for the shadow */
     padding: 5px;
-    min-width: 175px;
+    min-width: 150px;
+    max-width: 200px;
 }
 
 .select > .heading {
@@ -116,10 +117,4 @@
 
 .select > .options > li > .optionsButton:hover {
     background-color: rgba(213, 215, 225, 0.29);
-}
-
-@media screen and (min-width: theme('screens.sm')) {
-    .select {
-        max-width: 350px;
-    }
 }
