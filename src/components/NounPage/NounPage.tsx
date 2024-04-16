@@ -15,7 +15,7 @@ import Link from 'next/link'
 
 const londrinaSolid = Londrina_Solid({
     subsets: ['latin'],
-    weight: '900',
+    weight: '400',
 })
 
 const NounPage: React.FC<{ project: Project; nounId: number }> = ({
@@ -65,10 +65,10 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
 
             <div className={styles.detailsWrapper}>
                 <h1 className={`${londrinaSolid.className} ${styles.heading}`}>
-                    <span className="block text-[85px] leading-[.66] xl:text-[126px]">
+                    <span className="block text-[85px] leading-[.72] xl:text-[126px]">
                         {project === 'LilNouns' ? 'Lil' : 'Noun'}
                     </span>
-                    <span className="block text-[105px] leading-[.66] xl:text-[156px]">
+                    <span className="block text-[105px] leading-[.72] xl:text-[156px]">
                         {noun.token_id}
                     </span>
                 </h1>
@@ -114,7 +114,10 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
 
                             <section>
                                 <h3 className={styles.sectionTitle}>
-                                    Noun Stats
+                                    {project === 'LilNouns'
+                                        ? 'Lil Noun'
+                                        : 'Noun'}{' '}
+                                    Stats
                                 </h3>
 
                                 <dl className="space-y-1">

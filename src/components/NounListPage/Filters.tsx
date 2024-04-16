@@ -108,6 +108,7 @@ const NounListPageFilters: React.FC<{
                 <div className={styles.filters}>
                     <div className={styles.filter}>
                         <SelectNounColor
+                            className="select"
                             project={project}
                             selected={filters.color}
                             updateSelected={updateFilters}

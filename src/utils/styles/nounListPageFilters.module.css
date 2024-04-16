@@ -33,8 +33,20 @@
     padding-right: 1.5rem;
 }
 
+.wrapper > .content > .filters > .filter {
+    width: 100%;
+}
+
 .wrapper > .content > .filters > .filter:not(:last-child) {
     margin-bottom: 1rem;
+}
+
+@media screen and (min-width: theme('screens.md')) {
+    .wrapper > .content > .filters > .filter {
+        max-width: 300px;
+        margin-left: auto;
+        margin-right: auto;
+    }
 }
 
 @media screen and (min-width: theme('screens.xl')) {
@@ -50,14 +62,18 @@
     }
 
     .wrapper > .content > .filters {
-        flex-direction: row;
-        justify-content: center;
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 1.5rem;
         padding-left: 0;
         padding-right: 0;
     }
 
+    .wrapper > .content > .filters > .filter {
+        max-width: none;
+    }
+
     .wrapper > .content > .filters > .filter:not(:last-child) {
-        margin-right: 1.5rem;
         margin-bottom: 0;
     }
 }
