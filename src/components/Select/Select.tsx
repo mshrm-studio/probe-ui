@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import SpacesImage from '@/components/SpacesImage'
 import SelectOption from '@/utils/dto/SelectOption'
 import styles from '@/utils/styles/select.module.css'
@@ -19,6 +19,7 @@ const londrinaSolidNormal = Londrina_Solid({
 })
 
 type Props = {
+    disabled?: boolean
     label: string
     options: SelectOption[]
     placeholder?: string
@@ -27,6 +28,7 @@ type Props = {
 }
 
 const Select: React.FC<Props> = ({
+    disabled,
     label,
     options,
     placeholder = 'Any',
@@ -47,6 +49,12 @@ const Select: React.FC<Props> = ({
         setOptionsVisible((prev) => !prev)
     }
 
+    useEffect(() => {
+        if (disabled) {
+            setOptionsVisible(false)
+        }
+    }, [disabled])
+
     function handleSelect(value?: number | string) {
         setOptionsVisible(false)
 
@@ -65,6 +73,7 @@ const Select: React.FC<Props> = ({
         >
             <div className={styles.heading} role="heading">
                 <button
+                    disabled={disabled}
                     type="button"
                     className={styles.button}
                     onClick={toggleOptions}

@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+a[aria-disabled='true'] {
+    cursor: not-allowed; /* Changing cursor to indicate no interaction is possible */
+    pointer-events: none; /* Preventing all click events on the link */
+}

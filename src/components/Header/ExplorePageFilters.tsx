@@ -2,9 +2,10 @@
 
 import { ChevronRightIcon } from '@heroicons/react/24/solid'
 import styles from '@/utils/styles/header.module.css'
-import { useMemo } from 'react'
+import { useContext, useMemo } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { Londrina_Solid } from 'next/font/google'
+import RequestingContext from '@/utils/contexts/RequestingContext'
 
 const londrinaSolid = Londrina_Solid({
     subsets: ['latin'],
@@ -16,6 +17,7 @@ export default function HeaderExplorePageFilters({
 }: {
     explorePageLink: string
 }) {
+    const { requesting } = useContext(RequestingContext)
     const router = useRouter()
     const pathname = usePathname()
     const searchParams = useSearchParams()
@@ -76,6 +78,7 @@ export default function HeaderExplorePageFilters({
         <div className="flex items-center space-x-6">
             <div>
                 <button
+                    disabled={requesting}
                     type="button"
                     className="flex items-center"
                     onClick={resetFilters}
@@ -92,6 +95,7 @@ export default function HeaderExplorePageFilters({
 
             <div>
                 <button
+                    disabled={requesting}
                     type="button"
                     className="flex items-center"
                     onClick={() => updateSort(tokenIdSortLabel)}
@@ -108,6 +112,7 @@ export default function HeaderExplorePageFilters({
 
             <div>
                 <button
+                    disabled={requesting}
                     type="button"
                     className="flex items-center"
                     onClick={() => updateSort(weightSortLabel)}
@@ -124,6 +129,7 @@ export default function HeaderExplorePageFilters({
 
             <div>
                 <button
+                    disabled={requesting}
                     type="button"
                     className="flex items-center"
                     onClick={() => updateSort(areaSortLabel)}

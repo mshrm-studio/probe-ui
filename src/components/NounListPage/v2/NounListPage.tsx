@@ -17,6 +17,7 @@ import ShowExplorePageFiltersContext from '@/utils/contexts/ShowExplorePageFilte
 import Noun from '@/utils/dto/Noun'
 import { useSearchParams } from 'next/navigation'
 import useNounList from '@/utils/services/useNounList'
+import RequestingContext from '@/utils/contexts/RequestingContext'
 
 const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
     const { dimensions } = useContext(DimensionsContext)
@@ -25,6 +26,7 @@ const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
     const lastScrollTop = useRef(0)
     const [nouns, setNouns] = useState<Noun[]>([])
     const searchParams = useSearchParams()
+    const { setRequesting } = useContext(RequestingContext)
 
     const { error, fetching, fetchNounList, nounList, meta } =
         useNounList(project)
@@ -42,6 +44,10 @@ const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
         },
         [fetchNounList, searchParams]
     )
+
+    useEffect(() => {
+        setRequesting(fetching)
+    }, [fetching])
 
     // Effect for searchParams changes
     useEffect(() => {

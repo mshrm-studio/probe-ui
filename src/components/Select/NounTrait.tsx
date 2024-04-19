@@ -8,6 +8,7 @@ import Project from '@/utils/dto/Project'
 import Select from '@/components/Select/Select'
 
 type Props = {
+    disabled?: boolean
     project: Project
     layer: NounTraitLayer
     selected?: string | null
@@ -17,6 +18,7 @@ type Props = {
 }
 
 const SelectNounTrait: React.FC<Props> = ({
+    disabled,
     project,
     layer,
     selected,
@@ -75,6 +77,7 @@ const SelectNounTrait: React.FC<Props> = ({
 
     return (
         <Select
+            disabled={disabled}
             label={layer}
             options={filteredList}
             selected={selected}

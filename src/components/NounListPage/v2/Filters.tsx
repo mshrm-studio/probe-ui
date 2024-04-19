@@ -11,11 +11,13 @@ import styles from '@/utils/styles/nounListPageFilters.module.css'
 import { XMarkIcon } from '@heroicons/react/24/solid'
 import ShowExplorePageFiltersContext from '@/utils/contexts/ShowExplorePageFiltersContext'
 import DimensionsContext from '@/utils/contexts/DimensionsContext'
+import RequestingContext from '@/utils/contexts/RequestingContext'
 
 const NounListPageFilters: React.FC<{
     project: Project
 }> = ({ project }) => {
     const { dimensions } = useContext(DimensionsContext)
+    const { requesting } = useContext(RequestingContext)
     const { setShow } = useContext(ShowExplorePageFiltersContext)
     const { parseFilters } = useFilters()
     const router = useRouter()
@@ -100,7 +102,7 @@ const NounListPageFilters: React.FC<{
                 <div className={styles.filters}>
                     <div className={styles.filter}>
                         <SelectNounColor
-                            className="select"
+                            disabled={requesting}
                             project={project}
                             selected={filters.color}
                             updateSelected={updateFilters}
@@ -109,6 +111,7 @@ const NounListPageFilters: React.FC<{
 
                     <div className={styles.filter}>
                         <SelectNounTrait
+                            disabled={requesting}
                             project={project}
                             layer="glasses"
                             selected={filters.glasses}
@@ -118,6 +121,7 @@ const NounListPageFilters: React.FC<{
 
                     <div className={styles.filter}>
                         <SelectNounTrait
+                            disabled={requesting}
                             project={project}
                             layer="head"
                             selected={filters.head}
@@ -127,6 +131,7 @@ const NounListPageFilters: React.FC<{
 
                     <div className={styles.filter}>
                         <SelectNounTrait
+                            disabled={requesting}
                             project={project}
                             layer="accessory"
                             selected={filters.accessory}
@@ -136,6 +141,7 @@ const NounListPageFilters: React.FC<{
 
                     <div className={styles.filter}>
                         <SelectNounTrait
+                            disabled={requesting}
                             project={project}
                             layer="body"
                             selected={filters.body}
@@ -145,6 +151,7 @@ const NounListPageFilters: React.FC<{
 
                     <div className={styles.filter}>
                         <SelectNounTrait
+                            disabled={requesting}
                             project={project}
                             layer="background"
                             selected={filters.background}

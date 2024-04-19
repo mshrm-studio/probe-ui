@@ -7,7 +7,7 @@ import Project from '@/utils/dto/Project'
 import Select from '@/components/Select/Select'
 
 type Props = {
-    className?: string | null
+    disabled?: boolean
     project: Project
     selected?: string | null
     updateSelected: (e: {
@@ -16,7 +16,7 @@ type Props = {
 }
 
 const SelectNounColor: React.FC<Props> = ({
-    className = '',
+    disabled,
     project,
     selected,
     updateSelected,
@@ -53,6 +53,7 @@ const SelectNounColor: React.FC<Props> = ({
 
     return (
         <Select
+            disabled={disabled}
             label="Color"
             options={filteredList}
             selected={selected}

@@ -3,8 +3,9 @@ import { Inter } from 'next/font/google'
 import '@/app/globals.css'
 import Header from '@/components/Header/Header'
 import { Analytics } from '@vercel/analytics/react'
-import DimensionsProvider from '@/components/DimensionsProvider'
-import ShowExplorePageFiltersProvider from '@/components/ShowExplorePageFiltersProvider'
+import DimensionsProvider from '@/components/Provider/Dimensions'
+import RequestingProvider from '@/components/Provider/Requesting'
+import ShowExplorePageFiltersProvider from '@/components/Provider/ShowExplorePageFilters'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -29,15 +30,17 @@ export default function RootLayout({ children }: Props) {
             />
 
             <body className={inter.className}>
-                <DimensionsProvider>
-                    <ShowExplorePageFiltersProvider>
-                        <Header />
+                <RequestingProvider>
+                    <DimensionsProvider>
+                        <ShowExplorePageFiltersProvider>
+                            <Header />
 
-                        <main className="w-full">{children}</main>
+                            <main className="w-full">{children}</main>
 
-                        <Analytics />
-                    </ShowExplorePageFiltersProvider>
-                </DimensionsProvider>
+                            <Analytics />
+                        </ShowExplorePageFiltersProvider>
+                    </DimensionsProvider>
+                </RequestingProvider>
             </body>
         </html>
     )
