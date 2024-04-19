@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useContext, use } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import NounFiltersDto from '@/utils/dto/NounFilters'
 import useFilters from '@/utils/services/useFilters'
@@ -108,7 +108,6 @@ const NounListPageFilters: React.FC<{
                 <div className={styles.filters}>
                     <div className={styles.filter}>
                         <SelectNounColor
-                            className="select"
                             project={project}
                             selected={filters.color}
                             updateSelected={updateFilters}
