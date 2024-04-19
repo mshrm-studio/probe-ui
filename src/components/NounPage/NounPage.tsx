@@ -198,6 +198,9 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
                                             <dt className={styles.dt}>Area:</dt>
                                             <dd className={styles.dd}>
                                                 {noun.area}
+                                                <span className="lowercase">
+                                                    px
+                                                </span>
                                             </dd>
                                         </div>
                                     )}
