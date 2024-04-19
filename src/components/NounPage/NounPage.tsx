@@ -12,6 +12,7 @@ import DimensionsContext from '@/utils/contexts/DimensionsContext'
 import { usePathname } from 'next/navigation'
 import useHref from '@/utils/services/useHref'
 import Link from 'next/link'
+import TextLink from '@/components/TextLink'
 
 const londrinaSolid = Londrina_Solid({
     subsets: ['latin'],
@@ -197,7 +198,7 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
                                         <div className={styles.dlItemInline}>
                                             <dt className={styles.dt}>Area:</dt>
                                             <dd className={styles.dd}>
-                                                {noun.area}
+                                                {noun.area / 100}
                                                 <span className="lowercase">
                                                     px
                                                 </span>
@@ -211,7 +212,7 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
                                                 Weight:
                                             </dt>
                                             <dd className={styles.dd}>
-                                                {noun.weight}
+                                                {noun.weight / 100000}
                                                 <span className="lowercase">
                                                     gg
                                                 </span>
@@ -220,6 +221,18 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
                                     )}
                                 </dl>
                             </section>
+
+                            <div className="mt-4 text-[13px] uppercase">
+                                <TextLink
+                                    href={
+                                        project === 'Nouns'
+                                            ? `https://nouns.wtf/noun/${noun.token_id}`
+                                            : `https://lilnouns.wtf/lilnoun/${noun.token_id}`
+                                    }
+                                >
+                                    View Activity
+                                </TextLink>
+                            </div>
                         </div>
                     </div>
                 </div>
