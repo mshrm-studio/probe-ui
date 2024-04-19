@@ -14,8 +14,7 @@ import DimensionsContext from '@/utils/contexts/DimensionsContext'
 
 const NounListPageFilters: React.FC<{
     project: Project
-    setPage: React.Dispatch<React.SetStateAction<number>>
-}> = ({ project, setPage }) => {
+}> = ({ project }) => {
     const { dimensions } = useContext(DimensionsContext)
     const { setShow } = useContext(ShowExplorePageFiltersContext)
     const { parseFilters } = useFilters()
@@ -81,8 +80,6 @@ const NounListPageFilters: React.FC<{
             | React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
             | { target: { name: string; value?: string | null } }
     ) {
-        setPage(1)
-
         setFilters((values) => ({
             ...values,
             [e.target.name]: e.target.value || undefined,

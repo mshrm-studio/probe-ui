@@ -1,13 +1,20 @@
 'use client'
 
 import NounFilters from '@/components/NounListPage/v2/Filters'
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import {
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from 'react'
 import { debounce } from 'lodash'
 import NounList from '@/components/Noun/List'
 import Project from '@/utils/dto/Project'
 import DimensionsContext from '@/utils/contexts/DimensionsContext'
 import ShowExplorePageFiltersContext from '@/utils/contexts/ShowExplorePageFiltersContext'
-import Noun, { isNounList } from '@/utils/dto/Noun'
+import Noun from '@/utils/dto/Noun'
 import { useSearchParams } from 'next/navigation'
 import useNounList from '@/utils/services/useNounList'
 
@@ -15,63 +22,88 @@ const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
     const { dimensions } = useContext(DimensionsContext)
     const { show: showFilters } = useContext(ShowExplorePageFiltersContext)
     const [page, setPage] = useState(1)
-    const [lastScrollTop, setLastScrollTop] = useState(0)
+    const lastScrollTop = useRef(0)
     const [nouns, setNouns] = useState<Noun[]>([])
     const searchParams = useSearchParams()
 
     const { error, fetching, fetchNounList, nounList, meta } =
         useNounList(project)
 
+    // Function to handle fetching based on parameters
+    const fetchNouns = useCallback(
+        (pageNumber: number) => {
+            const params = new URLSearchParams(searchParams)
+
+            params.set('page', Math.max(1, pageNumber).toString())
+
+            console.log('fetchNouns useCallback, params:', params.toString())
+
+            fetchNounList(params)
+        },
+        [fetchNounList, searchParams]
+    )
+
+    // Effect for searchParams changes
+    useEffect(() => {
+        console.log('searchParams useEffect, params:', searchParams.toString())
+        setNouns([]) // Reset the nouns when searchParams change
+        setPage((prev) => (prev === 1 ? 0 : 1)) // 0 or 1 to make sure re-fetch is always triggered
+    }, [searchParams])
+
+    // Effect to fetch nouns when the page resets
+    useEffect(() => {
+        console.log('page useEffect, page:', page)
+        fetchNouns(page)
+    }, [page])
+
+    // useEffect to manage nounList updates
     useEffect(() => {
         if (nounList) {
-            if (page === 1) {
-                setNouns(nounList)
-            } else {
-                setNouns((prev) => [...prev, ...nounList])
-            }
+            setNouns((prev) => {
+                const nounMap = new Map(
+                    prev.map((noun) => [noun.token_id, noun])
+                )
+
+                nounList.forEach((noun) => {
+                    if (!nounMap.has(noun.token_id)) {
+                        nounMap.set(noun.token_id, noun)
+                    }
+                })
+
+                return Array.from(nounMap.values())
+            })
         }
     }, [nounList])
-
-    const loadNouns = useCallback(async () => {
-        const params = new URLSearchParams(searchParams)
-
-        params.set('page', page.toString())
-
-        fetchNounList(params)
-    }, [fetchNounList, page, searchParams]) // Dependencies include api and page
-
-    useEffect(() => {
-        loadNouns()
-    }, [loadNouns])
 
     useEffect(() => {
         const handleScroll = debounce(() => {
             if (fetching) return
 
-            const tolerance = 100 // pixels from the bottom to consider as "at the bottom"
-            const scrollTop = document.documentElement.scrollTop // Current scroll position
+            const tolerance = 100
+            const scrollTop = document.documentElement.scrollTop
             const scrolled = window.innerHeight + scrollTop
             const totalHeight = document.documentElement.offsetHeight
 
-            // Determine if scrolling up or down
-            const isScrollingDown = scrollTop > lastScrollTop
             const isNearBottom = totalHeight - scrolled <= tolerance
+            const isScrollingDown = scrollTop > lastScrollTop.current
+            lastScrollTop.current = scrollTop // Use ref to track last scroll position
 
-            if (isScrollingDown && isNearBottom) {
-                setPage((prev) => prev + 1)
+            if (
+                isScrollingDown &&
+                isNearBottom &&
+                (meta === undefined || page < meta.last_page)
+            ) {
+                setPage((prev) => Math.max(1, prev) + 1)
             }
-
-            setLastScrollTop(scrollTop) // Update the last scroll position
         }, 250)
 
         window.addEventListener('scroll', handleScroll)
 
         return () => {
             window.removeEventListener('scroll', handleScroll)
-
             handleScroll.cancel()
         }
-    }, [fetching, lastScrollTop])
+    }, [fetching, page, meta]) // Only re-run if fetching, page, or meta changes
 
     const minHeight = useMemo(() => {
         return dimensions.viewportHeight - dimensions.headerHeight
@@ -84,7 +116,7 @@ const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
         >
             <div className="space-y-3 w-full">
                 {(showFilters || dimensions.viewportWidth >= 1280) && (
-                    <NounFilters project={project} setPage={setPage} />
+                    <NounFilters project={project} />
                 )}
 
                 {error && (
@@ -103,6 +135,13 @@ const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
 
                 {fetching && (
                     <p className="text-center font-bold">Loading...</p>
+                )}
+
+                {!fetching && meta && meta.current_page === meta.last_page && (
+                    <p className="text-center font-bold">
+                        All {nouns.length}{' '}
+                        {project === 'LilNouns' ? 'Lil Nouns' : 'Nouns'} loaded
+                    </p>
                 )}
             </div>
         </div>
