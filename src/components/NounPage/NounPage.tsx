@@ -65,10 +65,10 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
 
             <div className={styles.detailsWrapper}>
                 <h1 className={`${londrinaSolid.className} ${styles.heading}`}>
-                    <span className="block text-[85px] leading-[.72] xl:text-[126px]">
+                    <span className="block text-[85px] leading-[.69] xl:text-[126px]">
                         {project === 'LilNouns' ? 'Lil' : 'Noun'}
                     </span>
-                    <span className="block text-[105px] leading-[.72] xl:text-[156px]">
+                    <span className="block text-[105px] leading-[.69] xl:text-[156px]">
                         {noun.token_id}
                     </span>
                 </h1>
