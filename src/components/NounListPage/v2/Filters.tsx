@@ -6,7 +6,6 @@ import NounFiltersDto from '@/utils/dto/NounFilters'
 import useFilters from '@/utils/services/useFilters'
 import SelectNounColor from '@/components/Select/NounColor'
 import SelectNounTrait from '@/components/Select/NounTrait'
-import ApiMeta from '@/utils/dto/ApiMeta'
 import Project from '@/utils/dto/Project'
 import styles from '@/utils/styles/nounListPageFilters.module.css'
 import { XMarkIcon } from '@heroicons/react/24/solid'
@@ -15,10 +14,8 @@ import DimensionsContext from '@/utils/contexts/DimensionsContext'
 
 const NounListPageFilters: React.FC<{
     project: Project
-    meta?: ApiMeta
-    page: number
     setPage: React.Dispatch<React.SetStateAction<number>>
-}> = ({ project, meta, page, setPage }) => {
+}> = ({ project, setPage }) => {
     const { dimensions } = useContext(DimensionsContext)
     const { setShow } = useContext(ShowExplorePageFiltersContext)
     const { parseFilters } = useFilters()
@@ -43,7 +40,6 @@ const NounListPageFilters: React.FC<{
         glasses: searchParams?.get('glasses') ?? undefined,
         head: searchParams?.get('head') ?? undefined,
         search: searchParams?.get('search') ?? '',
-        page: page,
         per_page: Number(searchParams?.get('per_page')) || 180,
         sort_property: searchParams?.get('sort_property') || 'token_id',
         sort_method: searchParams?.get('sort_method') || 'desc',
@@ -58,7 +54,6 @@ const NounListPageFilters: React.FC<{
             glasses: searchParams.get('glasses') ?? undefined,
             head: searchParams.get('head') ?? undefined,
             search: searchParams.get('search') ?? '',
-            page: page,
             per_page: Number(searchParams.get('per_page')) || 180,
             sort_property: searchParams.get('sort_property') || 'token_id',
             sort_method: searchParams.get('sort_method') || 'desc',
@@ -66,9 +61,7 @@ const NounListPageFilters: React.FC<{
     }, [searchParams])
 
     function pushToNewQuery() {
-        const params = parseFilters(filters)
-
-        params.delete('page')
+        const params = parseFilters({ ...filters })
 
         const basePath = project === 'Nouns' ? '/nouns' : '/lils'
 
@@ -81,7 +74,7 @@ const NounListPageFilters: React.FC<{
 
     useEffect(() => {
         pushToNewQuery()
-    }, [filters, page])
+    }, [filters])
 
     function updateFilters(
         e:
@@ -110,6 +103,7 @@ const NounListPageFilters: React.FC<{
                 <div className={styles.filters}>
                     <div className={styles.filter}>
                         <SelectNounColor
+                            className="select"
                             project={project}
                             selected={filters.color}
                             updateSelected={updateFilters}

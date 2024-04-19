@@ -1,107 +1,81 @@
 'use client'
 
 import NounFilters from '@/components/NounListPage/v2/Filters'
-import { useSearchParams } from 'next/navigation'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { debounce } from 'lodash'
-import useNounList from '@/utils/services/useNounList'
 import NounList from '@/components/Noun/List'
 import Project from '@/utils/dto/Project'
 import DimensionsContext from '@/utils/contexts/DimensionsContext'
 import ShowExplorePageFiltersContext from '@/utils/contexts/ShowExplorePageFiltersContext'
-import Noun from '@/utils/dto/Noun'
+import Noun, { isNounList } from '@/utils/dto/Noun'
+import { useSearchParams } from 'next/navigation'
+import useNounList from '@/utils/services/useNounList'
 
 const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
     const { dimensions } = useContext(DimensionsContext)
     const { show: showFilters } = useContext(ShowExplorePageFiltersContext)
     const [page, setPage] = useState(1)
-
-    const minHeight = useMemo(() => {
-        return dimensions.viewportHeight - dimensions.headerHeight
-    }, [dimensions.viewportHeight, dimensions.headerHeight])
-
-    const [maintainedNounList, setMaintainedNounList] = useState<Noun[]>([])
+    const [lastScrollTop, setLastScrollTop] = useState(0)
+    const [nouns, setNouns] = useState<Noun[]>([])
+    const searchParams = useSearchParams()
 
     const { error, fetching, fetchNounList, nounList, meta } =
         useNounList(project)
 
     useEffect(() => {
-        const debouncedNounListUpdate = debounce(() => {
-            if (!fetching && nounList && nounList.length > 0) {
-                if (page === 1) {
-                    setMaintainedNounList(nounList)
-                } else {
-                    setMaintainedNounList((prev) => {
-                        const existingIds = new Set(
-                            prev.map((item) => item.token_id)
-                        )
-
-                        const filteredNewItems = nounList.filter(
-                            (item) => !existingIds.has(item.token_id)
-                        )
-
-                        return [...prev, ...filteredNewItems]
-                    })
-                }
+        if (nounList) {
+            if (page === 1) {
+                setNouns(nounList)
+            } else {
+                setNouns((prev) => [...prev, ...nounList])
             }
-        }, 500)
-
-        debouncedNounListUpdate()
-
-        return () => debouncedNounListUpdate.cancel()
-    }, [fetching, nounList])
-
-    const searchParams = useSearchParams()
-
-    const debouncedFetch = useCallback(
-        debounce(() => {
-            const params = new URLSearchParams(searchParams.toString())
-            params.set('page', page.toString())
-            console.log('debouncedFetch')
-            fetchNounList(params)
-        }, 500),
-        [page, searchParams]
-    ) // Dependencies to trigger updates of the debounced function
-
-    useEffect(() => {
-        console.log('Fetch useEffect triggered')
-        debouncedFetch() // Call the debounced fetch function
-
-        return () => {
-            debouncedFetch.cancel() // Cleanup the debounce on unmount or when dependencies change
         }
-    }, [debouncedFetch]) // Depend on the stable debouncedFetch function
+    }, [nounList])
+
+    const loadNouns = useCallback(async () => {
+        const params = new URLSearchParams(searchParams)
+
+        params.set('page', page.toString())
+
+        fetchNounList(params)
+    }, [fetchNounList, page, searchParams]) // Dependencies include api and page
 
     useEffect(() => {
-        if (meta && page !== meta.current_page) {
-            setPage(meta.current_page)
-        }
-    }, [meta])
+        loadNouns()
+    }, [loadNouns])
 
     useEffect(() => {
-        console.log('scroll listener useeffect')
         const handleScroll = debounce(() => {
-            console.log('handleScroll')
+            if (fetching) return
+
             const tolerance = 100 // pixels from the bottom to consider as "at the bottom"
-            const scrolled =
-                window.innerHeight + document.documentElement.scrollTop
+            const scrollTop = document.documentElement.scrollTop // Current scroll position
+            const scrolled = window.innerHeight + scrollTop
             const totalHeight = document.documentElement.offsetHeight
 
+            // Determine if scrolling up or down
+            const isScrollingDown = scrollTop > lastScrollTop
             const isNearBottom = totalHeight - scrolled <= tolerance
 
-            if (isNearBottom && !fetching && (!meta || page < meta.last_page)) {
-                console.log('setPage')
+            if (isScrollingDown && isNearBottom) {
                 setPage((prev) => prev + 1)
             }
-        }, 100)
+
+            setLastScrollTop(scrollTop) // Update the last scroll position
+        }, 250)
 
         window.addEventListener('scroll', handleScroll)
 
         return () => {
             window.removeEventListener('scroll', handleScroll)
+
             handleScroll.cancel()
         }
-    }, [fetching, meta, page])
+    }, [fetching, lastScrollTop])
+
+    const minHeight = useMemo(() => {
+        return dimensions.viewportHeight - dimensions.headerHeight
+    }, [dimensions.viewportHeight, dimensions.headerHeight])
 
     return (
         <div
@@ -110,12 +84,7 @@ const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
         >
             <div className="space-y-3 w-full">
                 {(showFilters || dimensions.viewportWidth >= 1280) && (
-                    <NounFilters
-                        project={project}
-                        meta={meta}
-                        page={page}
-                        setPage={setPage}
-                    />
+                    <NounFilters project={project} setPage={setPage} />
                 )}
 
                 {error && (
@@ -124,12 +93,16 @@ const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
                     </p>
                 )}
 
-                {maintainedNounList.length > 0 && (
+                {nouns.length > 0 && (
                     <NounList
                         fetching={fetching}
-                        nouns={maintainedNounList}
+                        nouns={nouns}
                         project={project}
                     />
+                )}
+
+                {fetching && (
+                    <p className="text-center font-bold">Loading...</p>
                 )}
             </div>
         </div>

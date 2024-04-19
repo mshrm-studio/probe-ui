@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import useFetcher from '@/utils/services/useFetcher'
 import Project from '@/utils/dto/Project'
 
@@ -11,12 +11,15 @@ const useNounColorList = (project: Project) => {
         return Array.isArray(data) ? (data as string[]) : null
     }, [response])
 
-    const fetchNounColorList = (params?: URLSearchParams): void => {
-        fetchData(
-            project === 'Nouns' ? '/noun-colors' : '/lil-noun-colors',
-            params
-        )
-    }
+    const fetchNounColorList = useCallback(
+        (params?: URLSearchParams): void => {
+            fetchData(
+                project === 'Nouns' ? '/noun-colors' : '/lil-noun-colors',
+                params
+            )
+        },
+        [fetchData, project]
+    )
 
     return { error, fetching, fetchNounColorList, nounColorList: list }
 }

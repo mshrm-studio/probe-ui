@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { isNoun } from '@/utils/dto/Noun'
 import useFetcher from '@/utils/services/useFetcher'
 import Project from '@/utils/dto/Project'
@@ -12,11 +12,16 @@ const useNoun = (project: Project) => {
         return isNoun(data) ? data : null
     }, [response])
 
-    const fetchNoun = (nounId: number): void => {
-        fetchData(
-            project === 'Nouns' ? `/nouns/${nounId}` : `/lil-nouns/${nounId}`
-        )
-    }
+    const fetchNoun = useCallback(
+        (nounId: number): void => {
+            fetchData(
+                project === 'Nouns'
+                    ? `/nouns/${nounId}`
+                    : `/lil-nouns/${nounId}`
+            )
+        },
+        [fetchData]
+    )
 
     return { error, fetching, fetchNoun, noun }
 }

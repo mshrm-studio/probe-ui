@@ -1,6 +1,6 @@
 'use client'
 
-import NounListPage from '@/components/NounListPage/NounListPage'
+import NounListPage from '@/components/NounListPage/v2/NounListPage'
 
 export default function Page() {
     return (
