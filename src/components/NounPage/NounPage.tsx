@@ -13,6 +13,7 @@ import { usePathname } from 'next/navigation'
 import useHref from '@/utils/services/useHref'
 import Link from 'next/link'
 import TextLink from '@/components/TextLink'
+import SpacesImage from '@/components/SpacesImage'
 
 const londrinaSolid = Londrina_Solid({
     subsets: ['latin'],
@@ -38,11 +39,21 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
     }, [pathname])
 
     if (fetching) {
-        return <p>Loading...</p>
+        return (
+            <div className="pt-32">
+                <SpacesImage
+                    className="mx-auto h-10 w-10"
+                    src="misc/probe-loader.gif"
+                    alt="Loader"
+                />
+            </div>
+        )
     }
 
     if (noun === null) {
-        return <p>Noun not found</p>
+        return (
+            <p className="text-center text-red-500 font-bold">Noun not found</p>
+        )
     }
 
     return (
@@ -209,12 +220,12 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
                                     {noun.weight && (
                                         <div className={styles.dlItemInline}>
                                             <dt className={styles.dt}>
-                                                Weight:
+                                                Brightness:
                                             </dt>
                                             <dd className={styles.dd}>
                                                 {noun.weight / 100000}
                                                 <span className="lowercase">
-                                                    gg
+                                                    lm
                                                 </span>
                                             </dd>
                                         </div>

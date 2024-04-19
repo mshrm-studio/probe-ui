@@ -18,6 +18,7 @@ import Noun from '@/utils/dto/Noun'
 import { useSearchParams } from 'next/navigation'
 import useNounList from '@/utils/services/useNounList'
 import RequestingContext from '@/utils/contexts/RequestingContext'
+import SpacesImage from '@/components/SpacesImage'
 
 const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
     const { dimensions } = useContext(DimensionsContext)
@@ -140,7 +141,13 @@ const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
                 )}
 
                 {fetching && (
-                    <p className="text-center font-bold">Loading...</p>
+                    <div className="pt-32">
+                        <SpacesImage
+                            className="mx-auto h-10 w-10"
+                            src="misc/probe-loader.gif"
+                            alt="Loader"
+                        />
+                    </div>
                 )}
 
                 {!fetching && meta && meta.current_page === meta.last_page && (

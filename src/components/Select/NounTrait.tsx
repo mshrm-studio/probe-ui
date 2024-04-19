@@ -45,7 +45,7 @@ const SelectNounTrait: React.FC<Props> = ({
         }
     }
 
-    const filteredList = useMemo(() => {
+    const listWithImgSrc = useMemo(() => {
         return nounTraitList
             ? nounTraitList
                   .map((item) => ({
@@ -75,11 +75,20 @@ const SelectNounTrait: React.FC<Props> = ({
             : []
     }, [nounTraitList])
 
+    const curatedList = useMemo(() => {
+        if (layer !== 'background') return listWithImgSrc
+
+        return listWithImgSrc.map((item) => ({
+            ...item,
+            label: item.label.toLowerCase() == 'd5d7e1' ? 'cool' : 'warm',
+        }))
+    }, [listWithImgSrc])
+
     return (
         <Select
             disabled={disabled}
             label={layer}
-            options={filteredList}
+            options={curatedList}
             selected={selected}
             updateSelected={handleSelect}
         />

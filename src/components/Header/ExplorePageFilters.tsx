@@ -40,10 +40,10 @@ export default function HeaderExplorePageFilters({
 
     const weightSortLabel = useMemo(() => {
         return searchParams?.get('sort_property') !== 'weight'
-            ? 'Heaviest'
+            ? 'Brightest'
             : searchParams?.get('sort_method') === 'asc'
-            ? 'Heaviest'
-            : 'Lightest'
+            ? 'Brightest'
+            : 'Darkest'
     }, [searchParams])
 
     function updateSort(label: string) {
@@ -51,7 +51,7 @@ export default function HeaderExplorePageFilters({
 
         params.set(
             'sort_property',
-            label === 'Heaviest' || label === 'Lightest'
+            label === 'Brightest' || label === 'Darkest'
                 ? 'weight'
                 : label === 'Biggest' || label === 'Smallest'
                 ? 'area'
@@ -60,7 +60,7 @@ export default function HeaderExplorePageFilters({
 
         params.set(
             'sort_method',
-            label === 'Heaviest' ||
+            label === 'Brightest' ||
                 label === 'Most Recent' ||
                 label === 'Biggest'
                 ? 'desc'
