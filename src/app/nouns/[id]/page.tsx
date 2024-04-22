@@ -15,11 +15,14 @@ export async function generateMetadata({
     const id = params.id
 
     const title = `Noun ${id} | Probe`
+    const description = `Date of birth, colors and stats of Noun ${id}.`
 
     return {
         title: title,
+        description: description,
         openGraph: {
             title: title,
+            description: description,
         },
     }
 }
