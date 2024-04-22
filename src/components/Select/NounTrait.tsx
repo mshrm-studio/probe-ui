@@ -29,7 +29,7 @@ const SelectNounTrait: React.FC<Props> = ({
     useEffect(() => {
         const debouncedFetch = debounce(() => {
             const params = new URLSearchParams()
-            params.set('per_page', '200')
+            params.set('per_page', '300')
             params.set('layer', layer)
             fetchNounTraitList(params)
         }, 500)
