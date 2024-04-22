@@ -15,10 +15,6 @@ const useNounList = (project: Project) => {
 
     const fetchNounList = useCallback(
         (params?: ReadonlyURLSearchParams | URLSearchParams | null): void => {
-            console.log(
-                'useNounList fetchNounList, params:',
-                params?.toString() || 'none'
-            )
             fetchData(project === 'Nouns' ? '/nouns' : '/lil-nouns', params)
         },
         [fetchData, project]

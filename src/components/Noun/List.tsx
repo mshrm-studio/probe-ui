@@ -20,8 +20,6 @@ type Props = {
 }
 
 const NounList: React.FC<Props> = ({ project, fetching, nouns }) => {
-    console.log('noun list rendering')
-
     const linkPrefix = useMemo(() => {
         return project === 'LilNouns' ? `/lils` : `/nouns`
     }, [project])
