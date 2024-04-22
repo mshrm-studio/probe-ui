@@ -15,6 +15,8 @@ export default interface Noun {
     color_histogram: Record<string, number> | null
     svg_path: string | null
     svg_url: string | null
+    png_path: string | null
+    png_url: string | null
 }
 
 export const isNoun = (input: unknown): input is Noun => {
