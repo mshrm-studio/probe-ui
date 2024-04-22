@@ -10,16 +10,24 @@ type Props = {
 }
 
 const NounImage: React.FC<Props> = ({ className = '', noun }) => {
+    if (noun.token_uri) {
+        const prefix = 'data:application/json;base64,'
+        const jsonString = atob(noun.token_uri.replace(prefix, ''))
+        const jsonObject = JSON.parse(jsonString)
+        const imageSource = jsonObject?.image || ''
+
+        return <img className={className} src={imageSource} />
+    }
+
+    if (noun.png_url) {
+        return <SpacesImage className={className} src={noun.png_url} />
+    }
+
     if (noun.svg_url) {
         return <SpacesImage className={className} src={noun.svg_url} />
     }
 
-    const prefix = 'data:application/json;base64,'
-    const jsonString = atob(noun.token_uri.replace(prefix, ''))
-    const jsonObject = JSON.parse(jsonString)
-    const imageSource = jsonObject?.image || ''
-
-    return <img className={className} src={imageSource} />
+    return <img className={className} src="#" />
 }
 
 export default NounImage
