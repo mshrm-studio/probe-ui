@@ -39,8 +39,6 @@ const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
 
             params.set('page', Math.max(1, pageNumber).toString())
 
-            console.log('fetchNouns useCallback, params:', params.toString())
-
             fetchNounList(params)
         },
         [fetchNounList, searchParams]
@@ -52,14 +50,12 @@ const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
 
     // Effect for searchParams changes
     useEffect(() => {
-        console.log('searchParams useEffect, params:', searchParams.toString())
         setNouns([]) // Reset the nouns when searchParams change
         setPage((prev) => (prev === 1 ? 0 : 1)) // 0 or 1 to make sure re-fetch is always triggered
     }, [searchParams])
 
     // Effect to fetch nouns when the page resets
     useEffect(() => {
-        console.log('page useEffect, page:', page)
         fetchNouns(page)
     }, [page])
 
