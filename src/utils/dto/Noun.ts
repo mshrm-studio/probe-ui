@@ -10,6 +10,11 @@ export default interface Noun {
     accessory_name: string
     block_number: string
     minted_at: string
+    area: number | null
+    weight: number | null
+    color_histogram: Record<string, number> | null
+    svg_path: string | null
+    svg_url: string | null
 }
 
 export const isNoun = (input: unknown): input is Noun => {

@@ -1,14 +1,13 @@
 'use client'
+
 import React from 'react'
 import ApiMeta from '@/utils/dto/ApiMeta'
 import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/solid'
 
-type Props = {
+const NounListPagePagination: React.FC<{
     meta: ApiMeta
     setPage: React.Dispatch<React.SetStateAction<number>>
-}
-
-const NounPagination: React.FC<Props> = ({ meta, setPage }) => {
+}> = ({ meta, setPage }) => {
     return (
         <nav className="flex justify-center items-center space-x-2 text-[13px]">
             {meta.current_page > 1 && (
@@ -68,4 +67,4 @@ const NounPagination: React.FC<Props> = ({ meta, setPage }) => {
     )
 }
 
-export default NounPagination
+export default NounListPagePagination

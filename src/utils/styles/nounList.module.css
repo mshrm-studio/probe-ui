@@ -1,4 +1,4 @@
-.listWrapper {
+.listWrapper :global(a) {
     cursor: url('https://probewtf.fra1.cdn.digitaloceanspaces.com/cursor-probe.png'),
         auto;
 }
@@ -15,4 +15,31 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.nounLink {
+    position: relative;
+    display: block;
+}
+
+.nounLink > .nounLinkLabel {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0.25rem;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    text-align: center;
+    text-transform: uppercase;
+    white-space: nowrap;
+    font-size: theme('fontSize.xs');
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.2s ease;
+}
+
+.nounLink:hover > .nounLinkLabel {
+    opacity: 1;
+    transform: translateY(0);
 }

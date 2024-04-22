@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { isNounList } from '@/utils/dto/Noun'
 import useFetcher from '@/utils/services/useFetcher'
 import { ReadonlyURLSearchParams } from 'next/navigation'
@@ -13,11 +13,16 @@ const useNounList = (project: Project) => {
         return isNounList(data) ? data : null
     }, [response])
 
-    const fetchNounList = (
-        params?: ReadonlyURLSearchParams | URLSearchParams | null
-    ): void => {
-        fetchData(project === 'Nouns' ? '/nouns' : '/lil-nouns', params)
-    }
+    const fetchNounList = useCallback(
+        (params?: ReadonlyURLSearchParams | URLSearchParams | null): void => {
+            console.log(
+                'useNounList fetchNounList, params:',
+                params?.toString() || 'none'
+            )
+            fetchData(project === 'Nouns' ? '/nouns' : '/lil-nouns', params)
+        },
+        [fetchData, project]
+    )
 
     return { error, fetching, fetchNounList, nounList: list, meta }
 }

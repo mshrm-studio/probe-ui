@@ -1,14 +1,17 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import '@/app/globals.css'
-import Header from '@/components/Header'
+import Header from '@/components/Header/Header'
 import { Analytics } from '@vercel/analytics/react'
+import DimensionsProvider from '@/components/Provider/Dimensions'
+import RequestingProvider from '@/components/Provider/Requesting'
+import ShowExplorePageFiltersProvider from '@/components/Provider/ShowExplorePageFilters'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
     title: 'probe.wtf',
-    description: 'built by the MSHRM.studio team',
+    description: 'Probing Nouns',
 }
 
 type Props = {
@@ -16,16 +19,28 @@ type Props = {
 }
 
 export default function RootLayout({ children }: Props) {
+    const spacesStorageUrl = process.env.NEXT_PUBLIC_DO_STORAGE_URL
+
     return (
         <html lang="en">
-            <body className={`${inter.className} p-4`}>
-                <Header />
+            <link
+                rel="icon"
+                href={`${spacesStorageUrl}/Probe_Logo.svg`}
+                type="image/svg"
+            />
 
-                <main className="w-full overflow-x-hidden pt-6">
-                    {children}
-                </main>
+            <body className={inter.className}>
+                <RequestingProvider>
+                    <DimensionsProvider>
+                        <ShowExplorePageFiltersProvider>
+                            <Header />
 
-                <Analytics />
+                            <main className="w-full">{children}</main>
+
+                            <Analytics />
+                        </ShowExplorePageFiltersProvider>
+                    </DimensionsProvider>
+                </RequestingProvider>
             </body>
         </html>
     )

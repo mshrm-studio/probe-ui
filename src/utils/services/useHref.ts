@@ -1,10 +1,13 @@
 import { useMemo } from 'react'
-import { isNounTraitList } from '@/utils/dto/NounTrait'
-import useFetcher from '@/utils/services/useFetcher'
 
 const useHref = () => {
-    const lilsLink = '/lils?per_page=40&page=1'
-    const nounsLink = '/nouns?per_page=40&page=1'
+    const lilsLink = useMemo(() => {
+        return '/lils?page=1&per_page=180&sort_method=desc&sort_property=token_id'
+    }, [])
+
+    const nounsLink = useMemo(() => {
+        return '/nouns?per_page=180&sort_method=desc&sort_property=token_id'
+    }, [])
 
     return { lilsLink, nounsLink }
 }

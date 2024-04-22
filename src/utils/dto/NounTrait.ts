@@ -5,6 +5,8 @@ export default interface NounTrait {
     name: string
     layer: NounTraitLayer
     seed_id: number
+    svg_path: string
+    svg_url: string
 }
 
 export const isNounTrait = (input: unknown): input is NounTrait => {

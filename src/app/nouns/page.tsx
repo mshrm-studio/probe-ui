@@ -1,6 +1,11 @@
 'use client'
-import NounPage from '@/components/Noun/Page'
+
+import NounListPage from '@/components/NounListPage/v2/NounListPage'
 
 export default function Page() {
-    return <NounPage project="Nouns" />
+    return (
+        <div className="px-4">
+            <NounListPage project="Nouns" />
+        </div>
+    )
 }
