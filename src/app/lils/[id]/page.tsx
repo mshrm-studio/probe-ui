@@ -46,7 +46,7 @@ export async function generateMetadata({
             'fc:frame': 'vNext',
             'fc:frame:image': images[0].url,
             'fc:frame:image:aspect_ratio': '1:1',
-            'fc:frame:button:1': pageUrl,
+            'fc:frame:button:1': `probe.wtf/lils/${id}`,
             'fc:frame:button:1:action': 'link',
             'fc:frame:button:1:target': pageUrl,
         },
