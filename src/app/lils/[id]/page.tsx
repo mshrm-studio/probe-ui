@@ -13,7 +13,6 @@ export async function generateMetadata({
     params,
 }: PageProps): Promise<Metadata> {
     const id = params.id
-
     const title = `Lil Noun ${id} | Probe`
     const description = `Date of birth, colors and stats of Lil Noun ${id}.`
 
@@ -23,6 +22,11 @@ export async function generateMetadata({
         openGraph: {
             title: title,
             description: description,
+            images: [
+                {
+                    url: `${process.env.NEXT_PUBLIC_DO_STORAGE_URL}/lils/pngs/${id}.png`,
+                },
+            ],
         },
     }
 }
