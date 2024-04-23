@@ -209,7 +209,7 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
                                         <div className={styles.dlItemInline}>
                                             <dt className={styles.dt}>Area:</dt>
                                             <dd className={styles.dd}>
-                                                {(noun.area / 100).toFixed(0)}
+                                                {noun.area}
                                                 <span className="lowercase">
                                                     px
                                                 </span>
@@ -223,7 +223,7 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
                                                 Brightness:
                                             </dt>
                                             <dd className={styles.dd}>
-                                                {noun.weight / 100000}
+                                                {noun.weight}
                                                 <span className="lowercase">
                                                     lm
                                                 </span>
