@@ -13,8 +13,8 @@ export async function generateMetadata({
     params,
 }: PageProps): Promise<Metadata> {
     const id = params.id
-    const title = `Lil Noun ${id} | Probe`
-    const description = `View colors and stats for Lil Noun ${id}.`
+    const title = `Lil Noun ${id}`
+    const description = `Probe the colors and stats for Lil Noun ${id}.`
     const pageUrl = `https://probe.wtf/lils/${id}`
     const images = [
         {
