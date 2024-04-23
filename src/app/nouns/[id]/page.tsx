@@ -14,7 +14,7 @@ export async function generateMetadata({
 }: PageProps): Promise<Metadata> {
     const id = params.id
     const title = `Noun ${id} | Probe`
-    const description = `Date of birth, colors and stats of Noun ${id}.`
+    const description = `View colors and stats for Noun ${id}.`
     const pageUrl = `https://probe.wtf/nouns/${id}`
     const images = [
         {
