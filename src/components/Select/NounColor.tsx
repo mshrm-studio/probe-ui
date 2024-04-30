@@ -5,6 +5,7 @@ import useNounColorList from '@/utils/services/useNounColorList'
 import { debounce } from 'lodash'
 import Project from '@/utils/dto/Project'
 import Select from '@/components/Select/Select'
+import chroma from 'chroma-js'
 
 type Props = {
     disabled?: boolean
@@ -39,23 +40,31 @@ const SelectNounColor: React.FC<Props> = ({
         }
     }
 
-    const filteredList = useMemo(() => {
+    const colorListWithHue = useMemo(() => {
         return nounColorList
-            ? nounColorList
-                  .map((item) => ({
-                      colorHex: item,
-                      label: item,
-                      value: item,
-                  }))
-                  .sort((a, b) => a.label.localeCompare(b.label))
+            ? nounColorList.map((color) => ({
+                  hex: color,
+                  hue: chroma(color).get('hsl.h'),
+              }))
             : []
     }, [nounColorList])
+
+    const sortedList = useMemo(() => {
+        return colorListWithHue
+            .map((color) => ({
+                colorHex: color.hex,
+                hue: color.hue,
+                label: color.hex,
+                value: color.hex,
+            }))
+            .sort((a, b) => a.hue - b.hue)
+    }, [colorListWithHue])
 
     return (
         <Select
             disabled={disabled}
             label="Color"
-            options={filteredList}
+            options={sortedList}
             selected={selected}
             updateSelected={handleSelect}
         />
