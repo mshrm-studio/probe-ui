@@ -6,6 +6,9 @@ import React from 'react'
 // 1. Get projectId at https://cloud.walletconnect.com
 const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID as string
 const infuraApiKey = process.env.NEXT_PUBLIC_INFURA_API_KEY as string
+const defaultChainId = parseInt(process.env.NEXT_PUBLIC_CHAIN_ID as string)
+const mainnetRpcUrl = `https://mainnet.infura.io/v3/${infuraApiKey}`
+const sepoliaRpcUrl = `https://sepolia.infura.io/v3/${infuraApiKey}`
 
 // 2. Set chains
 const mainnet = {
@@ -13,7 +16,7 @@ const mainnet = {
     name: 'Ethereum',
     currency: 'ETH',
     explorerUrl: 'https://etherscan.io',
-    rpcUrl: 'https://cloudflare-eth.com',
+    rpcUrl: mainnetRpcUrl,
 }
 
 const sepolia = {
@@ -21,7 +24,7 @@ const sepolia = {
     name: 'Sepolia',
     currency: 'ETH',
     explorerUrl: 'https://sepolia.etherscan.io',
-    rpcUrl: `https://sepolia.infura.io/v3/${infuraApiKey}`,
+    rpcUrl: sepoliaRpcUrl,
 }
 
 // 3. Create a metadata object
@@ -41,17 +44,15 @@ const ethersConfig = defaultConfig({
     enableEIP6963: true, // true by default
     enableInjected: true, // true by default
     enableCoinbase: true, // true by default
-    rpcUrl: '...', // used for the Coinbase SDK
-    defaultChainId: 1, // used for the Coinbase SDK
+    rpcUrl: defaultChainId == 1 ? mainnetRpcUrl : sepoliaRpcUrl, // used for the Coinbase SDK
+    defaultChainId: defaultChainId, // used for the Coinbase SDK
 })
 
 // 5. Create a Web3Modal instance
 createWeb3Modal({
     ethersConfig,
     chains: [mainnet, sepolia].filter(
-        (chain) =>
-            chain.chainId ==
-            parseInt(process.env.NEXT_PUBLIC_CHAIN_ID as string)
+        (chain) => chain.chainId == defaultChainId
     ),
     projectId,
     enableAnalytics: true, // Optional - defaults to your Cloud configuration
