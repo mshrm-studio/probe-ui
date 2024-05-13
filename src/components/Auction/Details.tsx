@@ -766,7 +766,8 @@ function AuctionDetails() {
                                     <br />
                                     <strong>Value:</strong> {bid.value}
                                     <br />
-                                    <strong>Extended:</strong> {bid.extended}
+                                    <strong>Extended:</strong>{' '}
+                                    {bid.extended.toString()}
                                     <br />
                                     <strong>Transaction Hash:</strong>{' '}
                                     {bid.transactionHash}
@@ -779,7 +780,9 @@ function AuctionDetails() {
                     {auctionDetails && (
                         <div>
                             <button
-                                onClick={() => placeBid(auctionDetails.nounId)}
+                                onClick={() =>
+                                    placeBid(auctionDetails.nounId, '1')
+                                }
                             >
                                 Place Bid on Noun #{auctionDetails.nounId}
                             </button>
