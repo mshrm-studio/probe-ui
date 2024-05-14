@@ -654,7 +654,7 @@ function AuctionDetails() {
 
         const fromBlock = currentBlock - 5780219 // Adjust this value based on your needs
 
-        const filter = nounsContract.filters.AuctionBid(343)
+        const filter = nounsContract.filters.AuctionBid(nounId)
 
         const events = await nounsContract.queryFilter(
             filter,
