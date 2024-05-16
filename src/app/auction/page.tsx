@@ -2,9 +2,6 @@
 
 import CryptoWalletAddress from '@/components/CryptoWallet/Address'
 import CryptoWalletConnect from '@/components/CryptoWallet/Connect'
-import AuctionAmount from '@/components/Auction/Amount'
-import AuctionCountdown from '@/components/Auction/Countdown'
-import AuctionEndTime from '@/components/Auction/EndTime'
 import AuctionProvider from '@/components/Provider/Auction'
 
 export default function Page() {
@@ -20,14 +17,6 @@ export default function Page() {
 
                     <div>
                         <CryptoWalletAddress />
-                    </div>
-
-                    <div>
-                        <AuctionAmount />
-
-                        <AuctionCountdown />
-
-                        <AuctionEndTime />
                     </div>
                 </div>
             </div>

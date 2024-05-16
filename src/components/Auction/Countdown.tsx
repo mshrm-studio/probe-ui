@@ -1,11 +1,10 @@
 'use client'
 
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { DateTime } from 'luxon'
-import AuctionContext from '@/utils/contexts/AuctionContext'
+import Auction from '@/utils/dto/Auction'
 
-function AuctionCountdown() {
-    const { auction } = useContext(AuctionContext)
+const AuctionCountdown: React.FC<{ auction: Auction }> = ({ auction }) => {
     const [countdown, setCountdown] = useState<string>('0')
     const [countdownInterval, setCountdownInterval] = useState<NodeJS.Timeout>()
 
@@ -53,11 +52,7 @@ function AuctionCountdown() {
         }
     }, [auction]) // Depend on auction to recalculate when it changes
 
-    return auction && countdown !== '0' ? (
-        <p>Auction ends in: {countdown}</p>
-    ) : (
-        <></>
-    )
+    return auction && countdown !== '0' ? <>{countdown}</> : <></>
 }
 
 export default AuctionCountdown

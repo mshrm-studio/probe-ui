@@ -15,6 +15,7 @@ import TextLink from '@/components/TextLink'
 import SpacesImage from '@/components/SpacesImage'
 import NounDateOfBirth from '@/components/Noun/DateOfBirth'
 import NounColorHistogram from '@/components/Noun/ColorHistogram'
+import NounPageAuctionDetails from '@/components/NounPage/AuctionDetails'
 
 const londrinaSolid = Londrina_Solid({
     subsets: ['latin'],
@@ -91,6 +92,10 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
                         <p className={styles.dob}>
                             <NounDateOfBirth mintedAt={noun.minted_at} />
                         </p>
+
+                        {project === 'Nouns' && (
+                            <NounPageAuctionDetails nounId={noun.token_id} />
+                        )}
 
                         <div>
                             {noun.color_histogram && (
