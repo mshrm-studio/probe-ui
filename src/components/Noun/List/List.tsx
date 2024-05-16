@@ -7,6 +7,7 @@ import styles from '@/utils/styles/nounList.module.css'
 import Link from 'next/link'
 import Project from '@/utils/dto/Project'
 import { Londrina_Solid } from 'next/font/google'
+import NounListBidBage from '@/components/Noun/List/BidBadge'
 
 const londrinaSolid = Londrina_Solid({
     subsets: ['latin'],
@@ -50,6 +51,8 @@ const NounList: React.FC<Props> = ({ project, fetching, nouns }) => {
                                 {project === 'LilNouns' ? 'Lil' : 'Noun'}{' '}
                                 {noun.token_id}
                             </label>
+
+                            <NounListBidBage nounId={noun.token_id} />
                         </Link>
                     </li>
                 ))}
