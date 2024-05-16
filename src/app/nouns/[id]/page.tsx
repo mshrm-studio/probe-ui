@@ -1,12 +1,17 @@
 import NounPage from '@/components/NounPage/NounPage'
 import type { Metadata } from 'next'
+import AuctionProvider from '@/components/Provider/Auction'
 
 type PageProps = {
     params: { id: number }
 }
 
 export default function Page({ params }: PageProps) {
-    return <NounPage project="Nouns" nounId={params.id} />
+    return (
+        <AuctionProvider>
+            <NounPage project="Nouns" nounId={params.id} />
+        </AuctionProvider>
+    )
 }
 
 export async function generateMetadata({

@@ -6,6 +6,7 @@ import { Analytics } from '@vercel/analytics/react'
 import DimensionsProvider from '@/components/Provider/Dimensions'
 import RequestingProvider from '@/components/Provider/Requesting'
 import ShowExplorePageFiltersProvider from '@/components/Provider/ShowExplorePageFilters'
+import RpcProvider from '@/components/Provider/Rpc'
 import Web3ModalProvider from '@/components/Provider/Web3Modal'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -31,19 +32,21 @@ export default function RootLayout({ children }: Props) {
             />
 
             <body className={inter.className}>
-                <Web3ModalProvider>
-                    <RequestingProvider>
-                        <DimensionsProvider>
-                            <ShowExplorePageFiltersProvider>
-                                <Header />
+                <RpcProvider>
+                    <Web3ModalProvider>
+                        <RequestingProvider>
+                            <DimensionsProvider>
+                                <ShowExplorePageFiltersProvider>
+                                    <Header />
 
-                                <main className="w-full">{children}</main>
+                                    <main className="w-full">{children}</main>
 
-                                <Analytics />
-                            </ShowExplorePageFiltersProvider>
-                        </DimensionsProvider>
-                    </RequestingProvider>
-                </Web3ModalProvider>
+                                    <Analytics />
+                                </ShowExplorePageFiltersProvider>
+                            </DimensionsProvider>
+                        </RequestingProvider>
+                    </Web3ModalProvider>
+                </RpcProvider>
             </body>
         </html>
     )

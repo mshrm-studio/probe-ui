@@ -7,13 +7,14 @@ import NounImage from '@/components/Noun/Image'
 import { Londrina_Solid } from 'next/font/google'
 import styles from '@/utils/styles/nounPage.module.css'
 import { startCase } from 'lodash'
-import { DateTime } from 'luxon'
 import DimensionsContext from '@/utils/contexts/DimensionsContext'
 import { usePathname } from 'next/navigation'
 import useHref from '@/utils/services/useHref'
 import Link from 'next/link'
 import TextLink from '@/components/TextLink'
 import SpacesImage from '@/components/SpacesImage'
+import NounDateOfBirth from '@/components/Noun/DateOfBirth'
+import NounColorHistogram from '@/components/Noun/ColorHistogram'
 
 const londrinaSolid = Londrina_Solid({
     subsets: ['latin'],
@@ -88,12 +89,7 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
                 <div className={styles.body}>
                     <div className={styles.content}>
                         <p className={styles.dob}>
-                            Born{' '}
-                            {DateTime.fromISO(noun.minted_at, {
-                                zone: 'utc',
-                            })
-                                .toLocal()
-                                .toFormat('MMMM d, yyyy h:mm a (z)')}
+                            <NounDateOfBirth mintedAt={noun.minted_at} />
                         </p>
 
                         <div>
@@ -103,24 +99,10 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
                                         Colors
                                     </h3>
 
-                                    <ul className={styles.colorList}>
-                                        {Object.entries(
-                                            noun.color_histogram
-                                        ).map(([color, weight], index) => (
-                                            <li key={`${color}-${index}`}>
-                                                <Link
-                                                    href={`${listHref}&color=${encodeURIComponent(
-                                                        color
-                                                    )}`}
-                                                    className="block h-6 w-6"
-                                                    style={{
-                                                        backgroundColor: color,
-                                                    }}
-                                                    title={`${color} (${weight})`}
-                                                ></Link>
-                                            </li>
-                                        ))}
-                                    </ul>
+                                    <NounColorHistogram
+                                        className={styles.colorList}
+                                        histogram={noun.color_histogram}
+                                    />
                                 </section>
                             )}
 
