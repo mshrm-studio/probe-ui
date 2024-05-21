@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useContext, useEffect, useState } from 'react'
 import AuctionContext from '@/utils/contexts/AuctionContext'
 import RpcContext from '@/utils/contexts/RpcContext'
