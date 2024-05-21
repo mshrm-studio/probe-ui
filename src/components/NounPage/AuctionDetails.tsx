@@ -31,7 +31,7 @@ const NounPageAuctionDetails: React.FC<{ nounId: number }> = ({ nounId }) => {
                 <div className={styles.dlItemInline}>
                     <dt className={styles.dt}>Auction ends in:</dt>{' '}
                     <dd className={styles.dd}>
-                        <AuctionCountdown auction={auction} />
+                        <AuctionCountdown />
                     </dd>
                 </div>
             </dl>

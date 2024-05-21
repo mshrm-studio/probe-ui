@@ -3,7 +3,7 @@ import Auction from '@/utils/dto/Auction'
 
 // Define the types for the context
 interface AuctionContext {
-    auction?: Auction
+    auction?: Auction | null
 }
 
 // Create the context with default values

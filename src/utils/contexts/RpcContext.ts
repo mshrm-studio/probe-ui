@@ -1,9 +1,9 @@
 import { createContext } from 'react'
-import { Contract } from 'ethers'
+import { Contract, ContractTransaction } from 'ethers'
 
 // Define the types for the context
 interface RpcContext {
-    nounsAuctionContract?: Contract
+    nounsAuctionContract?: Contract | null
 }
 
 // Create the context with default values

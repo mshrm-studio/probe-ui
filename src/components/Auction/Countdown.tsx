@@ -1,17 +1,22 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import React, {
+    useContext,
+    useEffect,
+    useMemo,
+    useState,
+    useCallback,
+} from 'react'
 import { DateTime } from 'luxon'
-import Auction from '@/utils/dto/Auction'
+import AuctionContext from '@/utils/contexts/AuctionContext'
 
-const AuctionCountdown: React.FC<{ auction: Auction }> = ({ auction }) => {
+const AuctionCountdown: React.FC = () => {
+    const { auction } = useContext(AuctionContext)
     const [countdown, setCountdown] = useState<string>('0')
-    const [countdownInterval, setCountdownInterval] = useState<NodeJS.Timeout>()
 
-    function calculateTimeLeft() {
+    const calculateTimeLeft = useCallback(() => {
         if (auction) {
             const endTime = DateTime.fromSeconds(auction.endTime)
-
             const timeLeft = endTime.diff(DateTime.now(), [
                 'hours',
                 'minutes',
@@ -40,19 +45,23 @@ const AuctionCountdown: React.FC<{ auction: Auction }> = ({ auction }) => {
         } else {
             setCountdown('0')
         }
-    }
+    }, [auction])
 
     useEffect(() => {
         calculateTimeLeft() // Call immediately to initialize countdown
+
         const interval = setInterval(calculateTimeLeft, 1000) // Call every second
-        setCountdownInterval(interval)
 
-        return () => {
-            if (countdownInterval) clearInterval(countdownInterval) // Cleanup interval on component unmount
-        }
-    }, [auction]) // Depend on auction to recalculate when it changes
+        return () => clearInterval(interval)
+    }, [auction]) // Depend on calculateTimeLeft to recalculate when it changes
 
-    return auction && countdown !== '0' ? <>{countdown}</> : <></>
+    const timeLeft = useMemo(() => {
+        return auction && countdown !== '0' ? countdown : null
+    }, [auction, countdown])
+
+    if (timeLeft === null) return null
+
+    return <>{timeLeft}</>
 }
 
 export default AuctionCountdown

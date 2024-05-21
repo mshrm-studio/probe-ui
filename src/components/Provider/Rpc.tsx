@@ -8,7 +8,8 @@ import { nounsAuctionContractABI } from '@/utils/contracts/NounsAuctionContractA
 const RpcProvider: React.FC<{
     children: React.ReactNode
 }> = ({ children }) => {
-    const [nounsAuctionContract, setNounsAuctionContract] = useState<Contract>()
+    const [nounsAuctionContract, setNounsAuctionContract] =
+        useState<Contract | null>(null)
 
     useEffect(() => {
         const infuraApiKey = process.env.NEXT_PUBLIC_INFURA_API_KEY as string
