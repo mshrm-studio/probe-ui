@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useMemo } from 'react'
+import React, { useContext, useMemo } from 'react'
 import Noun from '@/utils/dto/Noun'
 import NounImage from '@/components/Noun/Image'
 import styles from '@/utils/styles/nounList.module.css'
@@ -8,6 +8,7 @@ import Link from 'next/link'
 import Project from '@/utils/dto/Project'
 import { Londrina_Solid } from 'next/font/google'
 import NounListBidBage from '@/components/Noun/List/BidBadge'
+import AuctionContext from '@/utils/contexts/AuctionContext'
 
 const londrinaSolid = Londrina_Solid({
     subsets: ['latin'],
@@ -21,6 +22,8 @@ type Props = {
 }
 
 const NounList: React.FC<Props> = ({ project, fetching, nouns }) => {
+    const { auction } = useContext(AuctionContext)
+
     const linkPrefix = useMemo(() => {
         return project === 'LilNouns' ? `/lils` : `/nouns`
     }, [project])
@@ -41,7 +44,11 @@ const NounList: React.FC<Props> = ({ project, fetching, nouns }) => {
                     <li key={noun.token_id}>
                         <Link
                             href={`${linkPrefix}/${noun.token_id}`}
-                            className={styles.nounLink}
+                            className={`${styles.nounLink} ${
+                                noun.token_id == auction?.nounId
+                                    ? styles.auctionedNoun
+                                    : styles.nonAuctionedNoun
+                            }`}
                         >
                             <NounImage noun={noun} />
 
