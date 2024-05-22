@@ -2,7 +2,7 @@
 
 import Project from '@/utils/dto/Project'
 import useNoun from '@/utils/services/useNoun'
-import { useContext, useEffect, useMemo } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import NounImage from '@/components/Noun/Image'
 import { Londrina_Solid } from 'next/font/google'
 import styles from '@/utils/styles/nounPage.module.css'
@@ -11,11 +11,16 @@ import DimensionsContext from '@/utils/contexts/DimensionsContext'
 import { usePathname } from 'next/navigation'
 import useHref from '@/utils/services/useHref'
 import Link from 'next/link'
-import TextLink from '@/components/TextLink'
 import SpacesImage from '@/components/SpacesImage'
 import NounDateOfBirth from '@/components/Noun/DateOfBirth'
 import NounColorHistogram from '@/components/Noun/ColorHistogram'
 import NounPageAuctionDetails from '@/components/NounPage/AuctionDetails'
+import AuctionPlaceBid from '@/components/Auction/PlaceBid/PlaceBid'
+import AuctionPlaceBidPayableAmount from '../Auction/PlaceBid/PayableAmount'
+import Button from '@/components/Button'
+import { useWeb3ModalAccount } from '@web3modal/ethers/react'
+import ContractTransactionReceipt from '@/utils/dto/ContractTransactionReceipt'
+import CryptoWalletConnect from '@/components/CryptoWallet/Connect'
 
 const londrinaSolid = Londrina_Solid({
     subsets: ['latin'],
@@ -27,6 +32,8 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
     nounId,
 }) => {
     const { error, fetching, fetchNoun, noun } = useNoun(project)
+    const { isConnected } = useWeb3ModalAccount()
+    const [receipt, setReceipt] = useState<ContractTransactionReceipt>()
 
     useEffect(() => {
         fetchNoun(nounId)
@@ -94,7 +101,37 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
                         </p>
 
                         {project === 'Nouns' && (
-                            <NounPageAuctionDetails nounId={noun.token_id} />
+                            <div className="space-y-2">
+                                <NounPageAuctionDetails
+                                    nounId={noun.token_id}
+                                    receipt={receipt}
+                                />
+
+                                <AuctionPlaceBid setReceipt={setReceipt}>
+                                    <div className="flex space-x-2">
+                                        <div>
+                                            <AuctionPlaceBidPayableAmount
+                                                disabled={!isConnected}
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <Button
+                                                disabled={!isConnected}
+                                                nativeType="submit"
+                                            >
+                                                Bid
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </AuctionPlaceBid>
+
+                                {!isConnected && (
+                                    <CryptoWalletConnect>
+                                        Login
+                                    </CryptoWalletConnect>
+                                )}
+                            </div>
                         )}
 
                         <div>
@@ -221,15 +258,17 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
                             </section>
 
                             <div className="mt-4 text-[13px] uppercase">
-                                <TextLink
+                                <Link
+                                    className="text-link"
                                     href={
                                         project === 'Nouns'
                                             ? `https://nouns.wtf/noun/${noun.token_id}`
                                             : `https://lilnouns.wtf/lilnoun/${noun.token_id}`
                                     }
+                                    target="_blank"
                                 >
                                     View Activity
-                                </TextLink>
+                                </Link>
                             </div>
                         </div>
                     </div>

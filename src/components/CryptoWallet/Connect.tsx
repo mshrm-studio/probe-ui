@@ -2,19 +2,14 @@
 
 import { useWeb3Modal } from '@web3modal/ethers/react'
 import React from 'react'
+import Button from '@/components/Button'
 
 export default function CryptoWalletConnect({
     children,
-    className,
 }: {
     children: React.ReactNode
-    className?: string
 }) {
     const { open } = useWeb3Modal()
 
-    return (
-        <button className={className} onClick={() => open()}>
-            {children}
-        </button>
-    )
+    return <Button onClick={() => open()}>{children}</Button>
 }

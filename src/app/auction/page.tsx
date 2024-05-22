@@ -1,53 +1,46 @@
 'use client'
 
-import CryptoWalletAddress from '@/components/CryptoWallet/Address'
 import CryptoWalletConnect from '@/components/CryptoWallet/Connect'
 import AuctionProvider from '@/components/Provider/Auction'
-import AuctionPlaceBid from '@/components/Auction/PlaceBid'
+import AuctionPlaceBid from '@/components/Auction/PlaceBid/PlaceBid'
 import { useWeb3ModalAccount } from '@web3modal/ethers/react'
-import AuctionCountdown from '@/components/Auction/Countdown'
-import AuctionCurrentBid from '@/components/Auction/CurrentBid'
+import Button from '@/components/Button'
+import AuctionPlaceBidPayableAmount from '@/components/Auction/PlaceBid/PayableAmount'
+import NounPageAuctionDetailsForAuctionNoun from '@/components/NounPage/AuctionDetailsForAuctionNoun'
+import { useState } from 'react'
+import ContractTransactionReceipt from '@/utils/dto/ContractTransactionReceipt'
 
 export default function Page() {
-    const { address, chainId, isConnected } = useWeb3ModalAccount()
+    const { isConnected } = useWeb3ModalAccount()
+    const [receipt, setReceipt] = useState<ContractTransactionReceipt>()
 
     return (
         <AuctionProvider>
             <div className="px-4">
-                <div className="space-y-6">
-                    {isConnected ? (
-                        <div className="flex flex-col space-y-2">
-                            <CryptoWalletAddress />
+                <div className="space-y-2">
+                    <NounPageAuctionDetailsForAuctionNoun receipt={receipt} />
 
+                    <AuctionPlaceBid setReceipt={setReceipt}>
+                        <div className="flex space-x-2">
                             <div>
-                                <AuctionCountdown />
+                                <AuctionPlaceBidPayableAmount
+                                    disabled={!isConnected}
+                                />
                             </div>
 
                             <div>
-                                <AuctionCurrentBid />
+                                <Button
+                                    disabled={!isConnected}
+                                    nativeType="submit"
+                                >
+                                    Bid
+                                </Button>
                             </div>
-
-                            <AuctionPlaceBid>
-                                <div className="flex flex-col space-y-2">
-                                    <div>
-                                        <input
-                                            className="border"
-                                            name="payableAmount"
-                                            step="0.001"
-                                            type="number"
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <button type="submit">place bid</button>
-                                    </div>
-                                </div>
-                            </AuctionPlaceBid>
                         </div>
-                    ) : (
-                        <CryptoWalletConnect className="underline">
-                            Login
-                        </CryptoWalletConnect>
+                    </AuctionPlaceBid>
+
+                    {!isConnected && (
+                        <CryptoWalletConnect>Login</CryptoWalletConnect>
                     )}
                 </div>
             </div>
