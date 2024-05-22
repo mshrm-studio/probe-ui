@@ -22,6 +22,7 @@ import { useWeb3ModalAccount } from '@web3modal/ethers/react'
 import ContractTransactionReceipt from '@/utils/dto/ContractTransactionReceipt'
 import CryptoWalletConnect from '@/components/CryptoWallet/Connect'
 import AuctionContext from '@/utils/contexts/AuctionContext'
+import useAuctionStatus from '@/utils/services/useAuctionStatus'
 
 const londrinaSolid = Londrina_Solid({
     subsets: ['latin'],
@@ -36,6 +37,7 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
     const { isConnected } = useWeb3ModalAccount()
     const [receipt, setReceipt] = useState<ContractTransactionReceipt>()
     const { auction } = useContext(AuctionContext)
+    const auctionActive = useAuctionStatus(auction)
 
     useEffect(() => {
         fetchNoun(nounId)
@@ -130,9 +132,9 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
                                         </div>
                                     </AuctionPlaceBid>
 
-                                    {!isConnected && (
+                                    {!isConnected && auctionActive && (
                                         <CryptoWalletConnect>
-                                            Login
+                                            Login to bid
                                         </CryptoWalletConnect>
                                     )}
                                 </section>
