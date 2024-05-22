@@ -57,45 +57,43 @@ const NounPageAuctionDetails: React.FC<{
     if (auction.nounId !== nounId) return null
 
     return (
-        <section>
-            <dl className="space-y-1">
+        <dl className="space-y-1">
+            <div className={styles.dlItemInline}>
+                <dt className={styles.dt}>{bidLabel}:</dt>{' '}
+                <dd className={styles.dd}>
+                    <EthPrice amount={auction.amount} /> by{' '}
+                    {truncatedBidderAddress}
+                </dd>
+            </div>
+
+            {receipt && truncatedReceiptHash && (
                 <div className={styles.dlItemInline}>
-                    <dt className={styles.dt}>{bidLabel}:</dt>{' '}
+                    <dt className={styles.dt}>Receipt:</dt>{' '}
                     <dd className={styles.dd}>
-                        <EthPrice amount={auction.amount} /> by{' '}
-                        {truncatedBidderAddress}
+                        <EtherscanLink
+                            address={receipt.hash}
+                            className="text-link"
+                            type="Transaction"
+                        >
+                            {truncatedReceiptHash}
+                        </EtherscanLink>
                     </dd>
                 </div>
+            )}
 
-                {receipt && truncatedReceiptHash && (
-                    <div className={styles.dlItemInline}>
-                        <dt className={styles.dt}>Receipt:</dt>{' '}
-                        <dd className={styles.dd}>
-                            <EtherscanLink
-                                address={receipt.hash}
-                                className="text-link"
-                                type="Transaction"
-                            >
-                                {truncatedReceiptHash}
-                            </EtherscanLink>
-                        </dd>
-                    </div>
-                )}
-
-                <div className={styles.dlItemInline}>
-                    <dt className={styles.dt}>{countdownLabel}:</dt>{' '}
-                    <dd className={styles.dd}>
-                        {auctionActive ? (
-                            <AuctionCountdown />
-                        ) : (
-                            DateTime.fromSeconds(
-                                auction.endTime
-                            ).toLocaleString(DateTime.DATETIME_MED)
-                        )}
-                    </dd>
-                </div>
-            </dl>
-        </section>
+            <div className={styles.dlItemInline}>
+                <dt className={styles.dt}>{countdownLabel}:</dt>{' '}
+                <dd className={styles.dd}>
+                    {auctionActive ? (
+                        <AuctionCountdown />
+                    ) : (
+                        DateTime.fromSeconds(auction.endTime).toLocaleString(
+                            DateTime.DATETIME_MED
+                        )
+                    )}
+                </dd>
+            </div>
+        </dl>
     )
 }
 

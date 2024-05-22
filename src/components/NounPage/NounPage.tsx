@@ -21,6 +21,7 @@ import Button from '@/components/Button'
 import { useWeb3ModalAccount } from '@web3modal/ethers/react'
 import ContractTransactionReceipt from '@/utils/dto/ContractTransactionReceipt'
 import CryptoWalletConnect from '@/components/CryptoWallet/Connect'
+import AuctionContext from '@/utils/contexts/AuctionContext'
 
 const londrinaSolid = Londrina_Solid({
     subsets: ['latin'],
@@ -34,6 +35,7 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
     const { error, fetching, fetchNoun, noun } = useNoun(project)
     const { isConnected } = useWeb3ModalAccount()
     const [receipt, setReceipt] = useState<ContractTransactionReceipt>()
+    const { auction } = useContext(AuctionContext)
 
     useEffect(() => {
         fetchNoun(nounId)
@@ -100,39 +102,41 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
                             <NounDateOfBirth mintedAt={noun.minted_at} />
                         </p>
 
-                        {project === 'Nouns' && (
-                            <div className="space-y-2">
-                                <NounPageAuctionDetails
-                                    nounId={noun.token_id}
-                                    receipt={receipt}
-                                />
+                        {project === 'Nouns' &&
+                            auction &&
+                            auction.nounId == noun.token_id && (
+                                <section className="space-y-2">
+                                    <NounPageAuctionDetails
+                                        nounId={noun.token_id}
+                                        receipt={receipt}
+                                    />
 
-                                <AuctionPlaceBid setReceipt={setReceipt}>
-                                    <div className="flex space-x-2">
-                                        <div>
-                                            <AuctionPlaceBidPayableAmount
-                                                disabled={!isConnected}
-                                            />
+                                    <AuctionPlaceBid setReceipt={setReceipt}>
+                                        <div className="flex space-x-2">
+                                            <div>
+                                                <AuctionPlaceBidPayableAmount
+                                                    disabled={!isConnected}
+                                                />
+                                            </div>
+
+                                            <div>
+                                                <Button
+                                                    disabled={!isConnected}
+                                                    nativeType="submit"
+                                                >
+                                                    Bid
+                                                </Button>
+                                            </div>
                                         </div>
+                                    </AuctionPlaceBid>
 
-                                        <div>
-                                            <Button
-                                                disabled={!isConnected}
-                                                nativeType="submit"
-                                            >
-                                                Bid
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </AuctionPlaceBid>
-
-                                {!isConnected && (
-                                    <CryptoWalletConnect>
-                                        Login
-                                    </CryptoWalletConnect>
-                                )}
-                            </div>
-                        )}
+                                    {!isConnected && (
+                                        <CryptoWalletConnect>
+                                            Login
+                                        </CryptoWalletConnect>
+                                    )}
+                                </section>
+                            )}
 
                         <div>
                             {noun.color_histogram && (
