@@ -5,7 +5,7 @@ import { Londrina_Solid } from 'next/font/google'
 
 const londrinaSolid = Londrina_Solid({
     subsets: ['latin'],
-    weight: '900',
+    weight: '400',
 })
 
 type Props = {
