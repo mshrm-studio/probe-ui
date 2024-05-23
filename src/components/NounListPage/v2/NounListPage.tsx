@@ -10,7 +10,7 @@ import {
     useState,
 } from 'react'
 import { debounce } from 'lodash'
-import NounList from '@/components/Noun/List'
+import NounList from '@/components/Noun/List/List'
 import Project from '@/utils/dto/Project'
 import DimensionsContext from '@/utils/contexts/DimensionsContext'
 import ShowExplorePageFiltersContext from '@/utils/contexts/ShowExplorePageFiltersContext'

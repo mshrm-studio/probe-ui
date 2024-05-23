@@ -2,18 +2,27 @@
 
 import Project from '@/utils/dto/Project'
 import useNoun from '@/utils/services/useNoun'
-import { useContext, useEffect, useMemo } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import NounImage from '@/components/Noun/Image'
 import { Londrina_Solid } from 'next/font/google'
 import styles from '@/utils/styles/nounPage.module.css'
 import { startCase } from 'lodash'
-import { DateTime } from 'luxon'
 import DimensionsContext from '@/utils/contexts/DimensionsContext'
 import { usePathname } from 'next/navigation'
 import useHref from '@/utils/services/useHref'
 import Link from 'next/link'
-import TextLink from '@/components/TextLink'
 import SpacesImage from '@/components/SpacesImage'
+import NounDateOfBirth from '@/components/Noun/DateOfBirth'
+import NounColorHistogram from '@/components/Noun/ColorHistogram'
+import NounPageAuctionDetails from '@/components/NounPage/AuctionDetails'
+import AuctionPlaceBid from '@/components/Auction/PlaceBid/PlaceBid'
+import AuctionPlaceBidPayableAmount from '../Auction/PlaceBid/PayableAmount'
+import Button from '@/components/Button'
+import { useWeb3ModalAccount } from '@web3modal/ethers/react'
+import ContractTransactionReceipt from '@/utils/dto/ContractTransactionReceipt'
+import CryptoWalletConnect from '@/components/CryptoWallet/Connect'
+import AuctionContext from '@/utils/contexts/AuctionContext'
+import useAuctionStatus from '@/utils/services/useAuctionStatus'
 
 const londrinaSolid = Londrina_Solid({
     subsets: ['latin'],
@@ -25,6 +34,10 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
     nounId,
 }) => {
     const { error, fetching, fetchNoun, noun } = useNoun(project)
+    const { isConnected } = useWeb3ModalAccount()
+    const [receipt, setReceipt] = useState<ContractTransactionReceipt>()
+    const { auction } = useContext(AuctionContext)
+    const auctionActive = useAuctionStatus(auction)
 
     useEffect(() => {
         fetchNoun(nounId)
@@ -88,13 +101,44 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
                 <div className={styles.body}>
                     <div className={styles.content}>
                         <p className={styles.dob}>
-                            Born{' '}
-                            {DateTime.fromISO(noun.minted_at, {
-                                zone: 'utc',
-                            })
-                                .toLocal()
-                                .toFormat('MMMM d, yyyy h:mm a (z)')}
+                            <NounDateOfBirth mintedAt={noun.minted_at} />
                         </p>
+
+                        {project === 'Nouns' &&
+                            auction &&
+                            auction.nounId == noun.token_id && (
+                                <section className="space-y-2">
+                                    <NounPageAuctionDetails
+                                        nounId={noun.token_id}
+                                        receipt={receipt}
+                                    />
+
+                                    <AuctionPlaceBid setReceipt={setReceipt}>
+                                        <div className="flex space-x-2">
+                                            <div>
+                                                <AuctionPlaceBidPayableAmount
+                                                    disabled={!isConnected}
+                                                />
+                                            </div>
+
+                                            <div>
+                                                <Button
+                                                    disabled={!isConnected}
+                                                    nativeType="submit"
+                                                >
+                                                    Bid
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    </AuctionPlaceBid>
+
+                                    {!isConnected && auctionActive && (
+                                        <CryptoWalletConnect>
+                                            Login to bid
+                                        </CryptoWalletConnect>
+                                    )}
+                                </section>
+                            )}
 
                         <div>
                             {noun.color_histogram && (
@@ -103,24 +147,10 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
                                         Colors
                                     </h3>
 
-                                    <ul className={styles.colorList}>
-                                        {Object.entries(
-                                            noun.color_histogram
-                                        ).map(([color, weight], index) => (
-                                            <li key={`${color}-${index}`}>
-                                                <Link
-                                                    href={`${listHref}&color=${encodeURIComponent(
-                                                        color
-                                                    )}`}
-                                                    className="block h-6 w-6"
-                                                    style={{
-                                                        backgroundColor: color,
-                                                    }}
-                                                    title={`${color} (${weight})`}
-                                                ></Link>
-                                            </li>
-                                        ))}
-                                    </ul>
+                                    <NounColorHistogram
+                                        className={styles.colorList}
+                                        histogram={noun.color_histogram}
+                                    />
                                 </section>
                             )}
 
@@ -234,15 +264,17 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
                             </section>
 
                             <div className="mt-4 text-[13px] uppercase">
-                                <TextLink
+                                <Link
+                                    className="text-link"
                                     href={
                                         project === 'Nouns'
                                             ? `https://nouns.wtf/noun/${noun.token_id}`
                                             : `https://lilnouns.wtf/lilnoun/${noun.token_id}`
                                     }
+                                    target="_blank"
                                 >
                                     View Activity
-                                </TextLink>
+                                </Link>
                             </div>
                         </div>
                     </div>
