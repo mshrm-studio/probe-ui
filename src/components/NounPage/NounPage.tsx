@@ -113,24 +113,28 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
                                         receipt={receipt}
                                     />
 
-                                    <AuctionPlaceBid setReceipt={setReceipt}>
-                                        <div className="flex space-x-2">
-                                            <div>
-                                                <AuctionPlaceBidPayableAmount
-                                                    disabled={!isConnected}
-                                                />
-                                            </div>
+                                    {isConnected && (
+                                        <AuctionPlaceBid
+                                            setReceipt={setReceipt}
+                                        >
+                                            <div className="flex space-x-2">
+                                                <div>
+                                                    <AuctionPlaceBidPayableAmount
+                                                        disabled={!isConnected}
+                                                    />
+                                                </div>
 
-                                            <div>
-                                                <Button
-                                                    disabled={!isConnected}
-                                                    nativeType="submit"
-                                                >
-                                                    Bid
-                                                </Button>
+                                                <div>
+                                                    <Button
+                                                        disabled={!isConnected}
+                                                        nativeType="submit"
+                                                    >
+                                                        Bid
+                                                    </Button>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </AuctionPlaceBid>
+                                        </AuctionPlaceBid>
+                                    )}
 
                                     {!isConnected && auctionActive && (
                                         <CryptoWalletConnect>
