@@ -6,3 +6,9 @@ a[aria-disabled='true'] {
     cursor: not-allowed; /* Changing cursor to indicate no interaction is possible */
     pointer-events: none; /* Preventing all click events on the link */
 }
+
+.text-link {
+    color: #2b83f6;
+    font-weight: theme('fontWeight.bold');
+    text-decoration: underline;
+}
