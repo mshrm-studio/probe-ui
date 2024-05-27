@@ -69,6 +69,7 @@ const Select: React.FC<Props> = ({
         <div
             ref={selectRef}
             className={styles.select}
+            data-option-count={options.length}
             data-state={optionsVisible ? 'open' : 'closed'}
         >
             <div className={styles.heading} role="heading">
