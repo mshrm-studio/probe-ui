@@ -19,11 +19,15 @@ const AuctionPlaceBidPayableAmount: React.FC<{ disabled?: boolean }> = ({
 
         const currentBid = parseFloat(auction.amount)
 
-        return Math.max(currentBid * (minBidIncrementPercentage / 100), 0.1)
+        const minBidIncrease = currentBid * (minBidIncrementPercentage / 100)
+
+        return currentBid + minBidIncrease
     }, [auction, minBidIncrementPercentage, reservePrice])
 
     const placeholder = useMemo(() => {
         if (!minBid) return
+
+        if (minBid <= 0) return 'Ξ Max bid'
 
         return `Ξ ${minBid} or more`
     }, [minBid])
