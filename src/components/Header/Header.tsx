@@ -51,7 +51,7 @@ export default function Header() {
     }, [pathname])
 
     return (
-        <header className={`${londrinaSolid.className} p-4`}>
+        <header className={`${londrinaSolid.className} p-4 relative z-[999]`}>
             <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-6">
                     <div>
