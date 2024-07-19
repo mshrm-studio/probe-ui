@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useContext, use } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import NounFiltersDto from '@/utils/dto/NounFilters'
 import useFilters from '@/utils/services/useFilters'
@@ -9,16 +9,15 @@ import SelectNounTrait from '@/components/Select/NounTrait'
 import Project from '@/utils/dto/Project'
 import styles from '@/utils/styles/nounListPageFilters.module.css'
 import { XMarkIcon } from '@heroicons/react/24/solid'
-import ShowExplorePageFiltersContext from '@/utils/contexts/ShowExplorePageFiltersContext'
 import DimensionsContext from '@/utils/contexts/DimensionsContext'
 import RequestingContext from '@/utils/contexts/RequestingContext'
 
 const NounListPageFilters: React.FC<{
     project: Project
-}> = ({ project }) => {
+    setShowFilters: React.Dispatch<React.SetStateAction<boolean>>
+}> = ({ project, setShowFilters }) => {
     const { dimensions } = useContext(DimensionsContext)
     const { requesting } = useContext(RequestingContext)
-    const { setShow } = useContext(ShowExplorePageFiltersContext)
     const { parseFilters } = useFilters()
     const router = useRouter()
     const searchParams = useSearchParams()
@@ -94,9 +93,9 @@ const NounListPageFilters: React.FC<{
                 <button
                     type="button"
                     className={styles.closeButton}
-                    onClick={() => setShow(false)}
+                    onClick={() => setShowFilters(false)}
                 >
-                    <XMarkIcon className="h-7 w-7 text-[#4a4545]" />
+                    <XMarkIcon className={styles.closeButtonIcon} />
                 </button>
 
                 <div className={styles.filters}>

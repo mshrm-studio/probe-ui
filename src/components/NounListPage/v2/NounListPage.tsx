@@ -13,21 +13,23 @@ import { debounce } from 'lodash'
 import NounList from '@/components/Noun/List/List'
 import Project from '@/utils/dto/Project'
 import DimensionsContext from '@/utils/contexts/DimensionsContext'
-import ShowExplorePageFiltersContext from '@/utils/contexts/ShowExplorePageFiltersContext'
 import Noun from '@/utils/dto/Noun'
 import { useSearchParams } from 'next/navigation'
 import useNounList from '@/utils/services/useNounList'
 import RequestingContext from '@/utils/contexts/RequestingContext'
 import SpacesImage from '@/components/SpacesImage'
+import Header from '@/components/NounListPage/v2/Header'
+import NounSearch from '@/components/NounListPage/v2/Search'
 
 const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
     const { dimensions } = useContext(DimensionsContext)
-    const { show: showFilters } = useContext(ShowExplorePageFiltersContext)
     const [page, setPage] = useState(1)
     const lastScrollTop = useRef(0)
     const [nouns, setNouns] = useState<Noun[]>([])
     const searchParams = useSearchParams()
     const { setRequesting } = useContext(RequestingContext)
+    const [showFilters, setShowFilters] = useState(false)
+    const [showSearch, setShowSearch] = useState(false)
 
     const { error, fetching, fetchNounList, nounList, meta } =
         useNounList(project)
@@ -113,47 +115,72 @@ const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
     }, [dimensions.viewportHeight, dimensions.headerHeight])
 
     return (
-        <div
-            className="flex xl:justify-center"
-            style={{ minHeight: minHeight }}
-        >
-            <div className="space-y-3 w-full">
-                {(showFilters || dimensions.viewportWidth >= 1280) && (
-                    <NounFilters project={project} />
-                )}
+        <>
+            <Header
+                setShowFilters={setShowFilters}
+                setShowSearch={setShowSearch}
+            />
 
-                {error && (
-                    <p className="text-center text-red-500 font-bold">
-                        {error.data.message}
-                    </p>
-                )}
+            <main className="w-full px-4">
+                <div
+                    className="flex xl:justify-center"
+                    style={{ minHeight: minHeight }}
+                >
+                    <div className="space-y-3 w-full">
+                        {showFilters ||
+                            (dimensions.viewportWidth >= 1280 && (
+                                <NounFilters
+                                    project={project}
+                                    setShowFilters={setShowFilters}
+                                />
+                            ))}
 
-                {nouns.length > 0 && (
-                    <NounList
-                        fetching={fetching}
-                        nouns={nouns}
-                        project={project}
-                    />
-                )}
+                        {showSearch && (
+                            <NounSearch
+                                project={project}
+                                setShowSearch={setShowSearch}
+                            />
+                        )}
 
-                {fetching && (
-                    <div className="pt-32">
-                        <SpacesImage
-                            className="mx-auto h-10 w-10"
-                            src="misc/probe-loader.gif"
-                            alt="Loader"
-                        />
+                        {error && (
+                            <p className="text-center text-red-500 font-bold">
+                                {error.data.message}
+                            </p>
+                        )}
+
+                        {nouns.length > 0 && (
+                            <NounList
+                                fetching={fetching}
+                                nouns={nouns}
+                                project={project}
+                            />
+                        )}
+
+                        {fetching && (
+                            <div className="pt-32">
+                                <SpacesImage
+                                    className="mx-auto h-10 w-10"
+                                    src="misc/probe-loader.gif"
+                                    alt="Loader"
+                                />
+                            </div>
+                        )}
+
+                        {!fetching &&
+                            meta &&
+                            meta.current_page === meta.last_page && (
+                                <p className="text-center font-bold">
+                                    All {nouns.length}{' '}
+                                    {project === 'LilNouns'
+                                        ? 'Lil Nouns'
+                                        : 'Nouns'}{' '}
+                                    loaded
+                                </p>
+                            )}
                     </div>
-                )}
-
-                {!fetching && meta && meta.current_page === meta.last_page && (
-                    <p className="text-center font-bold">
-                        All {nouns.length}{' '}
-                        {project === 'LilNouns' ? 'Lil Nouns' : 'Nouns'} loaded
-                    </p>
-                )}
-            </div>
-        </div>
+                </div>
+            </main>
+        </>
     )
 }
 

@@ -37,9 +37,7 @@ export default function RootLayout({ children }: Props) {
                         <RequestingProvider>
                             <DimensionsProvider>
                                 <ShowExplorePageFiltersProvider>
-                                    <Header />
-
-                                    <main className="w-full">{children}</main>
+                                    {children}
 
                                     <Analytics />
                                 </ShowExplorePageFiltersProvider>
