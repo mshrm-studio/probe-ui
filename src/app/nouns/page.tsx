@@ -1,6 +1,6 @@
 'use client'
 
-import NounListPage from '@/components/NounListPage/v2/NounListPage'
+import NounListPage from '@/components/NounListPage/NounListPage'
 import AuctionProvider from '@/components/Provider/Auction'
 
 export default function Page() {

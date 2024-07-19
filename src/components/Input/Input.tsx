@@ -4,6 +4,7 @@ import React from 'react'
 import styles from '@/utils/styles/input.module.css'
 
 type Props = {
+    autocomplete?: 'off'
     defaultValue?: string | number
     disabled?: boolean
     name: string
@@ -13,9 +14,11 @@ type Props = {
     step?: string
     value?: string | number
     onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+    onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void
 }
 
 const Input: React.FC<Props> = ({
+    autocomplete,
     defaultValue,
     disabled,
     name,
@@ -25,9 +28,11 @@ const Input: React.FC<Props> = ({
     step,
     value,
     onChange,
+    onKeyDown,
 }) => {
     return (
         <input
+            autoComplete={autocomplete}
             type={nativeType}
             name={name}
             disabled={disabled}
@@ -38,6 +43,7 @@ const Input: React.FC<Props> = ({
             defaultValue={defaultValue}
             value={value}
             onChange={onChange}
+            onKeyDown={onKeyDown}
         />
     )
 }

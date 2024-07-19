@@ -16,6 +16,7 @@
     height: 100%;
     display: flex;
     justify-content: center;
+    padding-top: 3rem;
 }
 
 .wrapper > .content > .closeButton {
@@ -29,16 +30,3 @@
     width: theme('width.7');
     color: #4a4545;
 }
-
-/* @media screen and (min-width: theme('screens.xl')) {
-    .wrapper {
-        position: static;
-        background-color: transparent;
-        backdrop-filter: none;
-        overflow: visible;
-    }
-
-    .wrapper > .content > .closeButton {
-        display: none;
-    }
-} */

@@ -6,11 +6,13 @@ import useNounTraitList from '@/utils/services/useNounTraitList'
 import { debounce, startCase } from 'lodash'
 import Project from '@/utils/dto/Project'
 import Select from '@/components/Select/Select'
+import NounTrait, { isNounTraitList } from '@/utils/dto/NounTrait'
 
 type Props = {
     disabled?: boolean
     project: Project
     layer: NounTraitLayer
+    options?: NounTrait[] | null
     selected?: string | null
     updateSelected: (e: {
         target: { name: string; value?: string | null }
@@ -21,6 +23,7 @@ const SelectNounTrait: React.FC<Props> = ({
     disabled,
     project,
     layer,
+    options,
     selected,
     updateSelected,
 }) => {
@@ -34,7 +37,9 @@ const SelectNounTrait: React.FC<Props> = ({
             fetchNounTraitList(params)
         }, 500)
 
-        debouncedFetch()
+        if (!isNounTraitList(options)) {
+            debouncedFetch()
+        }
 
         return () => debouncedFetch.cancel()
     }, [layer])
@@ -45,35 +50,36 @@ const SelectNounTrait: React.FC<Props> = ({
         }
     }
 
-    const listWithImgSrc = useMemo(() => {
-        return nounTraitList
+    const traitList = useMemo(() => {
+        return isNounTraitList(options)
+            ? options
+            : isNounTraitList(nounTraitList)
             ? nounTraitList
-                  .map((item) => ({
-                      imgSrc: item.svg_url,
-                      label:
-                          item.layer === 'background'
-                              ? item.name.replace(new RegExp(`^${layer}-`), '')
-                              : startCase(
-                                    item.name.replace(
-                                        new RegExp(`^${layer}-`),
-                                        ''
-                                    )
-                                ),
-                      value: item.name,
-                  }))
-                  .reduce(
-                      (unique, item) => {
-                          return unique.some(
-                              (uItem) => uItem.value === item.value
-                          )
-                              ? unique
-                              : [...unique, item]
-                      },
-                      [] as { imgSrc: string; label: string; value: string }[]
-                  )
-                  .sort((a, b) => a.label.localeCompare(b.label))
             : []
-    }, [nounTraitList])
+    }, [options, nounTraitList])
+
+    const listWithImgSrc = useMemo(() => {
+        return traitList
+            .map((item) => ({
+                imgSrc: item.svg_url,
+                label:
+                    item.layer === 'background'
+                        ? item.name.replace(new RegExp(`^${layer}-`), '')
+                        : startCase(
+                              item.name.replace(new RegExp(`^${layer}-`), '')
+                          ),
+                value: item.name,
+            }))
+            .reduce(
+                (unique, item) => {
+                    return unique.some((uItem) => uItem.value === item.value)
+                        ? unique
+                        : [...unique, item]
+                },
+                [] as { imgSrc: string; label: string; value: string }[]
+            )
+            .sort((a, b) => a.label.localeCompare(b.label))
+    }, [traitList])
 
     const curatedList = useMemo(() => {
         if (layer !== 'background') return listWithImgSrc

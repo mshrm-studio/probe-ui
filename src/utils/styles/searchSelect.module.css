@@ -17,6 +17,22 @@
     overflow-y: auto;
 }
 
+.searchSelect > .noOptions {
+    position: absolute;
+    border: 1px solid #d5d7e1;
+    background: #fff;
+    top: calc(100% + 0.5rem);
+    z-index: 2;
+    width: calc(100% + 1rem);
+    margin-left: -0.5rem;
+    max-height: 350px;
+    overflow-y: auto;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+}
+
 .searchSelect > .options > li > .optionsButton {
     display: flex;
     align-items: center;
@@ -28,5 +44,9 @@
 }
 
 .searchSelect > .options > li > .optionsButton:hover {
+    background-color: rgba(213, 215, 225, 0.29);
+}
+
+.searchSelect > .options > li > .optionsButton[data-hovered='true'] {
     background-color: rgba(213, 215, 225, 0.29);
 }

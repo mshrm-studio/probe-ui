@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useContext, useMemo } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Project from '@/utils/dto/Project'
 import styles from '@/utils/styles/nounListPageSearch.module.css'
@@ -8,67 +8,60 @@ import { XMarkIcon } from '@heroicons/react/24/solid'
 import DimensionsContext from '@/utils/contexts/DimensionsContext'
 import RequestingContext from '@/utils/contexts/RequestingContext'
 import SearchSelect from '@/components/SearchSelect'
-import useNounTraitList from '@/utils/services/useNounTraitList'
 import { startCase } from 'lodash'
+import NounTrait from '@/utils/dto/NounTrait'
 
-const NounListPageSearch: React.FC<{
+type Props = {
+    accessoryList: NounTrait[]
+    bodyList: NounTrait[]
+    glassesList: NounTrait[]
+    headList: NounTrait[]
     project: Project
     setShowSearch: React.Dispatch<React.SetStateAction<boolean>>
-}> = ({ project, setShowSearch }) => {
+}
+
+const NounListPageSearch: React.FC<Props> = ({
+    accessoryList,
+    bodyList,
+    glassesList,
+    headList,
+    project,
+    setShowSearch,
+}) => {
     const { dimensions } = useContext(DimensionsContext)
     const { requesting } = useContext(RequestingContext)
     const router = useRouter()
     const searchParams = useSearchParams()
-    const [search, setSearch] = useState<string>()
+    const [search, setSearch] = useState('')
 
-    function updateSelected(value?: string | number) {
+    useEffect(() => {
+        const incumbentSearch = searchParams.get('search')
+
+        if (incumbentSearch) {
+            const matchingOption = options.find(
+                (o) => o.value === incumbentSearch
+            )
+
+            if (matchingOption) {
+                setSearch(matchingOption.label)
+            }
+        }
+    }, [searchParams])
+
+    const updateSelected = (value?: string | number) => {
         if (typeof value === 'string') {
-            setSearch(value)
+            pushToNewQuery(value)
+        } else {
+            pushToNewQuery()
         }
     }
 
-    const {
-        fetchNounTraitList: fetchAccessoryList,
-        nounTraitList: accessoryList,
-    } = useNounTraitList(project)
-
-    const { fetchNounTraitList: fetchBodyList, nounTraitList: bodyList } =
-        useNounTraitList(project)
-
-    const { fetchNounTraitList: fetchGlassesList, nounTraitList: glassesList } =
-        useNounTraitList(project)
-
-    const { fetchNounTraitList: fetchHeadList, nounTraitList: headList } =
-        useNounTraitList(project)
-
-    useEffect(() => {
-        const accessoryListParams = new URLSearchParams()
-        accessoryListParams.set('per_page', '300')
-        accessoryListParams.set('layer', 'accessory')
-        fetchAccessoryList(accessoryListParams)
-
-        const bodyListParams = new URLSearchParams()
-        bodyListParams.set('per_page', '300')
-        bodyListParams.set('layer', 'body')
-        fetchBodyList(bodyListParams)
-
-        const glassesListParams = new URLSearchParams()
-        glassesListParams.set('per_page', '300')
-        glassesListParams.set('layer', 'glasses')
-        fetchGlassesList(glassesListParams)
-
-        const headListParams = new URLSearchParams()
-        headListParams.set('per_page', '300')
-        headListParams.set('layer', 'head')
-        fetchHeadList(headListParams)
-    }, [])
-
     const options = useMemo(() => {
         const listOfAllLayers = [
-            ...(accessoryList || []),
-            ...(bodyList || []),
-            ...(glassesList || []),
-            ...(headList || []),
+            ...accessoryList,
+            ...bodyList,
+            ...glassesList,
+            ...headList,
         ]
 
         return listOfAllLayers
@@ -90,21 +83,26 @@ const NounListPageSearch: React.FC<{
             .sort((a, b) => a.label.localeCompare(b.label))
     }, [accessoryList, bodyList, glassesList, headList])
 
-    // useEffect(() => {
-    //     setSearch(searchParams.get('search') ?? '')
-    // }, [searchParams])
+    const pushToNewQuery = (search?: string) => {
+        const basePath = project === 'Nouns' ? '/nouns' : '/lils'
 
-    // function pushToNewQuery() {
-    //     const basePath = project === 'Nouns' ? '/nouns' : '/lils'
+        const newSearchParams = new URLSearchParams(searchParams.toString())
 
-    //     const fullPath = search ? `${basePath}?${search}` : basePath
+        if (search) {
+            newSearchParams.set('search', search)
+        } else {
+            newSearchParams.delete('search')
+        }
 
-    //     router.push(fullPath)
-    // }
+        newSearchParams.delete('accessory')
+        newSearchParams.delete('body')
+        newSearchParams.delete('glasses')
+        newSearchParams.delete('head')
 
-    // useEffect(() => {
-    //     pushToNewQuery()
-    // }, [search])
+        router.push(`${basePath}?${newSearchParams.toString()}`)
+
+        setShowSearch(false)
+    }
 
     return (
         <div className={styles.wrapper}>
@@ -119,6 +117,7 @@ const NounListPageSearch: React.FC<{
 
                 <div>
                     <SearchSelect
+                        disabled={requesting}
                         options={options}
                         selected={search}
                         updateSelected={updateSelected}
