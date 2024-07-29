@@ -9,6 +9,7 @@ import Project from '@/utils/dto/Project'
 import { Londrina_Solid } from 'next/font/google'
 import NounListBidBage from '@/components/Noun/List/BidBadge'
 import AuctionContext from '@/utils/contexts/AuctionContext'
+import useAuctionStatus from '@/utils/services/useAuctionStatus'
 
 const londrinaSolid = Londrina_Solid({
     subsets: ['latin'],
@@ -23,6 +24,8 @@ type Props = {
 
 const NounList: React.FC<Props> = ({ project, fetching, nouns }) => {
     const { auction } = useContext(AuctionContext)
+
+    const auctionActive = useAuctionStatus(auction)
 
     const linkPrefix = useMemo(() => {
         return project === 'LilNouns' ? `/lils` : `/nouns`
@@ -45,7 +48,8 @@ const NounList: React.FC<Props> = ({ project, fetching, nouns }) => {
                         <Link
                             href={`${linkPrefix}/${noun.token_id}`}
                             className={`${styles.nounLink} ${
-                                noun.token_id == auction?.nounId
+                                noun.token_id == auction?.nounId &&
+                                auctionActive
                                     ? styles.auctionedNoun
                                     : styles.nonAuctionedNoun
                             }`}

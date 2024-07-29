@@ -55,14 +55,12 @@ const AuctionPlaceBid: React.FC<{
                 signer
             ) as Contract
 
-            const data = {
-                value: parseEther(payableAmount),
-            }
-
             const tx = await contractWithSigner.createBid(
                 auction.nounId,
                 clientId,
-                data
+                {
+                    value: parseEther(payableAmount),
+                }
             )
 
             const receipt: ContractTransactionReceipt = await tx.wait()
@@ -70,16 +68,6 @@ const AuctionPlaceBid: React.FC<{
             setReceipt(receipt)
 
             if (fetchAuctionDetails !== undefined) fetchAuctionDetails()
-
-            console.log('receipt', receipt)
-
-            // alert(
-            //     `Bid placed successfully! Transaction Hash: ${
-            //         receipt.hash
-            //     }, Block Number: ${
-            //         receipt.blockNumber
-            //     }, Gas Used: ${receipt.gasUsed.toString()}`
-            // )
         } catch (error: any) {
             console.log('error', error)
 

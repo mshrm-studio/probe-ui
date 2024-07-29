@@ -78,7 +78,7 @@ const AuctionProvider: React.FC<{
         fetchAuctionDetails()
         fetchMinBigIncrementPercentage()
         fetchReservePrice()
-    }, [nounsAuctionContract])
+    }, [])
 
     return (
         <AuctionContext.Provider

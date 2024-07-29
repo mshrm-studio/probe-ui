@@ -1,11 +1,9 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import '@/app/globals.css'
-import Header from '@/components/Header/Header'
 import { Analytics } from '@vercel/analytics/react'
 import DimensionsProvider from '@/components/Provider/Dimensions'
 import RequestingProvider from '@/components/Provider/Requesting'
-import ShowExplorePageFiltersProvider from '@/components/Provider/ShowExplorePageFilters'
 import RpcProvider from '@/components/Provider/Rpc'
 import Web3ModalProvider from '@/components/Provider/Web3Modal'
 
@@ -36,11 +34,9 @@ export default function RootLayout({ children }: Props) {
                     <Web3ModalProvider>
                         <RequestingProvider>
                             <DimensionsProvider>
-                                <ShowExplorePageFiltersProvider>
-                                    {children}
+                                {children}
 
-                                    <Analytics />
-                                </ShowExplorePageFiltersProvider>
+                                <Analytics />
                             </DimensionsProvider>
                         </RequestingProvider>
                     </Web3ModalProvider>
