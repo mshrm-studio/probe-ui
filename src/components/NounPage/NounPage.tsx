@@ -23,6 +23,7 @@ import ContractTransactionReceipt from '@/utils/dto/ContractTransactionReceipt'
 import CryptoWalletConnect from '@/components/CryptoWallet/Connect'
 import AuctionContext from '@/utils/contexts/AuctionContext'
 import useAuctionStatus from '@/utils/services/useAuctionStatus'
+import Header from '@/components/NounPage/Header'
 
 const londrinaSolid = Londrina_Solid({
     subsets: ['latin'],
@@ -70,221 +71,274 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
     }
 
     return (
-        <div className={styles.pageWrapper}>
-            <div
-                className={styles.imageWrapper}
-                style={{
-                    backgroundColor: `#${noun.background_name}`,
-                    maxHeight:
-                        dimensions.viewportOrientation === 'Landscape'
-                            ? dimensions.viewportHeight -
-                              dimensions.headerHeight
-                            : 'none',
-                }}
-            >
-                <NounImage
-                    className="w-full max-w-full max-h-full"
-                    noun={noun}
-                />
-            </div>
+        <>
+            <Header />
 
-            <div className={styles.detailsWrapper}>
-                <h1 className={`${londrinaSolid.className} ${styles.heading}`}>
-                    <span className="block text-[85px] leading-[.69] xl:text-[126px]">
-                        {project === 'LilNouns' ? 'Lil' : 'Noun'}
-                    </span>
-                    <span className="block text-[105px] leading-[.69] xl:text-[156px]">
-                        {noun.token_id}
-                    </span>
-                </h1>
+            <main>
+                <div className={styles.pageWrapper}>
+                    <div
+                        className={styles.imageWrapper}
+                        style={{
+                            backgroundColor: `#${noun.background_name}`,
+                            maxHeight:
+                                dimensions.viewportOrientation === 'Landscape'
+                                    ? dimensions.viewportHeight -
+                                      dimensions.headerHeight
+                                    : 'none',
+                        }}
+                    >
+                        <NounImage
+                            className="w-full max-w-full max-h-full"
+                            noun={noun}
+                        />
+                    </div>
 
-                <div className={styles.body}>
-                    <div className={styles.content}>
-                        <p className={styles.dob}>
-                            <NounDateOfBirth mintedAt={noun.minted_at} />
-                        </p>
+                    <div className={styles.detailsWrapper}>
+                        <h1
+                            className={`${londrinaSolid.className} ${styles.heading}`}
+                        >
+                            <span className="block text-[85px] leading-[.69] xl:text-[126px]">
+                                {project === 'LilNouns' ? 'Lil' : 'Noun'}
+                            </span>
 
-                        {project === 'Nouns' &&
-                            auction &&
-                            auction.nounId == noun.token_id && (
-                                <section className="space-y-2">
-                                    <NounPageAuctionDetails
-                                        nounId={noun.token_id}
-                                        receipt={receipt}
+                            <span className="block text-[105px] leading-[.69] xl:text-[156px]">
+                                {noun.token_id}
+                            </span>
+                        </h1>
+
+                        <div className={styles.body}>
+                            <div className={styles.content}>
+                                <p className={styles.dob}>
+                                    <NounDateOfBirth
+                                        mintedAt={noun.minted_at}
                                     />
+                                </p>
 
-                                    {isConnected && (
-                                        <AuctionPlaceBid
-                                            setReceipt={setReceipt}
-                                        >
-                                            <div className="flex space-x-2">
-                                                <div>
-                                                    <AuctionPlaceBidPayableAmount
-                                                        disabled={!isConnected}
-                                                    />
-                                                </div>
+                                {project === 'Nouns' &&
+                                    auction &&
+                                    auction.nounId == noun.token_id && (
+                                        <section className="space-y-2">
+                                            <NounPageAuctionDetails
+                                                nounId={noun.token_id}
+                                                receipt={receipt}
+                                            />
 
-                                                <div>
-                                                    <Button
-                                                        disabled={!isConnected}
-                                                        nativeType="submit"
+                                            {isConnected && (
+                                                <AuctionPlaceBid
+                                                    setReceipt={setReceipt}
+                                                >
+                                                    <div className="flex space-x-2">
+                                                        <div>
+                                                            <AuctionPlaceBidPayableAmount
+                                                                disabled={
+                                                                    !isConnected
+                                                                }
+                                                            />
+                                                        </div>
+
+                                                        <div>
+                                                            <Button
+                                                                disabled={
+                                                                    !isConnected
+                                                                }
+                                                                nativeType="submit"
+                                                            >
+                                                                Bid
+                                                            </Button>
+                                                        </div>
+                                                    </div>
+                                                </AuctionPlaceBid>
+                                            )}
+
+                                            {!isConnected && auctionActive && (
+                                                <CryptoWalletConnect>
+                                                    Login to bid
+                                                </CryptoWalletConnect>
+                                            )}
+                                        </section>
+                                    )}
+
+                                <div>
+                                    {noun.color_histogram && (
+                                        <section className="mb-6">
+                                            <h3 className={styles.sectionTitle}>
+                                                Colors
+                                            </h3>
+
+                                            <NounColorHistogram
+                                                className={styles.colorList}
+                                                histogram={noun.color_histogram}
+                                            />
+                                        </section>
+                                    )}
+
+                                    <section>
+                                        <h3 className={styles.sectionTitle}>
+                                            {project === 'LilNouns'
+                                                ? 'Lil Noun'
+                                                : 'Noun'}{' '}
+                                            Stats
+                                        </h3>
+
+                                        <dl className="space-y-1">
+                                            <div
+                                                className={styles.dlItemInline}
+                                            >
+                                                <dt className={styles.dt}>
+                                                    Body:
+                                                </dt>{' '}
+                                                <dd className={styles.dd}>
+                                                    <Link
+                                                        href={`${listHref}&body=${noun.body_name}`}
+                                                        className={
+                                                            styles.attributeLink
+                                                        }
                                                     >
-                                                        Bid
-                                                    </Button>
-                                                </div>
+                                                        {startCase(
+                                                            noun.body_name.replace(
+                                                                new RegExp(
+                                                                    `^body-`
+                                                                ),
+                                                                ''
+                                                            )
+                                                        )}
+                                                    </Link>
+                                                </dd>
                                             </div>
-                                        </AuctionPlaceBid>
-                                    )}
 
-                                    {!isConnected && auctionActive && (
-                                        <CryptoWalletConnect>
-                                            Login to bid
-                                        </CryptoWalletConnect>
-                                    )}
-                                </section>
-                            )}
-
-                        <div>
-                            {noun.color_histogram && (
-                                <section className="mb-6">
-                                    <h3 className={styles.sectionTitle}>
-                                        Colors
-                                    </h3>
-
-                                    <NounColorHistogram
-                                        className={styles.colorList}
-                                        histogram={noun.color_histogram}
-                                    />
-                                </section>
-                            )}
-
-                            <section>
-                                <h3 className={styles.sectionTitle}>
-                                    {project === 'LilNouns'
-                                        ? 'Lil Noun'
-                                        : 'Noun'}{' '}
-                                    Stats
-                                </h3>
-
-                                <dl className="space-y-1">
-                                    <div className={styles.dlItemInline}>
-                                        <dt className={styles.dt}>Body:</dt>{' '}
-                                        <dd className={styles.dd}>
-                                            <Link
-                                                href={`${listHref}&body=${noun.body_name}`}
-                                                className={styles.attributeLink}
+                                            <div
+                                                className={styles.dlItemInline}
                                             >
-                                                {startCase(
-                                                    noun.body_name.replace(
-                                                        new RegExp(`^body-`),
-                                                        ''
-                                                    )
-                                                )}
-                                            </Link>
-                                        </dd>
-                                    </div>
+                                                <dt className={styles.dt}>
+                                                    Accessory:
+                                                </dt>{' '}
+                                                <dd className={styles.dd}>
+                                                    <Link
+                                                        href={`${listHref}&accessory=${noun.accessory_name}`}
+                                                        className={
+                                                            styles.attributeLink
+                                                        }
+                                                    >
+                                                        {startCase(
+                                                            noun.accessory_name.replace(
+                                                                new RegExp(
+                                                                    `^accessory-`
+                                                                ),
+                                                                ''
+                                                            )
+                                                        )}
+                                                    </Link>
+                                                </dd>
+                                            </div>
 
-                                    <div className={styles.dlItemInline}>
-                                        <dt className={styles.dt}>
-                                            Accessory:
-                                        </dt>{' '}
-                                        <dd className={styles.dd}>
-                                            <Link
-                                                href={`${listHref}&accessory=${noun.accessory_name}`}
-                                                className={styles.attributeLink}
+                                            <div
+                                                className={styles.dlItemInline}
                                             >
-                                                {startCase(
-                                                    noun.accessory_name.replace(
-                                                        new RegExp(
-                                                            `^accessory-`
-                                                        ),
-                                                        ''
-                                                    )
-                                                )}
-                                            </Link>
-                                        </dd>
-                                    </div>
+                                                <dt className={styles.dt}>
+                                                    Head:
+                                                </dt>{' '}
+                                                <dd className={styles.dd}>
+                                                    <Link
+                                                        href={`${listHref}&head=${noun.head_name}`}
+                                                        className={
+                                                            styles.attributeLink
+                                                        }
+                                                    >
+                                                        {startCase(
+                                                            noun.head_name.replace(
+                                                                new RegExp(
+                                                                    `^head-`
+                                                                ),
+                                                                ''
+                                                            )
+                                                        )}
+                                                    </Link>
+                                                </dd>
+                                            </div>
 
-                                    <div className={styles.dlItemInline}>
-                                        <dt className={styles.dt}>Head:</dt>{' '}
-                                        <dd className={styles.dd}>
-                                            <Link
-                                                href={`${listHref}&head=${noun.head_name}`}
-                                                className={styles.attributeLink}
+                                            <div
+                                                className={styles.dlItemInline}
                                             >
-                                                {startCase(
-                                                    noun.head_name.replace(
-                                                        new RegExp(`^head-`),
-                                                        ''
-                                                    )
-                                                )}
-                                            </Link>
-                                        </dd>
+                                                <dt className={styles.dt}>
+                                                    Glasses:
+                                                </dt>{' '}
+                                                <dd className={styles.dd}>
+                                                    <Link
+                                                        href={`${listHref}&glasses=${noun.glasses_name}`}
+                                                        className={
+                                                            styles.attributeLink
+                                                        }
+                                                    >
+                                                        {startCase(
+                                                            noun.glasses_name.replace(
+                                                                new RegExp(
+                                                                    `^glasses-`
+                                                                ),
+                                                                ''
+                                                            )
+                                                        )}
+                                                    </Link>
+                                                </dd>
+                                            </div>
+
+                                            {noun.area && (
+                                                <div
+                                                    className={
+                                                        styles.dlItemInline
+                                                    }
+                                                >
+                                                    <dt className={styles.dt}>
+                                                        Area:
+                                                    </dt>
+                                                    <dd className={styles.dd}>
+                                                        {noun.area}
+                                                        <span className="lowercase">
+                                                            px
+                                                        </span>
+                                                    </dd>
+                                                </div>
+                                            )}
+
+                                            {noun.weight && (
+                                                <div
+                                                    className={
+                                                        styles.dlItemInline
+                                                    }
+                                                >
+                                                    <dt className={styles.dt}>
+                                                        Brightness:
+                                                    </dt>
+                                                    <dd className={styles.dd}>
+                                                        {noun.weight}
+                                                        <span className="lowercase">
+                                                            lm
+                                                        </span>
+                                                    </dd>
+                                                </div>
+                                            )}
+                                        </dl>
+                                    </section>
+
+                                    <div className="mt-4 text-[13px] uppercase">
+                                        <Link
+                                            className="text-link"
+                                            href={
+                                                project === 'Nouns'
+                                                    ? `https://nouns.wtf/noun/${noun.token_id}`
+                                                    : `https://lilnouns.wtf/lilnoun/${noun.token_id}`
+                                            }
+                                            target="_blank"
+                                        >
+                                            View Activity
+                                        </Link>
                                     </div>
-
-                                    <div className={styles.dlItemInline}>
-                                        <dt className={styles.dt}>Glasses:</dt>{' '}
-                                        <dd className={styles.dd}>
-                                            <Link
-                                                href={`${listHref}&glasses=${noun.glasses_name}`}
-                                                className={styles.attributeLink}
-                                            >
-                                                {startCase(
-                                                    noun.glasses_name.replace(
-                                                        new RegExp(`^glasses-`),
-                                                        ''
-                                                    )
-                                                )}
-                                            </Link>
-                                        </dd>
-                                    </div>
-
-                                    {noun.area && (
-                                        <div className={styles.dlItemInline}>
-                                            <dt className={styles.dt}>Area:</dt>
-                                            <dd className={styles.dd}>
-                                                {noun.area}
-                                                <span className="lowercase">
-                                                    px
-                                                </span>
-                                            </dd>
-                                        </div>
-                                    )}
-
-                                    {noun.weight && (
-                                        <div className={styles.dlItemInline}>
-                                            <dt className={styles.dt}>
-                                                Brightness:
-                                            </dt>
-                                            <dd className={styles.dd}>
-                                                {noun.weight}
-                                                <span className="lowercase">
-                                                    lm
-                                                </span>
-                                            </dd>
-                                        </div>
-                                    )}
-                                </dl>
-                            </section>
-
-                            <div className="mt-4 text-[13px] uppercase">
-                                <Link
-                                    className="text-link"
-                                    href={
-                                        project === 'Nouns'
-                                            ? `https://nouns.wtf/noun/${noun.token_id}`
-                                            : `https://lilnouns.wtf/lilnoun/${noun.token_id}`
-                                    }
-                                    target="_blank"
-                                >
-                                    View Activity
-                                </Link>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </main>
+        </>
     )
 }
 

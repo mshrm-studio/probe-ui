@@ -6,21 +6,22 @@ import { useContext, useMemo } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { Londrina_Solid } from 'next/font/google'
 import RequestingContext from '@/utils/contexts/RequestingContext'
+import useHref from '@/utils/services/useHref'
 
 const londrinaSolid = Londrina_Solid({
     subsets: ['latin'],
     weight: '900',
 })
 
-export default function HeaderExplorePageFilters({
-    explorePageLink,
-}: {
-    explorePageLink: string
-}) {
+export default function NounListPageSorters() {
     const { requesting } = useContext(RequestingContext)
     const router = useRouter()
     const pathname = usePathname()
     const searchParams = useSearchParams()
+    const { lilsLink, nounsLink } = useHref()
+    const explorePageLink = useMemo(() => {
+        return pathname.includes('/lils') ? lilsLink : nounsLink
+    }, [pathname])
 
     const areaSortLabel = useMemo(() => {
         return searchParams?.get('sort_property') !== 'area'

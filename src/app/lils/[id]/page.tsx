@@ -5,7 +5,7 @@ type PageProps = {
     params: { id: number }
 }
 
-export default function Page({ params }: { params: { id: number } }) {
+export default function Page({ params }: PageProps) {
     return <NounPage project="LilNouns" nounId={params.id} />
 }
 

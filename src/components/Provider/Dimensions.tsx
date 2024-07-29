@@ -32,6 +32,9 @@ const DimensionsProvider: React.FC<{
         window.addEventListener('resize', updateDimensions)
 
         updateDimensions()
+        setTimeout(updateDimensions, 1000)
+        setTimeout(updateDimensions, 2000)
+        setTimeout(updateDimensions, 3000)
 
         return () => window.removeEventListener('resize', updateDimensions)
     }, [])
