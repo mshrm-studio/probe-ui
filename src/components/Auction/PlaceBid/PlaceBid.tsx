@@ -18,7 +18,7 @@ const AuctionPlaceBid: React.FC<{
         React.SetStateAction<ContractTransactionReceipt | undefined>
     >
 }> = ({ children, setReceipt }) => {
-    const { nounsAuctionContract } = useContext(RpcContext)
+    const { nounsAuctionContract: contract } = useContext(RpcContext)
     const { walletProvider } = useWeb3ModalProvider()
     const { auction, fetchAuctionDetails } = useContext(AuctionContext)
     const { address } = useWeb3ModalAccount()
@@ -39,7 +39,7 @@ const AuctionPlaceBid: React.FC<{
 
         if (!auction) throw Error('Auction not found')
 
-        if (!nounsAuctionContract) throw Error('Auction contract not found')
+        if (!contract) throw Error('Auction contract not found')
 
         const clientId = process.env.NEXT_PUBLIC_PROBE_NOUNS_CLIENT_ID
 
@@ -48,18 +48,26 @@ const AuctionPlaceBid: React.FC<{
 
         try {
             const provider = new BrowserProvider(walletProvider)
-
             const signer = await provider.getSigner()
+            const contractWithSigner = contract.connect(signer) as Contract
+            const value = parseEther(payableAmount)
 
-            const contractWithSigner = nounsAuctionContract.connect(
-                signer
-            ) as Contract
+            const gasEstimate = await contractWithSigner.createBid.estimateGas(
+                auction.nounId,
+                clientId,
+                {
+                    value,
+                }
+            )
+
+            const gasLimit = gasEstimate + BigInt(10000) // A 10,000 gas pad is used to avoid 'Out of gas' errors
 
             const tx = await contractWithSigner.createBid(
                 auction.nounId,
                 clientId,
                 {
-                    value: parseEther(payableAmount),
+                    value,
+                    gasLimit,
                 }
             )
 
