@@ -6,7 +6,7 @@ import styles from '@/utils/styles/header.module.css'
 import { useContext } from 'react'
 import RequestingContext from '@/utils/contexts/RequestingContext'
 
-export default function HeaderProjectSwitcher() {
+export default function NounListPageProjectSwitcher() {
     const { requesting } = useContext(RequestingContext)
     const pathname = usePathname()
     const searchParams = useSearchParams()
