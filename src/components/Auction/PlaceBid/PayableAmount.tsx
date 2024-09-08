@@ -29,7 +29,7 @@ const AuctionPlaceBidPayableAmount: React.FC<{ disabled?: boolean }> = ({
 
         if (minBid <= 0) return 'Ξ Max bid'
 
-        return `Ξ ${minBid} or more`
+        return `Ξ ${parseFloat(minBid.toFixed(4))} or more`
     }, [minBid])
 
     if (!auction) return null
