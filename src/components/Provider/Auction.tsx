@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import AuctionContext from '@/utils/contexts/AuctionContext'
 import RpcContext from '@/utils/contexts/RpcContext'
 import { formatEther } from 'ethers'
@@ -9,19 +9,20 @@ import Auction from '@/utils/dto/Auction'
 const AuctionProvider: React.FC<{
     children: React.ReactNode
 }> = ({ children }) => {
-    const { nounsAuctionContract } = useContext(RpcContext)
+    const { nounsAuctionContract: contract } = useContext(RpcContext)
 
     const [auction, setAuction] = useState<Auction>()
 
     async function fetchAuctionDetails() {
-        if (!nounsAuctionContract) {
+        if (!contract) {
             console.error('Nouns auction contract not found')
+            alert('Nouns auction contract not found')
             return
         }
 
         try {
             const { nounId, amount, startTime, endTime, bidder, settled } =
-                await nounsAuctionContract.auction()
+                await contract.auction()
 
             setAuction({
                 nounId: Number(nounId),
@@ -33,6 +34,7 @@ const AuctionProvider: React.FC<{
             })
         } catch (error) {
             console.error('Failed to fetch auction details', error)
+            alert('Failed to fetch auction details')
         }
     }
 
@@ -40,13 +42,14 @@ const AuctionProvider: React.FC<{
         useState<number>()
 
     async function fetchMinBigIncrementPercentage() {
-        if (!nounsAuctionContract) {
+        if (!contract) {
             console.error('Nouns auction contract not found')
+            alert('Nouns auction contract not found')
             return
         }
 
         try {
-            const pc = await nounsAuctionContract.minBidIncrementPercentage()
+            const pc = await contract.minBidIncrementPercentage()
 
             setMinBigIncrementPercentage(Number(pc))
         } catch (error) {
@@ -54,23 +57,26 @@ const AuctionProvider: React.FC<{
                 'Failed to fetch auction min bid increment percentage',
                 error
             )
+            alert('Failed to fetch auction min bid increment percentage')
         }
     }
 
     const [reservePrice, setReservePrice] = useState<number>()
 
     async function fetchReservePrice() {
-        if (!nounsAuctionContract) {
+        if (!contract) {
             console.error('Nouns auction contract not found')
+            alert('Nouns auction contract not found')
             return
         }
 
         try {
-            const reserve = await nounsAuctionContract.reservePrice()
+            const reserve = await contract.reservePrice()
 
             setReservePrice(Number(reserve))
         } catch (error) {
             console.error('Failed to fetch auction reserve price', error)
+            alert('Failed to fetch auction reserve price')
         }
     }
 
@@ -79,6 +85,45 @@ const AuctionProvider: React.FC<{
         fetchMinBigIncrementPercentage()
         fetchReservePrice()
     }, [])
+
+    const handleAuctionBid = (
+        nounId: number,
+        sender: string,
+        value: string,
+        extended: boolean
+    ) => {
+        alert(
+            `New bid placed. NounId: ${nounId}, Sender: ${sender}, Value: ${formatEther(
+                value
+            )}, Extended: ${extended}`
+        )
+
+        setAuction((prev) => {
+            if (!prev) return prev // Ensure previous auction state exists
+
+            return {
+                ...prev,
+                amount: formatEther(value), // Convert value from wei to ether
+                bidder: sender,
+            }
+        })
+    }
+
+    useEffect(() => {
+        if (!contract) return
+
+        // Subscribe to events with an arrow function that calls the handler
+        contract.on('AuctionBid', (nounId, sender, value, extended) =>
+            handleAuctionBid(nounId, sender, value, extended)
+        )
+
+        // Cleanup listeners on component unmount
+        return () => {
+            contract.off('AuctionBid', (nounId, sender, value, extended) =>
+                handleAuctionBid(nounId, sender, value, extended)
+            )
+        }
+    }, [contract])
 
     return (
         <AuctionContext.Provider
