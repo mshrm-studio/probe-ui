@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useCallback, useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import AuctionContext from '@/utils/contexts/AuctionContext'
 import RpcContext from '@/utils/contexts/RpcContext'
 import { formatEther } from 'ethers'
