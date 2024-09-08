@@ -20,7 +20,7 @@ const AuctionPlaceBid: React.FC<{
 }> = ({ children, setReceipt }) => {
     const { nounsAuctionContract: contract } = useContext(RpcContext)
     const { walletProvider } = useWeb3ModalProvider()
-    const { auction, fetchAuctionDetails } = useContext(AuctionContext)
+    const { auction } = useContext(AuctionContext)
     const { address } = useWeb3ModalAccount()
     const auctionActive = useAuctionStatus(auction)
 
@@ -61,15 +61,9 @@ const AuctionPlaceBid: React.FC<{
                     }
                 )
 
-            console.log('bigIntGasEstimate', bigIntGasEstimate)
-            console.log('Number(gasEstimate)', Number(bigIntGasEstimate))
-
             const bigIntGasLimit = bigIntGasEstimate + BigInt(10000) // A 10,000 gas pad is used to avoid 'Out of gas' errors
 
             const gasLimit = Number(bigIntGasLimit)
-
-            console.log('bigIntGasLimit', bigIntGasLimit)
-            console.log('Number(gasLimit)', gasLimit)
 
             const tx = await contractWithSigner.createBid(
                 auction.nounId,
@@ -83,8 +77,6 @@ const AuctionPlaceBid: React.FC<{
             const receipt: ContractTransactionReceipt = await tx.wait()
 
             setReceipt(receipt)
-
-            if (fetchAuctionDetails !== undefined) fetchAuctionDetails()
         } catch (error: any) {
             console.log('error', error)
 
