@@ -60,6 +60,16 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
         fetchBlockNumber()
     }, [noun, provider])
 
+    useEffect(() => {
+        if (!noun) return
+
+        document.body.style.backgroundColor = `#${noun.background_name}`
+
+        return () => {
+            document.body.style.backgroundColor = ''
+        }
+    }, [noun])
+
     const { dimensions } = useContext(DimensionsContext)
     const { lilsLink, nounsLink } = useHref()
     const pathname = usePathname()
@@ -190,6 +200,9 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
 
                                             <NounColorHistogram
                                                 className={styles.colorList}
+                                                bgColorHex={
+                                                    noun.background_name
+                                                }
                                                 histogram={noun.color_histogram}
                                             />
                                         </section>

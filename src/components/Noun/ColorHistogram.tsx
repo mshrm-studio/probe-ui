@@ -7,10 +7,15 @@ import { usePathname } from 'next/navigation'
 
 type Props = {
     className?: string
+    bgColorHex: string
     histogram: Record<string, number>
 }
 
-const NounColorHistogram: React.FC<Props> = ({ className = '', histogram }) => {
+const NounColorHistogram: React.FC<Props> = ({
+    className = '',
+    bgColorHex,
+    histogram,
+}) => {
     const { lilsLink, nounsLink } = useHref()
 
     const pathname = usePathname()
@@ -19,9 +24,14 @@ const NounColorHistogram: React.FC<Props> = ({ className = '', histogram }) => {
         return pathname.includes('/lils') ? lilsLink : nounsLink
     }, [pathname])
 
+    const filteredHistogram = useMemo(() => {
+        const { [`#${bgColorHex}`]: _, ...rest } = histogram
+        return rest
+    }, [histogram, bgColorHex])
+
     return (
         <ul className={className}>
-            {Object.entries(histogram).map(([color, weight], index) => (
+            {Object.entries(filteredHistogram).map(([color, weight], index) => (
                 <li key={`${color}-${index}`}>
                     <Link
                         href={`${listHref}&color=${encodeURIComponent(color)}`}

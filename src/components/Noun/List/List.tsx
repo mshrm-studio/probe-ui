@@ -33,9 +33,7 @@ const NounList: React.FC<Props> = ({ project, nouns }) => {
 
     return (
         <div className={styles.listWrapper}>
-            <ul
-                className={`grid gap-2 grid-cols-5 md:grid-cols-10 xl:grid-cols-18`}
-            >
+            <ul className="grid gap-2 grid-cols-5 md:grid-cols-10 xl:grid-cols-18">
                 {nounsWithSvgUrl.map((noun) => (
                     <li key={noun.token_id}>
                         <Link
