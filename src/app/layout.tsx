@@ -1,13 +1,10 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import '@/app/globals.css'
 import { Analytics } from '@vercel/analytics/react'
 import DimensionsProvider from '@/components/Provider/Dimensions'
 import RequestingProvider from '@/components/Provider/Requesting'
 import RpcProvider from '@/components/Provider/Rpc'
 import Web3ModalProvider from '@/components/Provider/Web3Modal'
-
-const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
     title: 'probe.wtf',
@@ -27,7 +24,7 @@ export default function RootLayout({ children }: Props) {
                 type="image/svg"
             />
 
-            <body className={inter.className}>
+            <body>
                 <RpcProvider>
                     <Web3ModalProvider>
                         <RequestingProvider>
