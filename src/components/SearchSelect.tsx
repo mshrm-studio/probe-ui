@@ -7,11 +7,6 @@ import styles from '@/utils/styles/searchSelect.module.css'
 import { Londrina_Solid } from 'next/font/google'
 import Input from '@/components/Input/Input'
 
-const londrinaSolidBlack = Londrina_Solid({
-    subsets: ['latin'],
-    weight: '900',
-})
-
 const londrinaSolidNormal = Londrina_Solid({
     subsets: ['latin'],
     weight: '400',
@@ -47,7 +42,7 @@ const SearchSelect: React.FC<Props> = ({
 
     const searchFilteredOptions = useMemo(() => {
         return options.filter((option) => {
-            return option.label.toLowerCase().includes(search.toLowerCase())
+            return option.label.toLowerCase().startsWith(search.toLowerCase())
         })
     }, [options, search])
 

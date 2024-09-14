@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Project from '@/utils/dto/Project'
 import styles from '@/utils/styles/nounListPageSearch.module.css'
 import { XMarkIcon } from '@heroicons/react/24/solid'
-import DimensionsContext from '@/utils/contexts/DimensionsContext'
 import RequestingContext from '@/utils/contexts/RequestingContext'
 import SearchSelect from '@/components/SearchSelect'
 import { startCase } from 'lodash'
@@ -28,7 +27,6 @@ const NounListPageSearch: React.FC<Props> = ({
     project,
     setShowSearch,
 }) => {
-    const { dimensions } = useContext(DimensionsContext)
     const { requesting } = useContext(RequestingContext)
     const router = useRouter()
     const searchParams = useSearchParams()
