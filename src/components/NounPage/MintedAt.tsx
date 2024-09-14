@@ -7,7 +7,7 @@ type Props = {
 const NounPageMintedAt: React.FC<Props> = ({ mintedAt }) => {
     return (
         <span>
-            Minted at <MintDate mintedAt={mintedAt} />
+            Minted <MintDate mintedAt={mintedAt} />
         </span>
     )
 }

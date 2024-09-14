@@ -10,10 +10,6 @@
     color: #9c9c9c;
 }
 
-.input::placeholder {
-    text-transform: uppercase;
-}
-
 .input:focus {
     outline: none;
 }

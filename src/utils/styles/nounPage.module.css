@@ -3,7 +3,6 @@
 }
 
 .detailsWrapper > .heading {
-    text-transform: uppercase;
     margin-bottom: 3rem;
 }
 
@@ -20,14 +19,12 @@
     color: #6c6c6c;
     font-size: 11px;
     font-weight: 700;
-    text-transform: uppercase;
 }
 
 .sectionTitle {
     color: rgba(0, 0, 0, 0.33);
     font-size: 11px;
     font-weight: 700;
-    text-transform: uppercase;
     margin-bottom: 0.25rem;
 }
 
@@ -37,7 +34,6 @@
 
 .dt {
     font-weight: bold;
-    text-transform: uppercase;
     color: #858585;
     font-size: 13px;
     display: inline-block;
@@ -45,7 +41,6 @@
 
 .dd {
     font-weight: bold;
-    text-transform: uppercase;
     font-size: 13px;
     display: inline-block;
 }

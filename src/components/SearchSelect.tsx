@@ -4,13 +4,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import SpacesImage from '@/components/SpacesImage'
 import SelectOption from '@/utils/dto/SelectOption'
 import styles from '@/utils/styles/searchSelect.module.css'
-import { Londrina_Solid } from 'next/font/google'
 import Input from '@/components/Input/Input'
-
-const londrinaSolidNormal = Londrina_Solid({
-    subsets: ['latin'],
-    weight: '400',
-})
 
 type Props = {
     disabled?: boolean
@@ -116,9 +110,7 @@ const SearchSelect: React.FC<Props> = ({
             </div>
 
             {searchFilteredOptions.length === 0 ? (
-                <div
-                    className={`${styles.noOptions} ${londrinaSolidNormal.className} text-xl uppercase`}
-                >
+                <div className={`${styles.noOptions} text-xl`}>
                     No matches for "{search}"
                 </div>
             ) : (
@@ -155,9 +147,7 @@ const SearchSelect: React.FC<Props> = ({
                                     </div>
                                 )}
 
-                                <span
-                                    className={`${londrinaSolidNormal.className} text-xl uppercase truncate`}
-                                >
+                                <span className="text-xl truncate">
                                     {option.label}
                                 </span>
                             </button>

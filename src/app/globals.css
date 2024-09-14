@@ -2,9 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
 a[aria-disabled='true'] {
     cursor: not-allowed; /* Changing cursor to indicate no interaction is possible */
     pointer-events: none; /* Preventing all click events on the link */
+}
+
+button {
+    text-transform: uppercase;
 }
 
 .text-link {

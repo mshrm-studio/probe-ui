@@ -4,7 +4,6 @@ import Project from '@/utils/dto/Project'
 import useNoun from '@/utils/services/useNoun'
 import { useContext, useEffect, useMemo, useState } from 'react'
 import NounImage from '@/components/Noun/Image'
-import { Londrina_Solid } from 'next/font/google'
 import styles from '@/utils/styles/nounPage.module.css'
 import { startCase } from 'lodash'
 import DimensionsContext from '@/utils/contexts/DimensionsContext'
@@ -26,11 +25,6 @@ import AuctionContext from '@/utils/contexts/AuctionContext'
 import useAuctionStatus from '@/utils/services/useAuctionStatus'
 import Header from '@/components/NounPage/Header'
 import RpcContext from '@/utils/contexts/RpcContext'
-
-const londrinaSolid = Londrina_Solid({
-    subsets: ['latin'],
-    weight: '400',
-})
 
 const NounPage: React.FC<{ project: Project; nounId: number }> = ({
     project,
@@ -116,9 +110,7 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
                     </div>
 
                     <div className={styles.detailsWrapper}>
-                        <h1
-                            className={`${londrinaSolid.className} ${styles.heading}`}
-                        >
+                        <h1 className={styles.heading}>
                             <span className="block text-[85px] leading-[.69] xl:text-[126px]">
                                 {project === 'LilNouns' ? 'Lil' : 'Noun'}
                             </span>
@@ -350,7 +342,7 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
                                         </dl>
                                     </section>
 
-                                    <div className="mt-4 text-[13px] uppercase">
+                                    <div className="mt-4 text-[13px]">
                                         <Link
                                             className="text-link"
                                             href={

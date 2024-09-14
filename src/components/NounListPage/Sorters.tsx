@@ -4,14 +4,8 @@ import { ChevronRightIcon } from '@heroicons/react/24/solid'
 import styles from '@/utils/styles/header.module.css'
 import { useContext, useMemo } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { Londrina_Solid } from 'next/font/google'
 import RequestingContext from '@/utils/contexts/RequestingContext'
 import useHref from '@/utils/services/useHref'
-
-const londrinaSolid = Londrina_Solid({
-    subsets: ['latin'],
-    weight: '900',
-})
 
 export default function NounListPageSorters() {
     const { requesting } = useContext(RequestingContext)
@@ -84,11 +78,7 @@ export default function NounListPageSorters() {
                     className="flex items-center"
                     onClick={resetFilters}
                 >
-                    <span
-                        className={`${londrinaSolid.className} ${styles.filterSortBtn}`}
-                    >
-                        Reset
-                    </span>
+                    <span className={styles.filterSortBtn}>Reset</span>
 
                     <ChevronRightIcon className={styles.filterSortBtnIcon} />
                 </button>
@@ -101,9 +91,7 @@ export default function NounListPageSorters() {
                     className="flex items-center"
                     onClick={() => updateSort(tokenIdSortLabel)}
                 >
-                    <span
-                        className={`${londrinaSolid.className} ${styles.filterSortBtn}`}
-                    >
+                    <span className={styles.filterSortBtn}>
                         {tokenIdSortLabel}
                     </span>
 
@@ -118,9 +106,7 @@ export default function NounListPageSorters() {
                     className="flex items-center"
                     onClick={() => updateSort(weightSortLabel)}
                 >
-                    <span
-                        className={`${londrinaSolid.className} ${styles.filterSortBtn}`}
-                    >
+                    <span className={styles.filterSortBtn}>
                         {weightSortLabel}
                     </span>
 
@@ -135,9 +121,7 @@ export default function NounListPageSorters() {
                     className="flex items-center"
                     onClick={() => updateSort(areaSortLabel)}
                 >
-                    <span
-                        className={`${londrinaSolid.className} ${styles.filterSortBtn}`}
-                    >
+                    <span className={styles.filterSortBtn}>
                         {areaSortLabel}
                     </span>
 

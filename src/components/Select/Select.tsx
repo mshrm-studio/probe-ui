@@ -4,19 +4,8 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import SpacesImage from '@/components/SpacesImage'
 import SelectOption from '@/utils/dto/SelectOption'
 import styles from '@/utils/styles/select.module.css'
-import { Londrina_Solid } from 'next/font/google'
 import useOutsideClick from '@/utils/services/useClickOutside'
 import { ChevronDownIcon } from '@heroicons/react/24/solid'
-
-const londrinaSolidBlack = Londrina_Solid({
-    subsets: ['latin'],
-    weight: '900',
-})
-
-const londrinaSolidNormal = Londrina_Solid({
-    subsets: ['latin'],
-    weight: '400',
-})
 
 type Props = {
     disabled?: boolean
@@ -79,11 +68,7 @@ const Select: React.FC<Props> = ({
                     className={styles.button}
                     onClick={toggleOptions}
                 >
-                    <label
-                        className={`${londrinaSolidBlack.className} ${styles.label}`}
-                    >
-                        {label}
-                    </label>
+                    <label className={styles.label}>{label}</label>
 
                     {selected ? (
                         <div className={styles.selected}>
@@ -104,20 +89,14 @@ const Select: React.FC<Props> = ({
                                 />
                             )}
 
-                            <span
-                                className={`${londrinaSolidNormal.className} truncate`}
-                            >
+                            <span className="truncate">
                                 {selectedOption
                                     ? selectedOption.label
                                     : selected}
                             </span>
                         </div>
                     ) : (
-                        <div
-                            className={`${londrinaSolidNormal.className} ${styles.placeholder}`}
-                        >
-                            {placeholder}
-                        </div>
+                        <div className={styles.placeholder}>{placeholder}</div>
                     )}
 
                     <div className={styles.iconWrapper}>
@@ -134,9 +113,7 @@ const Select: React.FC<Props> = ({
                             className={styles.optionsButton}
                             onClick={() => handleSelect(undefined)}
                         >
-                            <span
-                                className={`${londrinaSolidNormal.className} text-xl uppercase truncate`}
-                            >
+                            <span className="text-xl truncate">
                                 {placeholder}
                             </span>
                         </button>
@@ -167,9 +144,7 @@ const Select: React.FC<Props> = ({
                                     </div>
                                 )}
 
-                                <span
-                                    className={`${londrinaSolidNormal.className} text-xl uppercase truncate`}
-                                >
+                                <span className="text-xl truncate">
                                     {option.label}
                                 </span>
                             </button>
