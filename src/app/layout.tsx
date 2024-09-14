@@ -5,6 +5,13 @@ import DimensionsProvider from '@/components/Provider/Dimensions'
 import RequestingProvider from '@/components/Provider/Requesting'
 import RpcProvider from '@/components/Provider/Rpc'
 import Web3ModalProvider from '@/components/Provider/Web3Modal'
+import { Comic_Neue } from 'next/font/google'
+
+const comicNeue = Comic_Neue({
+    weight: ['700'], // Specify the weights you want to use
+    subsets: ['latin'], // Include the subset for Latin characters
+    display: 'swap', // Optional: improve loading performance with "swap"
+})
 
 export const metadata: Metadata = {
     title: 'probe.wtf',
@@ -24,7 +31,7 @@ export default function RootLayout({ children }: Props) {
                 type="image/svg"
             />
 
-            <body>
+            <body className={comicNeue.className}>
                 <RpcProvider>
                     <Web3ModalProvider>
                         <RequestingProvider>
