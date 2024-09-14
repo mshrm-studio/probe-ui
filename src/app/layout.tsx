@@ -19,13 +19,11 @@ type Props = {
 }
 
 export default function RootLayout({ children }: Props) {
-    const spacesStorageUrl = process.env.NEXT_PUBLIC_DO_STORAGE_URL
-
     return (
         <html lang="en">
             <link
                 rel="icon"
-                href={`${spacesStorageUrl}/Probe_Logo.svg`}
+                href={`${process.env.NEXT_PUBLIC_DO_STORAGE_URL}/Probe_Logo.svg`}
                 type="image/svg"
             />
 

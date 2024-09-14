@@ -86,44 +86,44 @@ const AuctionProvider: React.FC<{
         fetchReservePrice()
     }, [])
 
-    const handleAuctionBid = (
-        nounId: number,
-        sender: string,
-        value: string,
-        extended: boolean
-    ) => {
-        alert(
-            `New bid placed. NounId: ${nounId}, Sender: ${sender}, Value: ${formatEther(
-                value
-            )}, Extended: ${extended}`
-        )
+    // const handleAuctionBid = (
+    //     nounId: number,
+    //     sender: string,
+    //     value: string,
+    //     extended: boolean
+    // ) => {
+    //     alert(
+    //         `New bid placed. NounId: ${nounId}, Sender: ${sender}, Value: ${formatEther(
+    //             value
+    //         )}, Extended: ${extended}`
+    //     )
 
-        setAuction((prev) => {
-            if (!prev) return prev // Ensure previous auction state exists
+    //     setAuction((prev) => {
+    //         if (!prev) return prev // Ensure previous auction state exists
 
-            return {
-                ...prev,
-                amount: formatEther(value), // Convert value from wei to ether
-                bidder: sender,
-            }
-        })
-    }
+    //         return {
+    //             ...prev,
+    //             amount: formatEther(value), // Convert value from wei to ether
+    //             bidder: sender,
+    //         }
+    //     })
+    // }
 
-    useEffect(() => {
-        if (!contract) return
+    // useEffect(() => {
+    //     if (!contract) return
 
-        // Subscribe to events with an arrow function that calls the handler
-        contract.on('AuctionBid', (nounId, sender, value, extended) =>
-            handleAuctionBid(nounId, sender, value, extended)
-        )
+    //     // Subscribe to events with an arrow function that calls the handler
+    //     contract.on('AuctionBid', (nounId, sender, value, extended) =>
+    //         handleAuctionBid(nounId, sender, value, extended)
+    //     )
 
-        // Cleanup listeners on component unmount
-        return () => {
-            contract.off('AuctionBid', (nounId, sender, value, extended) =>
-                handleAuctionBid(nounId, sender, value, extended)
-            )
-        }
-    }, [contract])
+    //     // Cleanup listeners on component unmount
+    //     return () => {
+    //         contract.off('AuctionBid', (nounId, sender, value, extended) =>
+    //             handleAuctionBid(nounId, sender, value, extended)
+    //         )
+    //     }
+    // }, [contract])
 
     return (
         <AuctionContext.Provider
