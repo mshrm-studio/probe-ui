@@ -50,6 +50,7 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
                 const block = await provider.getBlock(noun.block_number)
 
                 if (block) {
+                    console.log('block', block)
                     setBlockNumber(block.number)
                 }
             } catch (error) {
