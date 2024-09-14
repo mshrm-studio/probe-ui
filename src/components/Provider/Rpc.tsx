@@ -8,6 +8,7 @@ import { nounsAuctionContractABI } from '@/utils/contracts/NounsAuctionContractA
 const RpcProvider: React.FC<{
     children: React.ReactNode
 }> = ({ children }) => {
+    const [provider, setProvider] = useState<JsonRpcProvider | null>(null)
     const [nounsAuctionContract, setNounsAuctionContract] =
         useState<Contract | null>(null)
 
@@ -26,19 +27,20 @@ const RpcProvider: React.FC<{
                 ? `https://mainnet.infura.io/v3/${infuraApiKey}`
                 : `https://sepolia.infura.io/v3/${infuraApiKey}`
 
-        const provider = new JsonRpcProvider(rpcUrl)
+        const jsonRpcProvider = new JsonRpcProvider(rpcUrl)
+        setProvider(jsonRpcProvider)
 
         const contract = new Contract(
             nounsAuctionContractAddress,
             nounsAuctionContractABI,
-            provider
+            jsonRpcProvider
         )
 
         setNounsAuctionContract(contract)
     }, [])
 
     return (
-        <RpcContext.Provider value={{ nounsAuctionContract }}>
+        <RpcContext.Provider value={{ nounsAuctionContract, provider }}>
             {children}
         </RpcContext.Provider>
     )

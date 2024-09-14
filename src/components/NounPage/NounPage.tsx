@@ -12,7 +12,8 @@ import { usePathname } from 'next/navigation'
 import useHref from '@/utils/services/useHref'
 import Link from 'next/link'
 import SpacesImage from '@/components/SpacesImage'
-import NounDateOfBirth from '@/components/Noun/DateOfBirth'
+import SettlementDetails from '@/components/NounPage/SettlementDetails'
+import DateOfBirth from '@/components/NounPage/DateOfBirth'
 import NounColorHistogram from '@/components/Noun/ColorHistogram'
 import NounPageAuctionDetails from '@/components/NounPage/AuctionDetails'
 import AuctionPlaceBid from '@/components/Auction/PlaceBid/PlaceBid'
@@ -24,6 +25,7 @@ import CryptoWalletConnect from '@/components/CryptoWallet/Connect'
 import AuctionContext from '@/utils/contexts/AuctionContext'
 import useAuctionStatus from '@/utils/services/useAuctionStatus'
 import Header from '@/components/NounPage/Header'
+import RpcContext from '@/utils/contexts/RpcContext'
 
 const londrinaSolid = Londrina_Solid({
     subsets: ['latin'],
@@ -39,10 +41,30 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
     const [receipt, setReceipt] = useState<ContractTransactionReceipt>()
     const { auction } = useContext(AuctionContext)
     const auctionActive = useAuctionStatus(auction)
+    const { provider } = useContext(RpcContext)
+    const [blockNumber, setBlockNumber] = useState<number | null>(null)
 
     useEffect(() => {
         fetchNoun(nounId)
     }, [nounId])
+
+    useEffect(() => {
+        if (!provider || !noun) return
+
+        const fetchBlockNumber = async () => {
+            try {
+                const block = await provider.getBlock(noun.block_number)
+
+                if (block) {
+                    setBlockNumber(block.number)
+                }
+            } catch (error) {
+                console.error('Failed to fetch block number:', error)
+            }
+        }
+
+        fetchBlockNumber()
+    }, [noun, provider])
 
     const { dimensions } = useContext(DimensionsContext)
     const { lilsLink, nounsLink } = useHref()
@@ -109,9 +131,22 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
                         <div className={styles.body}>
                             <div className={styles.content}>
                                 <p className={styles.dob}>
-                                    <NounDateOfBirth
-                                        mintedAt={noun.minted_at}
-                                    />
+                                    {project === 'LilNouns' ? (
+                                        <DateOfBirth
+                                            mintedAt={noun.minted_at}
+                                        />
+                                    ) : (auction &&
+                                          auction.nounId == noun.token_id) ||
+                                      !blockNumber ? (
+                                        <DateOfBirth
+                                            mintedAt={noun.minted_at}
+                                        />
+                                    ) : (
+                                        <SettlementDetails
+                                            blockNumber={blockNumber}
+                                            mintedAt={noun.minted_at}
+                                        />
+                                    )}
                                 </p>
 
                                 {project === 'Nouns' &&

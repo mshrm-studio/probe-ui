@@ -1,8 +1,6 @@
 'use client'
 
 import React, { useMemo } from 'react'
-import Noun from '@/utils/dto/Noun'
-import { DateTime } from 'luxon'
 import Link from 'next/link'
 import useHref from '@/utils/services/useHref'
 import { usePathname } from 'next/navigation'
