@@ -3,8 +3,6 @@
 @tailwind utilities;
 
 body {
-    font-family: 'Comic Sans', cursive;
-    font-weight: 700;
     text-transform: uppercase;
 }
 
