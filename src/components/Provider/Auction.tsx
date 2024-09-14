@@ -16,7 +16,7 @@ const AuctionProvider: React.FC<{
     async function fetchAuctionDetails() {
         if (!contract) {
             console.error('Nouns auction contract not found')
-            alert('Nouns auction contract not found')
+            // alert('Nouns auction contract not found')
             return
         }
 
@@ -34,7 +34,7 @@ const AuctionProvider: React.FC<{
             })
         } catch (error) {
             console.error('Failed to fetch auction details', error)
-            alert('Failed to fetch auction details')
+            // alert('Failed to fetch auction details')
         }
     }
 
@@ -44,7 +44,7 @@ const AuctionProvider: React.FC<{
     async function fetchMinBigIncrementPercentage() {
         if (!contract) {
             console.error('Nouns auction contract not found')
-            alert('Nouns auction contract not found')
+            // alert('Nouns auction contract not found')
             return
         }
 
@@ -57,7 +57,7 @@ const AuctionProvider: React.FC<{
                 'Failed to fetch auction min bid increment percentage',
                 error
             )
-            alert('Failed to fetch auction min bid increment percentage')
+            // alert('Failed to fetch auction min bid increment percentage')
         }
     }
 
@@ -66,7 +66,7 @@ const AuctionProvider: React.FC<{
     async function fetchReservePrice() {
         if (!contract) {
             console.error('Nouns auction contract not found')
-            alert('Nouns auction contract not found')
+            // alert('Nouns auction contract not found')
             return
         }
 
@@ -76,7 +76,7 @@ const AuctionProvider: React.FC<{
             setReservePrice(Number(reserve))
         } catch (error) {
             console.error('Failed to fetch auction reserve price', error)
-            alert('Failed to fetch auction reserve price')
+            // alert('Failed to fetch auction reserve price')
         }
     }
 
