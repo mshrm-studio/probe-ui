@@ -62,7 +62,6 @@
 }
 
 .select > .heading > .button > .label {
-    text-transform: uppercase;
     color: #838383;
     position: absolute;
     left: 1rem;
@@ -71,7 +70,6 @@
 
 .select > .heading > .button > .selected,
 .select > .heading > .button > .placeholder {
-    text-transform: uppercase;
     font-size: 26px;
     position: absolute;
     left: 1rem;

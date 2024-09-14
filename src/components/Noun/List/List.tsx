@@ -6,23 +6,16 @@ import NounImage from '@/components/Noun/Image'
 import styles from '@/utils/styles/nounList.module.css'
 import Link from 'next/link'
 import Project from '@/utils/dto/Project'
-import { Londrina_Solid } from 'next/font/google'
 import NounListBidBage from '@/components/Noun/List/BidBadge'
 import AuctionContext from '@/utils/contexts/AuctionContext'
 import useAuctionStatus from '@/utils/services/useAuctionStatus'
 
-const londrinaSolid = Londrina_Solid({
-    subsets: ['latin'],
-    weight: '900',
-})
-
 type Props = {
     project: Project
-    fetching: boolean
     nouns: Noun[]
 }
 
-const NounList: React.FC<Props> = ({ project, fetching, nouns }) => {
+const NounList: React.FC<Props> = ({ project, nouns }) => {
     const { auction } = useContext(AuctionContext)
 
     const auctionActive = useAuctionStatus(auction)
@@ -56,10 +49,7 @@ const NounList: React.FC<Props> = ({ project, fetching, nouns }) => {
                         >
                             <NounImage noun={noun} />
 
-                            <label
-                                className={`${londrinaSolid.className} ${styles.nounLinkLabel}`}
-                            >
-                                {project === 'LilNouns' ? 'Lil' : 'Noun'}{' '}
+                            <label className={styles.nounLinkLabel}>
                                 {noun.token_id}
                             </label>
 

@@ -197,11 +197,7 @@ const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
                         )}
 
                         {nouns.length > 0 && (
-                            <NounList
-                                fetching={fetching}
-                                nouns={nouns}
-                                project={project}
-                            />
+                            <NounList nouns={nouns} project={project} />
                         )}
 
                         {fetching && (

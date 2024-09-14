@@ -1,6 +1,5 @@
 .filterSortBtn {
     font-size: 13px;
-    text-transform: uppercase;
     color: #6c6c6c;
 }
 
@@ -11,7 +10,6 @@
 
 .projectSwitcherLink {
     font-size: 13px;
-    text-transform: uppercase;
 }
 
 .projectSwitcherLink[data-state='active'] {

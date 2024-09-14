@@ -5,12 +5,6 @@ import { usePathname } from 'next/navigation'
 import useHref from '@/utils/services/useHref'
 import React, { useMemo } from 'react'
 import Link from 'next/link'
-import { Londrina_Solid } from 'next/font/google'
-
-const londrinaSolid = Londrina_Solid({
-    subsets: ['latin'],
-    weight: '900',
-})
 
 const Header: React.FC<{
     children: React.ReactNode
@@ -24,9 +18,7 @@ const Header: React.FC<{
     }, [pathname])
 
     return (
-        <header
-            className={`${londrinaSolid.className} p-4 relative z-[999] flex items-center`}
-        >
+        <header className="p-4 relative z-[999] flex items-center">
             <div className="mr-6">
                 <Link href={explorePageLink}>
                     <Logo className="h-[24px] w-[24px]" />
