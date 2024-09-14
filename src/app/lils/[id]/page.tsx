@@ -15,7 +15,7 @@ export async function generateMetadata({
     const id = params.id
     const title = `Lil Noun ${id}`
     const description = `Probe the colors and stats for Lil Noun ${id}.`
-    const pageUrl = `https://probe.wtf/lils/${id}`
+    const pageUrl = `https://www.probe.wtf/lils/${id}`
     const images = [
         {
             url: `${process.env.NEXT_PUBLIC_DO_STORAGE_URL}/lils/pngs/${id}.png`,

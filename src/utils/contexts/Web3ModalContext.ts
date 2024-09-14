@@ -31,7 +31,7 @@ const sepolia = {
 const metadata = {
     name: 'probe.wtf',
     description: 'Probing Nouns & LilNouns.',
-    url: 'https://probe.wtf', // origin must match your domain & subdomain
+    url: 'https://www.probe.wtf', // origin must match your domain & subdomain
     icons: ['https://avatars.mywebsite.com/'],
 }
 
