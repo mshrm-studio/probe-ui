@@ -13,7 +13,7 @@ import useHref from '@/utils/services/useHref'
 import Link from 'next/link'
 import SpacesImage from '@/components/SpacesImage'
 import SettlementDetails from '@/components/NounPage/SettlementDetails'
-import DateOfBirth from '@/components/NounPage/DateOfBirth'
+import MintedAt from '@/components/NounPage/MintedAt'
 import NounColorHistogram from '@/components/Noun/ColorHistogram'
 import NounPageAuctionDetails from '@/components/NounPage/AuctionDetails'
 import AuctionPlaceBid from '@/components/Auction/PlaceBid/PlaceBid'
@@ -132,15 +132,11 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
                             <div className={styles.content}>
                                 <p className={styles.dob}>
                                     {project === 'LilNouns' ? (
-                                        <DateOfBirth
-                                            mintedAt={noun.minted_at}
-                                        />
+                                        <MintedAt mintedAt={noun.minted_at} />
                                     ) : (auction &&
                                           auction.nounId == noun.token_id) ||
                                       !blockNumber ? (
-                                        <DateOfBirth
-                                            mintedAt={noun.minted_at}
-                                        />
+                                        <MintedAt mintedAt={noun.minted_at} />
                                     ) : (
                                         <SettlementDetails
                                             blockNumber={blockNumber}
