@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-    font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+    font-family: 'Comic Sans', cursive;
     font-weight: 700;
     text-transform: uppercase;
 }

@@ -1,63 +1,60 @@
 'use client'
 
 import RpcContext from '@/utils/contexts/RpcContext'
-import { EventLog, Log } from 'ethers'
 import { useContext, useEffect, useMemo, useState } from 'react'
 import MintDate from '@/components/Noun/MintDate'
 import EthAddress from '@/components/EthAddress'
 import EtherscanLink from '@/components/EtherscanLink'
+import Noun from '@/utils/dto/Noun'
 
 type Props = {
-    blockNumber: number
-    mintedAt: string
+    noun: Noun
 }
 
-const NounPageSettlementDetails: React.FC<Props> = ({
-    blockNumber,
-    mintedAt,
-}: Props) => {
+const NounPageSettlementDetails: React.FC<Props> = ({ noun }: Props) => {
     const { nounsAuctionContract: contract } = useContext(RpcContext)
-    const [auctionEvents, setAuctionEvents] = useState<(EventLog | Log)[]>([])
     const [failed, setFailed] = useState(false)
+    const [winner, setWinner] = useState('')
 
     useEffect(() => {
-        if (!contract) return
+        if (!contract || !noun) return
 
-        const fetchSettledEvents = async () => {
+        const fetchSettlements = async () => {
             try {
-                const auctionEvents = await contract.queryFilter(
-                    'AuctionSettled',
-                    blockNumber,
-                    blockNumber
-                )
+                const response = await contract[
+                    'getSettlements(uint256,uint256,bool)'
+                ](noun.token_id, noun.token_id + 1, false)
 
-                setAuctionEvents(auctionEvents)
+                if (response && Array.isArray(response)) {
+                    const settlements = response.map((settlement) => {
+                        console.log('settlement:', settlement)
+                        return {
+                            blockTimestamp: settlement.blockTimestamp,
+                            amount: settlement.amount,
+                            winner: settlement.winner,
+                            nounId: settlement.nounId,
+                            clientId: settlement.clientId,
+                        }
+                    })
+
+                    console.log('settlements:', settlements)
+
+                    if (settlements.length === 1) {
+                        const { winner } = settlements[0]
+
+                        if (typeof winner === 'string') {
+                            setWinner(winner)
+                        }
+                    }
+                }
             } catch (error) {
-                console.error(
-                    'Failed to fetch "Settled" auction events:',
-                    error
-                )
+                console.error('Failed to fetch settlements:', error)
                 setFailed(true)
             }
         }
 
-        fetchSettledEvents()
-    }, [contract, blockNumber])
-
-    const winner = useMemo(() => {
-        if (auctionEvents.length === 0) return null
-
-        const auctionEvent = auctionEvents[0]
-
-        if (!('args' in auctionEvent)) return null
-
-        if (Array.isArray(auctionEvent.args) && auctionEvent.args.length > 1)
-            return auctionEvent.args[1] as string
-
-        const args = auctionEvent.args
-
-        return args.winner ?? null
-    }, [contract, auctionEvents])
+        fetchSettlements()
+    }, [contract, noun])
 
     if (failed)
         return (
@@ -73,11 +70,11 @@ const NounPageSettlementDetails: React.FC<Props> = ({
                 <EtherscanLink address={winner} type="Address">
                     <EthAddress address={winner} />
                 </EtherscanLink>{' '}
-                on <MintDate mintedAt={mintedAt} />
+                on <MintDate mintedAt={noun.minted_at} />
             </span>
         )
 
-    return null
+    return <MintDate mintedAt={noun.minted_at} />
 }
 
 export default NounPageSettlementDetails
