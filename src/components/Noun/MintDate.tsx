@@ -13,7 +13,7 @@ const NounMintDate: React.FC<Props> = ({ mintedAt }) => {
                 zone: 'utc',
             })
                 .toLocal()
-                .toFormat('MMMM d, yyyy h:mm a')}
+                .toFormat('MMM d, yyyy h:mm a')}
         </>
     )
 }
