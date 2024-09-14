@@ -18,6 +18,8 @@ const EthAddress: React.FC<{ address: string; shorten?: boolean }> = ({
             try {
                 const name = await provider.lookupAddress(address)
 
+                console.log('name:', name)
+
                 setEnsName(name)
             } catch (error) {
                 console.error('Error fetching ENS name:', error)
@@ -33,7 +35,7 @@ const EthAddress: React.FC<{ address: string; shorten?: boolean }> = ({
         if (!shorten) return address
 
         return `${address.slice(0, 4)}...${address.slice(-4)}`
-    }, [address, shorten])
+    }, [address, ensName, shorten])
 
     return <>{textToDisplay}</>
 }
