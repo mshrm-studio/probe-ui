@@ -12,7 +12,7 @@ type Props = {
 }
 
 const NounPageSettlementDetails: React.FC<Props> = ({ noun }: Props) => {
-    const { httpNounsAuctionContract: contract } = useContext(RpcContext)
+    const { httpNounsAuctionHouseContract: contract } = useContext(RpcContext)
     const [failed, setFailed] = useState(false)
     const [winner, setWinner] = useState('')
 
@@ -27,7 +27,6 @@ const NounPageSettlementDetails: React.FC<Props> = ({ noun }: Props) => {
 
                 if (response && Array.isArray(response)) {
                     const settlements = response.map((settlement) => {
-                        console.log('settlement:', settlement)
                         return {
                             blockTimestamp: settlement.blockTimestamp,
                             amount: settlement.amount,
@@ -36,8 +35,6 @@ const NounPageSettlementDetails: React.FC<Props> = ({ noun }: Props) => {
                             clientId: settlement.clientId,
                         }
                     })
-
-                    console.log('settlements:', settlements)
 
                     if (settlements.length === 1) {
                         const { winner } = settlements[0]

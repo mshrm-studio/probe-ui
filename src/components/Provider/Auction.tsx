@@ -10,8 +10,8 @@ const AuctionProvider: React.FC<{
     children: React.ReactNode
 }> = ({ children }) => {
     const {
-        httpNounsAuctionContract: httpContract,
-        wsNounsAuctionContract: wsContract,
+        httpNounsAuctionHouseContract: httpContract,
+        wsNounsAuctionHouseContract: wsContract,
     } = useContext(RpcContext)
 
     const [auction, setAuction] = useState<Auction>()
@@ -89,45 +89,6 @@ const AuctionProvider: React.FC<{
         fetchReservePrice()
     }, [])
 
-    const handleAuctionBid = (
-        nounId: number,
-        sender: string,
-        value: string,
-        extended: boolean
-    ) => {
-        alert(
-            `New bid placed. NounId: ${nounId}, Sender: ${sender}, Value: ${formatEther(
-                value
-            )}, Extended: ${extended}`
-        )
-
-        setAuction((prev) => {
-            if (!prev) return prev // Ensure previous auction state exists
-
-            return {
-                ...prev,
-                amount: formatEther(value), // Convert value from wei to ether
-                bidder: sender,
-            }
-        })
-    }
-
-    useEffect(() => {
-        if (!wsContract) return
-
-        // Subscribe to events with an arrow function that calls the handler
-        wsContract.on('AuctionBid', (nounId, sender, value, extended) =>
-            handleAuctionBid(nounId, sender, value, extended)
-        )
-
-        // Cleanup listeners on component unmount
-        return () => {
-            wsContract.off('AuctionBid', (nounId, sender, value, extended) =>
-                handleAuctionBid(nounId, sender, value, extended)
-            )
-        }
-    }, [wsContract])
-
     return (
         <AuctionContext.Provider
             value={{
@@ -135,6 +96,7 @@ const AuctionProvider: React.FC<{
                 minBidIncrementPercentage,
                 reservePrice,
                 fetchAuctionDetails,
+                setAuction,
             }}
         >
             {children}
