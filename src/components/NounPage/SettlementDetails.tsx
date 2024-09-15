@@ -1,12 +1,12 @@
 'use client'
 
 import RpcContext from '@/utils/contexts/RpcContext'
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import MintDate from '@/components/Noun/MintDate'
 import EthAddress from '@/components/EthAddress'
 import EtherscanLink from '@/components/EtherscanLink'
 import Noun from '@/utils/dto/Noun'
-import { EventLog, Log } from 'ethers'
+import MintedAt from '@/components/NounPage/MintedAt'
 
 type Props = {
     noun: Noun
@@ -127,12 +127,13 @@ const NounPageSettlementDetails: React.FC<Props> = ({ noun }: Props) => {
     if (winner)
         return (
             <span>
-                <span>
+                <MintedAt mintedAt={noun.minted_at} />
+
+                <span className="mt-1 block">
                     Won by{' '}
                     <EtherscanLink address={winner} type="Address">
                         <EthAddress address={winner} />
-                    </EtherscanLink>{' '}
-                    on <MintDate mintedAt={noun.minted_at} />
+                    </EtherscanLink>
                 </span>
 
                 {settledByAddress && (
