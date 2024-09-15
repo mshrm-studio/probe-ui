@@ -8,8 +8,13 @@ import { nounsAuctionContractABI } from '@/utils/contracts/NounsAuctionContractA
 const RpcProvider: React.FC<{
     children: React.ReactNode
 }> = ({ children }) => {
-    const [provider, setProvider] = useState<JsonRpcProvider | null>(null)
-    const [nounsAuctionContract, setNounsAuctionContract] =
+    const [httpProvider, setHttpProvider] = useState<JsonRpcProvider | null>(
+        null
+    )
+    const [wsProvider, setWsProvider] = useState<JsonRpcProvider | null>(null)
+    const [httpNounsAuctionContract, setHttpNounsAuctionContract] =
+        useState<Contract | null>(null)
+    const [wsNounsAuctionContract, setWsNounsAuctionContract] =
         useState<Contract | null>(null)
 
     useEffect(() => {
@@ -22,25 +27,44 @@ const RpcProvider: React.FC<{
             process.env.NEXT_PUBLIC_CHAIN_ID as string
         )
 
-        const rpcUrl =
+        const httpJsonRpcProvider = new JsonRpcProvider(
             defaultChainId == 1
                 ? `https://mainnet.infura.io/v3/${infuraApiKey}`
                 : `https://sepolia.infura.io/v3/${infuraApiKey}`
+        )
+        setHttpProvider(httpJsonRpcProvider)
 
-        const jsonRpcProvider = new JsonRpcProvider(rpcUrl)
-        setProvider(jsonRpcProvider)
-
-        const contract = new Contract(
+        const httpContract = new Contract(
             nounsAuctionContractAddress,
             nounsAuctionContractABI,
-            jsonRpcProvider
+            httpJsonRpcProvider
         )
+        setHttpNounsAuctionContract(httpContract)
 
-        setNounsAuctionContract(contract)
+        const wsJsonRpcProvider = new JsonRpcProvider(
+            defaultChainId == 1
+                ? `wss://mainnet.infura.io/ws/v3/${infuraApiKey}`
+                : `wss://sepolia.infura.io/ws/v3/${infuraApiKey}`
+        )
+        setWsProvider(wsJsonRpcProvider)
+
+        const wsContract = new Contract(
+            nounsAuctionContractAddress,
+            nounsAuctionContractABI,
+            wsJsonRpcProvider
+        )
+        setWsNounsAuctionContract(wsContract)
     }, [])
 
     return (
-        <RpcContext.Provider value={{ nounsAuctionContract, provider }}>
+        <RpcContext.Provider
+            value={{
+                httpNounsAuctionContract,
+                httpProvider,
+                wsNounsAuctionContract,
+                wsProvider,
+            }}
+        >
             {children}
         </RpcContext.Provider>
     )

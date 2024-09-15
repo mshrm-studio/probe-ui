@@ -3,14 +3,18 @@ import { Contract, JsonRpcProvider } from 'ethers'
 
 // Define the types for the context
 interface RpcContext {
-    nounsAuctionContract?: Contract | null
-    provider?: JsonRpcProvider | null
+    httpNounsAuctionContract?: Contract | null
+    httpProvider?: JsonRpcProvider | null
+    wsNounsAuctionContract?: Contract | null
+    wsProvider?: JsonRpcProvider | null
 }
 
 // Create the context with default values
 const RpcContext = createContext<RpcContext>({
-    nounsAuctionContract: undefined,
-    provider: undefined,
+    httpNounsAuctionContract: undefined,
+    httpProvider: undefined,
+    wsNounsAuctionContract: undefined,
+    wsProvider: undefined,
 })
 
 export default RpcContext

@@ -9,12 +9,15 @@ import Auction from '@/utils/dto/Auction'
 const AuctionProvider: React.FC<{
     children: React.ReactNode
 }> = ({ children }) => {
-    const { nounsAuctionContract: contract } = useContext(RpcContext)
+    const {
+        httpNounsAuctionContract: httpContract,
+        wsNounsAuctionContract: wsContract,
+    } = useContext(RpcContext)
 
     const [auction, setAuction] = useState<Auction>()
 
     async function fetchAuctionDetails() {
-        if (!contract) {
+        if (!httpContract) {
             console.error('Nouns auction contract not found')
             // alert('Nouns auction contract not found')
             return
@@ -22,7 +25,7 @@ const AuctionProvider: React.FC<{
 
         try {
             const { nounId, amount, startTime, endTime, bidder, settled } =
-                await contract.auction()
+                await httpContract.auction()
 
             setAuction({
                 nounId: Number(nounId),
@@ -42,14 +45,14 @@ const AuctionProvider: React.FC<{
         useState<number>()
 
     async function fetchMinBigIncrementPercentage() {
-        if (!contract) {
+        if (!httpContract) {
             console.error('Nouns auction contract not found')
             // alert('Nouns auction contract not found')
             return
         }
 
         try {
-            const pc = await contract.minBidIncrementPercentage()
+            const pc = await httpContract.minBidIncrementPercentage()
 
             setMinBigIncrementPercentage(Number(pc))
         } catch (error) {
@@ -64,14 +67,14 @@ const AuctionProvider: React.FC<{
     const [reservePrice, setReservePrice] = useState<number>()
 
     async function fetchReservePrice() {
-        if (!contract) {
+        if (!httpContract) {
             console.error('Nouns auction contract not found')
             // alert('Nouns auction contract not found')
             return
         }
 
         try {
-            const reserve = await contract.reservePrice()
+            const reserve = await httpContract.reservePrice()
 
             setReservePrice(Number(reserve))
         } catch (error) {
@@ -86,44 +89,44 @@ const AuctionProvider: React.FC<{
         fetchReservePrice()
     }, [])
 
-    // const handleAuctionBid = (
-    //     nounId: number,
-    //     sender: string,
-    //     value: string,
-    //     extended: boolean
-    // ) => {
-    //     alert(
-    //         `New bid placed. NounId: ${nounId}, Sender: ${sender}, Value: ${formatEther(
-    //             value
-    //         )}, Extended: ${extended}`
-    //     )
+    const handleAuctionBid = (
+        nounId: number,
+        sender: string,
+        value: string,
+        extended: boolean
+    ) => {
+        alert(
+            `New bid placed. NounId: ${nounId}, Sender: ${sender}, Value: ${formatEther(
+                value
+            )}, Extended: ${extended}`
+        )
 
-    //     setAuction((prev) => {
-    //         if (!prev) return prev // Ensure previous auction state exists
+        setAuction((prev) => {
+            if (!prev) return prev // Ensure previous auction state exists
 
-    //         return {
-    //             ...prev,
-    //             amount: formatEther(value), // Convert value from wei to ether
-    //             bidder: sender,
-    //         }
-    //     })
-    // }
+            return {
+                ...prev,
+                amount: formatEther(value), // Convert value from wei to ether
+                bidder: sender,
+            }
+        })
+    }
 
-    // useEffect(() => {
-    //     if (!contract) return
+    useEffect(() => {
+        if (!wsContract) return
 
-    //     // Subscribe to events with an arrow function that calls the handler
-    //     contract.on('AuctionBid', (nounId, sender, value, extended) =>
-    //         handleAuctionBid(nounId, sender, value, extended)
-    //     )
+        // Subscribe to events with an arrow function that calls the handler
+        wsContract.on('AuctionBid', (nounId, sender, value, extended) =>
+            handleAuctionBid(nounId, sender, value, extended)
+        )
 
-    //     // Cleanup listeners on component unmount
-    //     return () => {
-    //         contract.off('AuctionBid', (nounId, sender, value, extended) =>
-    //             handleAuctionBid(nounId, sender, value, extended)
-    //         )
-    //     }
-    // }, [contract])
+        // Cleanup listeners on component unmount
+        return () => {
+            wsContract.off('AuctionBid', (nounId, sender, value, extended) =>
+                handleAuctionBid(nounId, sender, value, extended)
+            )
+        }
+    }, [wsContract])
 
     return (
         <AuctionContext.Provider

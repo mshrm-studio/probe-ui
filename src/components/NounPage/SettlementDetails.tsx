@@ -12,7 +12,7 @@ type Props = {
 }
 
 const NounPageSettlementDetails: React.FC<Props> = ({ noun }: Props) => {
-    const { nounsAuctionContract: contract } = useContext(RpcContext)
+    const { httpNounsAuctionContract: contract } = useContext(RpcContext)
     const [failed, setFailed] = useState(false)
     const [winner, setWinner] = useState('')
 

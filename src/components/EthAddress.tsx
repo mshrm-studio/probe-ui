@@ -7,16 +7,16 @@ const EthAddress: React.FC<{ address: string; shorten?: boolean }> = ({
     address,
     shorten = true,
 }) => {
-    const { provider } = useContext(RpcContext)
+    const { httpProvider } = useContext(RpcContext)
 
     const [ensName, setEnsName] = useState<string | null>(null)
 
     useEffect(() => {
-        if (!provider) return
+        if (!httpProvider) return
 
         const fetchEnsName = async () => {
             try {
-                const name = await provider.lookupAddress(address)
+                const name = await httpProvider.lookupAddress(address)
 
                 console.log('name:', name)
 
@@ -27,7 +27,7 @@ const EthAddress: React.FC<{ address: string; shorten?: boolean }> = ({
         }
 
         fetchEnsName()
-    }, [address, provider])
+    }, [address, httpProvider])
 
     const textToDisplay = useMemo(() => {
         if (ensName) return ensName

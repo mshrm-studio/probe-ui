@@ -2,12 +2,11 @@
     height: 40px;
     border-style: solid;
     border-width: 2px;
-    border-color: #c2c2c2;
+    border-color: black;
     padding-left: 1rem;
     padding-right: 1rem;
     font-size: theme('fontSize.sm');
     font-weight: theme('fontWeight.bold');
-    color: #9c9c9c;
 }
 
 .input:focus {
