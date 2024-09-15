@@ -18,8 +18,6 @@ const EthAddress: React.FC<{ address: string; shorten?: boolean }> = ({
             try {
                 const name = await httpProvider.lookupAddress(address)
 
-                console.log('name:', name)
-
                 setEnsName(name)
             } catch (error) {
                 console.error('Error fetching ENS name:', error)

@@ -24,6 +24,7 @@ import CryptoWalletConnect from '@/components/CryptoWallet/Connect'
 import AuctionContext from '@/utils/contexts/AuctionContext'
 import useAuctionStatus from '@/utils/services/useAuctionStatus'
 import Header from '@/components/NounPage/Header'
+import useLiveAuction from '@/utils/services/useLiveAuction'
 
 const NounPage: React.FC<{ project: Project; nounId: number }> = ({
     project,
@@ -34,6 +35,7 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
     const [receipt, setReceipt] = useState<ContractTransactionReceipt>()
     const { auction } = useContext(AuctionContext)
     const auctionActive = useAuctionStatus(auction)
+    useLiveAuction(nounId, auction?.nounId)
 
     useEffect(() => {
         fetchNoun(nounId)

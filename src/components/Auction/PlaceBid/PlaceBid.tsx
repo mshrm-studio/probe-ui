@@ -18,7 +18,7 @@ const AuctionPlaceBid: React.FC<{
         React.SetStateAction<ContractTransactionReceipt | undefined>
     >
 }> = ({ children, setReceipt }) => {
-    const { httpNounsAuctionContract: contract } = useContext(RpcContext)
+    const { httpNounsAuctionHouseContract: contract } = useContext(RpcContext)
     const { walletProvider } = useWeb3ModalProvider()
     const { auction } = useContext(AuctionContext)
     const { address } = useWeb3ModalAccount()

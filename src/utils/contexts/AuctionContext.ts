@@ -3,10 +3,11 @@ import Auction from '@/utils/dto/Auction'
 
 // Define the types for the context
 interface AuctionContext {
-    auction?: Auction | null
-    reservePrice?: number | null
-    minBidIncrementPercentage?: number | null
+    auction?: Auction
+    reservePrice?: number
+    minBidIncrementPercentage?: number
     fetchAuctionDetails?: () => Promise<void>
+    setAuction?: React.Dispatch<React.SetStateAction<Auction | undefined>>
 }
 
 // Create the context with default values

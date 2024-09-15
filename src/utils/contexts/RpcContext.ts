@@ -1,20 +1,16 @@
 import { createContext } from 'react'
-import { Contract, JsonRpcProvider } from 'ethers'
+import { Contract, JsonRpcProvider, WebSocketProvider } from 'ethers'
 
 // Define the types for the context
 interface RpcContext {
-    httpNounsAuctionContract?: Contract | null
+    httpNounsAuctionHouseContract?: Contract | null
+    httpNounsTokenContract?: Contract | null
     httpProvider?: JsonRpcProvider | null
-    wsNounsAuctionContract?: Contract | null
-    wsProvider?: JsonRpcProvider | null
+    wsNounsAuctionHouseContract?: Contract | null
+    wsProvider?: WebSocketProvider | null
 }
 
 // Create the context with default values
-const RpcContext = createContext<RpcContext>({
-    httpNounsAuctionContract: undefined,
-    httpProvider: undefined,
-    wsNounsAuctionContract: undefined,
-    wsProvider: undefined,
-})
+const RpcContext = createContext<RpcContext>({})
 
 export default RpcContext

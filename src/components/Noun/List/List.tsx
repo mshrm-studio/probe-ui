@@ -9,6 +9,7 @@ import Project from '@/utils/dto/Project'
 import NounListBidBage from '@/components/Noun/List/BidBadge'
 import AuctionContext from '@/utils/contexts/AuctionContext'
 import useAuctionStatus from '@/utils/services/useAuctionStatus'
+import NounImageFromId from '@/components/Noun/ImageFromId'
 
 type Props = {
     project: Project
@@ -31,9 +32,32 @@ const NounList: React.FC<Props> = ({ project, nouns }) => {
         )
     }, [nouns])
 
+    const auctionNounInList = useMemo(() => {
+        return nouns.find((noun) => noun.token_id === auction?.nounId)
+            ? true
+            : false
+    }, [auction, nouns])
+
     return (
         <div className={styles.listWrapper}>
             <ul className="grid gap-2 grid-cols-5 md:grid-cols-10 xl:grid-cols-18">
+                {auction && !auctionNounInList && (
+                    <li className={styles.nounLink}>
+                        <Link
+                            href={`${linkPrefix}/auction`}
+                            className={`${styles.nounLink} ${styles.auctionedNoun}`}
+                        >
+                            <NounImageFromId nounId={auction.nounId} />
+
+                            <label className={styles.nounLinkLabel}>
+                                {auction.nounId}
+                            </label>
+
+                            <NounListBidBage nounId={auction.nounId} />
+                        </Link>
+                    </li>
+                )}
+
                 {nounsWithSvgUrl.map((noun) => (
                     <li key={noun.token_id}>
                         <Link

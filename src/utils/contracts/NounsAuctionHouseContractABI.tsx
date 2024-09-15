@@ -1,4 +1,4 @@
-export const nounsAuctionContractABI = [
+export const nounsAuctionHouseContractABI = [
     {
         inputs: [
             {
