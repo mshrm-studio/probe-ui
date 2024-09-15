@@ -28,5 +28,4 @@
 .wrapper > .content > .closeButton > .closeButtonIcon {
     height: theme('height.7');
     width: theme('width.7');
-    color: #4a4545;
 }

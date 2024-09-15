@@ -24,7 +24,7 @@ export default function NounPageHeader() {
     return (
         <Header>
             <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-0.5 text-[#6C6C6C] text-[13px]">
+                <div className="flex items-center space-x-0.5 text-[13px]">
                     <span>{project}</span>
 
                     <ChevronRightIcon className="h-3 w-3" />

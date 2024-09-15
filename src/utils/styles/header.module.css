@@ -1,6 +1,5 @@
 .filterSortBtn {
     font-size: 13px;
-    color: #6c6c6c;
 }
 
 .filterSortBtnIcon {
@@ -10,10 +9,6 @@
 
 .projectSwitcherLink {
     font-size: 13px;
-}
-
-.projectSwitcherLink[data-state='active'] {
-    color: rgba(108, 108, 108, 0.3);
 }
 
 .projectSwitcherLink[data-state='inactive'] {
