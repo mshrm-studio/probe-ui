@@ -27,7 +27,7 @@ export default function NounPageHeader() {
         <Header>
             <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-0.5 text-[13px]">
-                    <span>{project}</span>
+                    <Link href={explorePageLink}>{project}</Link>
 
                     <ChevronRightIcon className="h-3 w-3" />
 
