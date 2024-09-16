@@ -120,9 +120,10 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
 
                                 {project === 'Nouns' &&
                                     auction &&
+                                    auctionActive &&
                                     auction.nounId == noun.token_id && (
                                         <section className="space-y-2">
-                                            {isConnected && (
+                                            {isConnected ? (
                                                 <AuctionPlaceBid
                                                     setReceipt={setReceipt}
                                                 >
@@ -147,9 +148,7 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
                                                         </div>
                                                     </div>
                                                 </AuctionPlaceBid>
-                                            )}
-
-                                            {!isConnected && auctionActive && (
+                                            ) : (
                                                 <CryptoWalletConnect>
                                                     Login to bid
                                                 </CryptoWalletConnect>
