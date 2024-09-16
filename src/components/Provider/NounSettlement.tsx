@@ -20,6 +20,11 @@ const NounSettlementProvider: React.FC<Props> = ({ nounId, children }) => {
     useEffect(() => {
         if (!contract || !nounId) return
 
+        if (typeof nounId !== 'number') {
+            console.warn('Invalid nounId type:', typeof nounId)
+            return
+        }
+
         const fetchSettlements = async () => {
             try {
                 const logs = await contract[

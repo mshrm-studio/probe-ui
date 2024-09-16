@@ -1,16 +1,10 @@
 'use client'
 
-import RpcContext from '@/utils/contexts/RpcContext'
 import { useContext, useEffect, useState } from 'react'
-import EtherscanLink from '@/components/EtherscanLink'
-import EthAddress from '@/components/EthAddress'
+import RpcContext from '@/utils/contexts/RpcContext'
 import NounMintContext from '@/utils/contexts/NounMintContext'
 
-type Props = {
-    className?: string
-}
-
-const NounSettler: React.FC<Props> = ({ className }) => {
+const useNounSettler = () => {
     const { httpNounsAuctionHouseContract: contract, httpProvider: provider } =
         useContext(RpcContext)
     const { blockNumber } = useContext(NounMintContext)
@@ -51,17 +45,7 @@ const NounSettler: React.FC<Props> = ({ className }) => {
         fetchSettledEvents()
     }, [contract, blockNumber])
 
-    if (!settledByAddress) return null
-
-    return (
-        <EtherscanLink
-            address={settledByAddress}
-            className={className}
-            type="Address"
-        >
-            <EthAddress address={settledByAddress} />
-        </EtherscanLink>
-    )
+    return settledByAddress
 }
 
-export default NounSettler
+export default useNounSettler

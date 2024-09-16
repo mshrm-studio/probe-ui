@@ -6,15 +6,13 @@ import { useContext } from 'react'
 
 type Props = {
     className?: string
-    mintedAt?: string
+    mintedAt?: number | string
 }
 
 const NounMintDate: React.FC<Props> = ({ className, mintedAt }) => {
-    const { blockTimestamp } = useContext(NounMintContext)
-
     const dateTimeFormat = 'MMM d, yyyy h:mm a'
 
-    if (mintedAt) {
+    if (typeof mintedAt === 'string') {
         return (
             <span className={className}>
                 {DateTime.fromISO(mintedAt).toFormat(dateTimeFormat)}
@@ -22,10 +20,10 @@ const NounMintDate: React.FC<Props> = ({ className, mintedAt }) => {
         )
     }
 
-    if (blockTimestamp) {
+    if (typeof mintedAt === 'number') {
         return (
             <span className={className}>
-                {DateTime.fromSeconds(blockTimestamp, {
+                {DateTime.fromSeconds(mintedAt, {
                     zone: 'utc',
                 })
                     .toLocal()

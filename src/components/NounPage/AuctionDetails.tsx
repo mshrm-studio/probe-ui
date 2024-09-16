@@ -7,22 +7,27 @@ import AuctionCountdown from '@/components/Auction/Countdown'
 import ContractTransactionReceipt from '@/utils/dto/ContractTransactionReceipt'
 import EtherscanLink from '@/components/EtherscanLink'
 import useAuctionStatus from '@/utils/services/useAuctionStatus'
-import AuctionBidder from '@/components/Auction/Bidder'
 import EthAddress from '@/components/EthAddress'
 import AuctionClient from '@/components/Auction/Client'
 import NounMintDate from '@/components/Noun/MintDate'
-import NounSettler from '@/components/Noun/Settler'
-import CurrentBid from '@/components/Auction/CurrentBid'
-import WinningBid from '@/components/Auction/WinningBid'
-import AuctionWinner from '@/components/Auction/Winner'
+import useNounOwner from '@/utils/services/useNounOwner'
+import useAuctionClient from '@/utils/services/useAuctionClient'
+import NounSettlementContext from '@/utils/contexts/NounSettlementContext'
+import NounMintContext from '@/utils/contexts/NounMintContext'
+import EthPrice from '@/components/EthPrice'
+import useNounSettler from '@/utils/services/useNounSettler'
 
 const NounPageAuctionDetails: React.FC<{
     nounId: number
     receipt?: ContractTransactionReceipt
 }> = ({ nounId, receipt }) => {
     const { auction } = useContext(AuctionContext)
-
     const auctionActive = useAuctionStatus(auction)
+    const currentNounOwner = useNounOwner(nounId)
+    const { amount, clientId, winner } = useContext(NounSettlementContext)
+    const auctionClient = useAuctionClient(clientId)
+    const { blockTimestamp } = useContext(NounMintContext)
+    const settlerAddress = useNounSettler()
 
     const nounIsUpForAuction = useMemo(() => {
         return auctionActive && auction?.nounId === nounId
@@ -30,44 +35,92 @@ const NounPageAuctionDetails: React.FC<{
 
     return (
         <dl className="space-y-1">
-            <div className={styles.dlItemInline}>
-                <dt className={styles.dt}>Minted:</dt>
-                <dd className={styles.dd}>
-                    <NounMintDate />
-                </dd>
-            </div>
+            {blockTimestamp && (
+                <div className={styles.dlItemInline}>
+                    <dt className={styles.dt}>Minted:</dt>
+                    <dd className={styles.dd}>
+                        <NounMintDate mintedAt={blockTimestamp} />
+                    </dd>
+                </div>
+            )}
 
-            <div className={styles.dlItemInline}>
-                <dt className={styles.dt}>Settled by:</dt>
-                <dd className={styles.dd}>
-                    <NounSettler className="text-link" />
-                </dd>
-            </div>
+            {settlerAddress && (
+                <div className={styles.dlItemInline}>
+                    <dt className={styles.dt}>Settled by:</dt>
+                    <dd className={styles.dd}>
+                        <EtherscanLink
+                            className="text-link"
+                            address={settlerAddress}
+                            type="Address"
+                        >
+                            <EthAddress address={settlerAddress} />
+                        </EtherscanLink>
+                    </dd>
+                </div>
+            )}
 
-            {nounIsUpForAuction ? (
-                <>
-                    <div className={styles.dlItemInline}>
-                        <dt className={styles.dt}>Auction ends in:</dt>
-                        <dd className={styles.dd}>
-                            <AuctionCountdown />
-                        </dd>
-                    </div>
+            {auction && nounIsUpForAuction && (
+                <div className={styles.dlItemInline}>
+                    <dt className={styles.dt}>Auction ends in:</dt>
+                    <dd className={styles.dd}>
+                        <AuctionCountdown />
+                    </dd>
+                </div>
+            )}
 
-                    <div className={styles.dlItemInline}>
-                        <dt className={styles.dt}>Current bid:</dt>
-                        <dd className={styles.dd}>
-                            <CurrentBid /> by{' '}
-                            <AuctionBidder className="text-link" />
-                        </dd>
-                    </div>
-                </>
-            ) : (
+            {auction && nounIsUpForAuction && (
+                <div className={styles.dlItemInline}>
+                    <dt className={styles.dt}>Current bid:</dt>
+                    <dd className={styles.dd}>
+                        <EthPrice amount={auction.amount} /> by{' '}
+                        <EtherscanLink
+                            address={auction.bidder}
+                            className="text-link"
+                            type="Address"
+                        >
+                            <EthAddress address={auction.bidder} />
+                        </EtherscanLink>
+                    </dd>
+                </div>
+            )}
+
+            {!nounIsUpForAuction && amount && winner && (
                 <div className={styles.dlItemInline}>
                     <dt className={styles.dt}>Winning bid:</dt>
                     <dd className={styles.dd}>
-                        <WinningBid /> by{' '}
-                        <AuctionWinner className="text-link" /> via{' '}
-                        <AuctionClient className="text-link" />
+                        <EthPrice amount={amount} /> by{' '}
+                        <EtherscanLink
+                            className="text-link"
+                            address={winner}
+                            type="Address"
+                        >
+                            <EthAddress address={winner} />
+                        </EtherscanLink>
+                        {auctionClient && (
+                            <span>
+                                {' '}
+                                via{' '}
+                                <AuctionClient
+                                    className="text-link"
+                                    client={auctionClient}
+                                />
+                            </span>
+                        )}
+                    </dd>
+                </div>
+            )}
+
+            {!nounIsUpForAuction && currentNounOwner && (
+                <div className={styles.dlItemInline}>
+                    <dt className={styles.dt}>Current owner:</dt>
+                    <dd className={styles.dd}>
+                        <EtherscanLink
+                            address={currentNounOwner}
+                            className="text-link"
+                            type="Address"
+                        >
+                            <EthAddress address={currentNounOwner} />
+                        </EtherscanLink>
                     </dd>
                 </div>
             )}
