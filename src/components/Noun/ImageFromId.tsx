@@ -9,7 +9,7 @@ type Props = {
     nounId: number
 }
 
-const NounImageFromId: React.FC<Props> = ({ className = '', nounId }) => {
+const NounImageFromId: React.FC<Props> = ({ className, nounId }) => {
     const { httpNounsTokenContract: contract } = useContext(RpcContext)
     const [tokenUri, setTokenUri] = useState<string>()
 

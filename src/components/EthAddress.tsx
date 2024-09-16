@@ -35,7 +35,7 @@ const EthAddress: React.FC<{ address: string; shorten?: boolean }> = ({
         return `${address.slice(0, 4)}...${address.slice(-4)}`
     }, [address, ensName, shorten])
 
-    return <>{textToDisplay}</>
+    return <span>{textToDisplay}</span>
 }
 
 export default EthAddress
