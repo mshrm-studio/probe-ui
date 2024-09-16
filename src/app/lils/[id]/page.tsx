@@ -1,12 +1,20 @@
 import NounPage from '@/components/NounPage/NounPage'
 import type { Metadata } from 'next'
+import NounSettlementProvider from '@/components/Provider/NounSettlement'
+import NounMintProvider from '@/components/Provider/NounMint'
 
 type PageProps = {
-    params: { id: number }
+    params: { id: string }
 }
 
 export default function Page({ params }: PageProps) {
-    return <NounPage project="LilNouns" nounId={params.id} />
+    return (
+        <NounSettlementProvider nounId={parseInt(params.id)}>
+            <NounMintProvider nounId={parseInt(params.id)}>
+                <NounPage project="LilNouns" nounId={parseInt(params.id)} />
+            </NounMintProvider>
+        </NounSettlementProvider>
+    )
 }
 
 export async function generateMetadata({

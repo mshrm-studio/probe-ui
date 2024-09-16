@@ -1,67 +1,63 @@
 'use client'
 
-import React, {
-    useContext,
-    useEffect,
-    useMemo,
-    useState,
-    useCallback,
-} from 'react'
+import React, { useContext, useEffect, useState, useCallback } from 'react'
 import { DateTime } from 'luxon'
 import AuctionContext from '@/utils/contexts/AuctionContext'
+import useAuctionStatus from '@/utils/services/useAuctionStatus'
 
-const AuctionCountdown: React.FC = () => {
+const AuctionCountdown: React.FC<{ className?: string }> = ({ className }) => {
     const { auction } = useContext(AuctionContext)
-    const [countdown, setCountdown] = useState<string>('0')
+    const [timeRemaining, setTimeRemaining] = useState<string>('0')
+    const auctionActive = useAuctionStatus(auction)
 
-    const calculateTimeLeft = useCallback(() => {
+    const calculateTimeRemaining = useCallback(() => {
         if (auction) {
             const endTime = DateTime.fromSeconds(auction.endTime)
-            const timeLeft = endTime.diff(DateTime.now(), [
+            const timeDifference = endTime.diff(DateTime.now(), [
                 'hours',
                 'minutes',
                 'seconds',
             ])
 
-            if (timeLeft.as('seconds') <= 0) {
-                setCountdown('0')
+            if (timeDifference.as('seconds') <= 0) {
+                setTimeRemaining('0')
             } else {
-                const { hours, minutes, seconds } = timeLeft.toObject()
+                const { hours, minutes, seconds } = timeDifference.toObject()
 
                 if (
                     typeof hours === 'number' &&
                     typeof minutes === 'number' &&
                     typeof seconds === 'number'
                 ) {
-                    setCountdown(
+                    setTimeRemaining(
                         `${Math.floor(hours)}H ${Math.floor(
                             minutes
                         )}M ${Math.floor(seconds)}S`
                     )
                 } else {
-                    setCountdown('0')
+                    setTimeRemaining('0')
                 }
             }
         } else {
-            setCountdown('0')
+            setTimeRemaining('0')
         }
     }, [auction])
 
     useEffect(() => {
-        calculateTimeLeft() // Call immediately to initialize countdown
+        if (auctionActive) {
+            calculateTimeRemaining() // Call immediately to initialize countdown
 
-        const interval = setInterval(calculateTimeLeft, 1000) // Call every second
+            const interval = setInterval(calculateTimeRemaining, 1000) // Call every second
 
-        return () => clearInterval(interval)
-    }, [auction]) // Depend on calculateTimeLeft to recalculate when it changes
+            return () => clearInterval(interval)
+        }
+    }, [auction, auctionActive])
 
-    const timeLeft = useMemo(() => {
-        return auction && countdown !== '0' ? countdown : null
-    }, [auction, countdown])
+    if (auction && auctionActive && timeRemaining !== '0') {
+        return <span className={className}>{timeRemaining}</span>
+    }
 
-    if (timeLeft === null) return null
-
-    return <>{timeLeft}</>
+    return null
 }
 
 export default AuctionCountdown

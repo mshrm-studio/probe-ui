@@ -1,98 +1,144 @@
 'use client'
 
-import EthPrice from '@/components/EthPrice'
 import AuctionContext from '@/utils/contexts/AuctionContext'
 import { useContext, useMemo } from 'react'
 import styles from '@/utils/styles/nounPage.module.css'
 import AuctionCountdown from '@/components/Auction/Countdown'
-import { DateTime } from 'luxon'
 import ContractTransactionReceipt from '@/utils/dto/ContractTransactionReceipt'
 import EtherscanLink from '@/components/EtherscanLink'
 import useAuctionStatus from '@/utils/services/useAuctionStatus'
+import EthAddress from '@/components/EthAddress'
+import AuctionClient from '@/components/Auction/Client'
+import NounMintDate from '@/components/Noun/MintDate'
+import useNounOwner from '@/utils/services/useNounOwner'
+import useAuctionClient from '@/utils/services/useAuctionClient'
+import NounSettlementContext from '@/utils/contexts/NounSettlementContext'
+import NounMintContext from '@/utils/contexts/NounMintContext'
+import EthPrice from '@/components/EthPrice'
+import useNounSettler from '@/utils/services/useNounSettler'
 
 const NounPageAuctionDetails: React.FC<{
     nounId: number
     receipt?: ContractTransactionReceipt
 }> = ({ nounId, receipt }) => {
-    const { auction, reservePrice } = useContext(AuctionContext)
-
+    const { auction } = useContext(AuctionContext)
     const auctionActive = useAuctionStatus(auction)
+    const currentNounOwner = useNounOwner(nounId)
+    const { amount, clientId, winner } = useContext(NounSettlementContext)
+    const auctionClient = useAuctionClient(clientId)
+    const { blockTimestamp } = useContext(NounMintContext)
+    const settlerAddress = useNounSettler()
 
-    const truncatedBidderAddress = useMemo(() => {
-        if (!auction) return
-
-        return `${auction.bidder.substring(0, 6)}...${auction.bidder.substring(
-            auction.bidder.length - 4
-        )}`
-    }, [auction])
-
-    const bidLabel = useMemo(() => {
-        if (!auction) return
-
-        if (reservePrice === undefined || reservePrice === null) return
-
-        if (auctionActive) return 'Current bid'
-
-        return reservePrice > parseFloat(auction.amount)
-            ? 'Highest bid (below reserve)'
-            : 'Winning bid'
-    }, [auctionActive, reservePrice])
-
-    const countdownLabel = useMemo(() => {
-        return auctionActive ? 'Auction ends in' : 'Auction ended at'
-    }, [auctionActive])
-
-    const truncatedReceiptHash = useMemo(() => {
-        if (!receipt) return
-
-        return `${receipt.hash.substring(0, 6)}...${receipt.hash.substring(
-            receipt.hash.length - 4
-        )}`
-    }, [auction])
-
-    if (!auction) return null
-
-    if (reservePrice === undefined || reservePrice === null) return null
-
-    if (auction.nounId !== nounId) return null
+    const nounIsUpForAuction = useMemo(() => {
+        return auctionActive && auction?.nounId === nounId
+    }, [auction, nounId])
 
     return (
         <dl className="space-y-1">
-            <div className={styles.dlItemInline}>
-                <dt className={styles.dt}>{bidLabel}:</dt>{' '}
-                <dd className={styles.dd}>
-                    <EthPrice amount={auction.amount} /> by{' '}
-                    {truncatedBidderAddress}
-                </dd>
-            </div>
-
-            {receipt && truncatedReceiptHash && (
+            {blockTimestamp && (
                 <div className={styles.dlItemInline}>
-                    <dt className={styles.dt}>Receipt:</dt>{' '}
+                    <dt className={styles.dt}>Minted:</dt>
+                    <dd className={styles.dd}>
+                        <NounMintDate mintedAt={blockTimestamp} />
+                    </dd>
+                </div>
+            )}
+
+            {settlerAddress && (
+                <div className={styles.dlItemInline}>
+                    <dt className={styles.dt}>Settled by:</dt>
+                    <dd className={styles.dd}>
+                        <EtherscanLink
+                            className="text-link"
+                            address={settlerAddress}
+                            type="Address"
+                        >
+                            <EthAddress address={settlerAddress} />
+                        </EtherscanLink>
+                    </dd>
+                </div>
+            )}
+
+            {auction && nounIsUpForAuction && (
+                <div className={styles.dlItemInline}>
+                    <dt className={styles.dt}>Auction ends in:</dt>
+                    <dd className={styles.dd}>
+                        <AuctionCountdown />
+                    </dd>
+                </div>
+            )}
+
+            {auction && nounIsUpForAuction && (
+                <div className={styles.dlItemInline}>
+                    <dt className={styles.dt}>Current bid:</dt>
+                    <dd className={styles.dd}>
+                        <EthPrice amount={auction.amount} /> by{' '}
+                        <EtherscanLink
+                            address={auction.bidder}
+                            className="text-link"
+                            type="Address"
+                        >
+                            <EthAddress address={auction.bidder} />
+                        </EtherscanLink>
+                    </dd>
+                </div>
+            )}
+
+            {!nounIsUpForAuction && amount && winner && (
+                <div className={styles.dlItemInline}>
+                    <dt className={styles.dt}>Winning bid:</dt>
+                    <dd className={styles.dd}>
+                        <EthPrice amount={amount} /> by{' '}
+                        <EtherscanLink
+                            className="text-link"
+                            address={winner}
+                            type="Address"
+                        >
+                            <EthAddress address={winner} />
+                        </EtherscanLink>
+                        {auctionClient && (
+                            <span>
+                                {' '}
+                                via{' '}
+                                <AuctionClient
+                                    className="text-link"
+                                    client={auctionClient}
+                                />
+                            </span>
+                        )}
+                    </dd>
+                </div>
+            )}
+
+            {!nounIsUpForAuction && currentNounOwner && (
+                <div className={styles.dlItemInline}>
+                    <dt className={styles.dt}>Current owner:</dt>
+                    <dd className={styles.dd}>
+                        <EtherscanLink
+                            address={currentNounOwner}
+                            className="text-link"
+                            type="Address"
+                        >
+                            <EthAddress address={currentNounOwner} />
+                        </EtherscanLink>
+                    </dd>
+                </div>
+            )}
+
+            {receipt && (
+                <div className={styles.dlItemInline}>
+                    <dt className={styles.dt}>Receipt:</dt>
                     <dd className={styles.dd}>
                         <EtherscanLink
                             address={receipt.hash}
                             className="text-link"
                             type="Transaction"
                         >
-                            {truncatedReceiptHash}
+                            <EthAddress address={receipt.hash} />
                         </EtherscanLink>
                     </dd>
                 </div>
             )}
-
-            <div className={styles.dlItemInline}>
-                <dt className={styles.dt}>{countdownLabel}:</dt>{' '}
-                <dd className={styles.dd}>
-                    {auctionActive ? (
-                        <AuctionCountdown />
-                    ) : (
-                        DateTime.fromSeconds(auction.endTime).toLocaleString(
-                            DateTime.DATETIME_MED
-                        )
-                    )}
-                </dd>
-            </div>
         </dl>
     )
 }

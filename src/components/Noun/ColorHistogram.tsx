@@ -12,7 +12,7 @@ type Props = {
 }
 
 const NounColorHistogram: React.FC<Props> = ({
-    className = '',
+    className,
     bgColorHex,
     histogram,
 }) => {
