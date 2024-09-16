@@ -10,15 +10,19 @@ const useAuctionStatus = (auction?: Auction | null) => {
             const endTime = DateTime.fromSeconds(auction.endTime)
 
             setActive(endTime > DateTime.now())
+        } else {
+            setActive(false)
         }
     }
 
     useEffect(() => {
-        checkAuctionStatus()
+        if (auction) {
+            checkAuctionStatus()
 
-        const interval = setInterval(checkAuctionStatus, 1000)
+            const interval = setInterval(checkAuctionStatus, 1000)
 
-        return () => clearInterval(interval)
+            return () => clearInterval(interval)
+        }
     }, [auction])
 
     return active
