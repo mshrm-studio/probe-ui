@@ -11,8 +11,6 @@ import { usePathname } from 'next/navigation'
 import useHref from '@/utils/services/useHref'
 import Link from 'next/link'
 import SpacesImage from '@/components/SpacesImage'
-import SettlementDetails from '@/components/NounPage/SettlementDetails'
-import MintedAt from '@/components/NounPage/MintedAt'
 import NounColorHistogram from '@/components/Noun/ColorHistogram'
 import NounPageAuctionDetails from '@/components/NounPage/AuctionDetails'
 import AuctionPlaceBid from '@/components/Auction/PlaceBid/PlaceBid'
@@ -113,26 +111,17 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
 
                         <div className={styles.body}>
                             <div className={styles.content}>
-                                <p className={styles.dob}>
-                                    {project === 'LilNouns' ? (
-                                        <MintedAt mintedAt={noun.minted_at} />
-                                    ) : auction &&
-                                      auction.nounId == noun.token_id ? (
-                                        <MintedAt mintedAt={noun.minted_at} />
-                                    ) : (
-                                        <SettlementDetails noun={noun} />
-                                    )}
-                                </p>
+                                <section className="mb-2">
+                                    <NounPageAuctionDetails
+                                        nounId={noun.token_id}
+                                        receipt={receipt}
+                                    />
+                                </section>
 
                                 {project === 'Nouns' &&
                                     auction &&
                                     auction.nounId == noun.token_id && (
                                         <section className="space-y-2">
-                                            <NounPageAuctionDetails
-                                                nounId={noun.token_id}
-                                                receipt={receipt}
-                                            />
-
                                             {isConnected && (
                                                 <AuctionPlaceBid
                                                     setReceipt={setReceipt}
@@ -199,7 +188,7 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
                                             >
                                                 <dt className={styles.dt}>
                                                     Body:
-                                                </dt>{' '}
+                                                </dt>
                                                 <dd className={styles.dd}>
                                                     <Link
                                                         href={`${listHref}&body=${noun.body_name}`}
@@ -224,7 +213,7 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
                                             >
                                                 <dt className={styles.dt}>
                                                     Accessory:
-                                                </dt>{' '}
+                                                </dt>
                                                 <dd className={styles.dd}>
                                                     <Link
                                                         href={`${listHref}&accessory=${noun.accessory_name}`}
@@ -249,7 +238,7 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
                                             >
                                                 <dt className={styles.dt}>
                                                     Head:
-                                                </dt>{' '}
+                                                </dt>
                                                 <dd className={styles.dd}>
                                                     <Link
                                                         href={`${listHref}&head=${noun.head_name}`}
@@ -274,7 +263,7 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
                                             >
                                                 <dt className={styles.dt}>
                                                     Glasses:
-                                                </dt>{' '}
+                                                </dt>
                                                 <dd className={styles.dd}>
                                                     <Link
                                                         href={`${listHref}&glasses=${noun.glasses_name}`}
