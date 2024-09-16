@@ -31,20 +31,32 @@ const AuctionPlaceBid: React.FC<{
 
         const payableAmount = formData.get('payableAmount')
 
-        if (walletProvider === undefined)
-            throw Error('Wallet provider undefined')
+        if (walletProvider === undefined) {
+            alert('Wallet provider undefined')
+            return
+        }
 
-        if (typeof payableAmount !== 'string' || !payableAmount)
-            throw Error('Payable amount not valid')
+        if (typeof payableAmount !== 'string' || !payableAmount) {
+            alert('Payable amount not valid')
+            return
+        }
 
-        if (!auction) throw Error('Auction not found')
+        if (!auction) {
+            alert('Auction not found')
+            return
+        }
 
-        if (!contract) throw Error('Auction contract not found')
+        if (!contract) {
+            alert('Auction contract not found')
+            return
+        }
 
         const clientId = process.env.NEXT_PUBLIC_PROBE_NOUNS_CLIENT_ID
 
-        if (typeof clientId !== 'string' || !clientId)
-            throw Error('Client ID not found')
+        if (typeof clientId !== 'string' || !clientId) {
+            alert('Client ID not found')
+            return
+        }
 
         try {
             const provider = new BrowserProvider(walletProvider)
