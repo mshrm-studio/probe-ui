@@ -30,8 +30,10 @@ const NounPageAuctionDetails: React.FC<{
     const settlerAddress = useNounSettler()
 
     const nounIsUpForAuction = useMemo(() => {
-        return auctionActive && auction?.nounId === nounId
-    }, [auction, nounId])
+        return auctionActive && auction && auction.nounId === nounId
+            ? true
+            : false
+    }, [auctionActive, auction, nounId])
 
     return (
         <dl className="space-y-1">
