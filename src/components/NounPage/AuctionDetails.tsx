@@ -16,6 +16,8 @@ import NounSettlementContext from '@/utils/contexts/NounSettlementContext'
 import NounMintContext from '@/utils/contexts/NounMintContext'
 import EthPrice from '@/components/EthPrice'
 import useNounSettler from '@/utils/services/useNounSettler'
+import { ZeroAddress } from 'ethers'
+import Link from 'next/link'
 
 const NounPageAuctionDetails: React.FC<{
     nounId: number
@@ -35,9 +37,13 @@ const NounPageAuctionDetails: React.FC<{
             : false
     }, [auctionActive, auction, nounId])
 
+    const nounWentToNounders = useMemo(() => {
+        return winner === ZeroAddress && amount === '0.0'
+    }, [amount, winner])
+
     return (
         <dl className="space-y-1">
-            {blockTimestamp && (
+            {!settlerAddress && blockTimestamp && (
                 <div className={styles.dlItemInline}>
                     <dt className={styles.dt}>Minted:</dt>
                     <dd className={styles.dd}>
@@ -57,6 +63,13 @@ const NounPageAuctionDetails: React.FC<{
                         >
                             <EthAddress address={settlerAddress} />
                         </EtherscanLink>
+
+                        {blockTimestamp && (
+                            <span>
+                                {' '}
+                                on <NounMintDate mintedAt={blockTimestamp} />
+                            </span>
+                        )}
                     </dd>
                 </div>
             )}
@@ -86,31 +99,47 @@ const NounPageAuctionDetails: React.FC<{
                 </div>
             )}
 
-            {!nounIsUpForAuction && amount && winner && (
-                <div className={styles.dlItemInline}>
-                    <dt className={styles.dt}>Winning bid:</dt>
-                    <dd className={styles.dd}>
-                        <EthPrice amount={amount} /> by{' '}
-                        <EtherscanLink
-                            className="text-link"
-                            address={winner}
-                            type="Address"
-                        >
-                            <EthAddress address={winner} />
-                        </EtherscanLink>
-                        {auctionClient && (
-                            <span>
-                                {' '}
-                                via{' '}
-                                <AuctionClient
-                                    className="text-link"
-                                    client={auctionClient}
-                                />
-                            </span>
-                        )}
-                    </dd>
-                </div>
-            )}
+            {!nounIsUpForAuction &&
+                amount &&
+                winner &&
+                (nounWentToNounders ? (
+                    <div className={styles.dlItemInline}>
+                        <dt className={styles.dt}>Allocated to:</dt>
+                        <dd className={styles.dd}>
+                            <Link
+                                href="https://nouns.wtf/nounders"
+                                target="_blank"
+                                className="text-link"
+                            >
+                                Nounders
+                            </Link>
+                        </dd>
+                    </div>
+                ) : (
+                    <div className={styles.dlItemInline}>
+                        <dt className={styles.dt}>Winning bid:</dt>
+                        <dd className={styles.dd}>
+                            <EthPrice amount={amount} /> by{' '}
+                            <EtherscanLink
+                                className="text-link"
+                                address={winner}
+                                type="Address"
+                            >
+                                <EthAddress address={winner} />
+                            </EtherscanLink>
+                            {auctionClient && (
+                                <span>
+                                    {' '}
+                                    via{' '}
+                                    <AuctionClient
+                                        className="text-link"
+                                        client={auctionClient}
+                                    />
+                                </span>
+                            )}
+                        </dd>
+                    </div>
+                ))}
 
             {!nounIsUpForAuction && currentNounOwner && (
                 <div className={styles.dlItemInline}>
