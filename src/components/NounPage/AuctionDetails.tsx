@@ -99,7 +99,33 @@ const NounPageAuctionDetails: React.FC<{
                 </div>
             )}
 
-            {!nounIsUpForAuction &&
+            {!nounIsUpForAuction && amount && winner && (
+                <div className={styles.dlItemInline}>
+                    <dt className={styles.dt}>Winning bid:</dt>
+                    <dd className={styles.dd}>
+                        <EthPrice amount={amount} /> by{' '}
+                        <EtherscanLink
+                            className="text-link"
+                            address={winner}
+                            type="Address"
+                        >
+                            <EthAddress address={winner} />
+                        </EtherscanLink>
+                        {auctionClient && (
+                            <span>
+                                {' '}
+                                via{' '}
+                                <AuctionClient
+                                    className="text-link"
+                                    client={auctionClient}
+                                />
+                            </span>
+                        )}
+                    </dd>
+                </div>
+            )}
+
+            {/* {!nounIsUpForAuction &&
                 amount &&
                 winner &&
                 (nounWentToNounders ? (
@@ -139,7 +165,7 @@ const NounPageAuctionDetails: React.FC<{
                             )}
                         </dd>
                     </div>
-                ))}
+                ))} */}
 
             {!nounIsUpForAuction && currentNounOwner && (
                 <div className={styles.dlItemInline}>
