@@ -1,7 +1,6 @@
 'use client'
 
 import AuctionContext from '@/utils/contexts/AuctionContext'
-import RpcContext from '@/utils/contexts/RpcContext'
 import { Contract, parseEther } from 'ethers'
 import React, { useContext } from 'react'
 import { BrowserProvider } from 'ethers'
@@ -11,6 +10,7 @@ import {
 } from '@web3modal/ethers/react'
 import ContractTransactionReceipt from '@/utils/dto/ContractTransactionReceipt'
 import useAuctionStatus from '@/utils/services/useAuctionStatus'
+import AuctionHouseContractContext from '@/utils/contexts/AuctionHouseContractContext'
 
 const AuctionPlaceBid: React.FC<{
     children: React.ReactNode
@@ -18,7 +18,9 @@ const AuctionPlaceBid: React.FC<{
         React.SetStateAction<ContractTransactionReceipt | undefined>
     >
 }> = ({ children, setReceipt }) => {
-    const { httpNounsAuctionHouseContract: contract } = useContext(RpcContext)
+    const { httpAuctionHouseContract: contract } = useContext(
+        AuctionHouseContractContext
+    )
     const { walletProvider } = useWeb3ModalProvider()
     const { auction } = useContext(AuctionContext)
     const { address } = useWeb3ModalAccount()

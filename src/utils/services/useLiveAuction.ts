@@ -2,11 +2,13 @@
 
 import { useContext, useEffect } from 'react'
 import AuctionContext from '@/utils/contexts/AuctionContext'
-import RpcContext from '@/utils/contexts/RpcContext'
 import { formatEther } from 'ethers'
+import AuctionHouseContractContext from '@/utils/contexts/AuctionHouseContractContext'
 
 const useLiveAuction = (nounId?: number, auctionNounId?: number) => {
-    const { wsNounsAuctionHouseContract: wsContract } = useContext(RpcContext)
+    const { wsAuctionHouseContract: wsContract } = useContext(
+        AuctionHouseContractContext
+    )
     const { fetchAuctionDetails, setAuction } = useContext(AuctionContext)
 
     const handleAuctionBid = (

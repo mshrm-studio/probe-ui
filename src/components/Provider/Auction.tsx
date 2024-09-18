@@ -2,30 +2,25 @@
 
 import React, { useContext, useEffect, useState } from 'react'
 import AuctionContext from '@/utils/contexts/AuctionContext'
-import RpcContext from '@/utils/contexts/RpcContext'
 import { formatEther } from 'ethers'
 import Auction from '@/utils/dto/Auction'
+import AuctionHouseContractContext from '@/utils/contexts/AuctionHouseContractContext'
 
 const AuctionProvider: React.FC<{
     children: React.ReactNode
 }> = ({ children }) => {
-    const {
-        httpNounsAuctionHouseContract: httpContract,
-        wsNounsAuctionHouseContract: wsContract,
-    } = useContext(RpcContext)
+    const { httpAuctionHouseContract: auctionHouse } = useContext(
+        AuctionHouseContractContext
+    )
 
     const [auction, setAuction] = useState<Auction>()
 
     async function fetchAuctionDetails() {
-        if (!httpContract) {
-            console.error('Nouns auction contract not found')
-            // alert('Nouns auction contract not found')
-            return
-        }
+        if (!auctionHouse) return
 
         try {
             const { nounId, amount, startTime, endTime, bidder, settled } =
-                await httpContract.auction()
+                await auctionHouse.auction()
 
             setAuction({
                 nounId: Number(nounId),
@@ -45,14 +40,10 @@ const AuctionProvider: React.FC<{
         useState<number>()
 
     async function fetchMinBigIncrementPercentage() {
-        if (!httpContract) {
-            console.error('Nouns auction contract not found')
-            // alert('Nouns auction contract not found')
-            return
-        }
+        if (!auctionHouse) return
 
         try {
-            const pc = await httpContract.minBidIncrementPercentage()
+            const pc = await auctionHouse.minBidIncrementPercentage()
 
             setMinBigIncrementPercentage(Number(pc))
         } catch (error) {
@@ -67,14 +58,10 @@ const AuctionProvider: React.FC<{
     const [reservePrice, setReservePrice] = useState<number>()
 
     async function fetchReservePrice() {
-        if (!httpContract) {
-            console.error('Nouns auction contract not found')
-            // alert('Nouns auction contract not found')
-            return
-        }
+        if (!auctionHouse) return
 
         try {
-            const reserve = await httpContract.reservePrice()
+            const reserve = await auctionHouse.reservePrice()
 
             setReservePrice(Number(reserve))
         } catch (error) {
@@ -84,10 +71,15 @@ const AuctionProvider: React.FC<{
     }
 
     useEffect(() => {
+        if (!auctionHouse) {
+            console.warn('AuctionHouse contract not available')
+            return
+        }
+
         fetchAuctionDetails()
         fetchMinBigIncrementPercentage()
         fetchReservePrice()
-    }, [])
+    }, [auctionHouse])
 
     return (
         <AuctionContext.Provider

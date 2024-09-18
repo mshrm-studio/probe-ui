@@ -2,6 +2,7 @@
 
 import NounMintContext from '@/utils/contexts/NounMintContext'
 import RpcContext from '@/utils/contexts/RpcContext'
+import TokenContractContext from '@/utils/contexts/TokenContractContext'
 import { ZeroAddress } from 'ethers'
 import { useContext, useEffect, useState } from 'react'
 
@@ -15,13 +16,11 @@ const NounMintProvider: React.FC<Props> = ({ nounId, children }) => {
     const [blockNumber, setBlockNumber] = useState<number>()
     const [blockTimestamp, setBlockTimestamp] = useState<number>()
 
-    const { httpNounsTokenContract: contract, httpProvider: provider } =
-        useContext(RpcContext)
+    const { httpProvider: provider } = useContext(RpcContext)
+    const { httpTokenContract: contract } = useContext(TokenContractContext)
 
     useEffect(() => {
         if (!contract || !provider) return
-
-        console.log('fetchTokenTransfers:', nounId)
 
         const fetchTokenTransfers = async () => {
             try {
@@ -34,8 +33,6 @@ const NounMintProvider: React.FC<Props> = ({ nounId, children }) => {
                 // first block to latest block
                 const logs = await contract.queryFilter(filter, 0, 'latest')
 
-                console.log('tokenTransferLogs:', logs, typeof logs)
-
                 if (Array.isArray(logs) && logs.length === 0) {
                     console.warn(`No mint event found for noun ID ${nounId}`)
                 }
@@ -47,7 +44,7 @@ const NounMintProvider: React.FC<Props> = ({ nounId, children }) => {
                 const block = await provider.getBlock(log.blockHash)
 
                 if (!block) {
-                    console.warn(`Block not found for hash: ${log.blockHash}`)
+                    console.error(`Block not found for hash: ${log.blockHash}`)
                 } else {
                     setBlockNumber(block.number)
                     setBlockTimestamp(block.timestamp)

@@ -1,7 +1,3 @@
-.detailsWrapper {
-    transform: translateY(-1.5rem);
-}
-
 .detailsWrapper > .heading {
     margin-bottom: 3rem;
 }
@@ -60,7 +56,6 @@
 
     .detailsWrapper {
         grid-column: span 2 / span 2;
-        transform: translateY(0);
     }
 
     .detailsWrapper > .heading {

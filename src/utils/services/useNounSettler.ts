@@ -3,10 +3,13 @@
 import { useContext, useEffect, useState } from 'react'
 import RpcContext from '@/utils/contexts/RpcContext'
 import NounMintContext from '@/utils/contexts/NounMintContext'
+import AuctionHouseContractContext from '@/utils/contexts/AuctionHouseContractContext'
 
 const useNounSettler = () => {
-    const { httpNounsAuctionHouseContract: contract, httpProvider: provider } =
-        useContext(RpcContext)
+    const { httpProvider: provider } = useContext(RpcContext)
+    const { httpAuctionHouseContract: contract } = useContext(
+        AuctionHouseContractContext
+    )
     const { blockNumber } = useContext(NounMintContext)
     const [settledByAddress, setSettledByAddress] = useState<string>()
 

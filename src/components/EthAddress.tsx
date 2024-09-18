@@ -12,7 +12,7 @@ const EthAddress: React.FC<{ address: string; shorten?: boolean }> = ({
     const [ensName, setEnsName] = useState<string | null>(null)
 
     useEffect(() => {
-        if (!httpProvider) return
+        if (!httpProvider || !address) return
 
         const fetchEnsName = async () => {
             try {

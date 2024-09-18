@@ -11,9 +11,9 @@ type PageProps = {
 export default function Page({ params }: PageProps) {
     return (
         <AuctionProvider>
-            <NounSettlementProvider nounId={parseInt(params.id)}>
-                <NounMintProvider nounId={parseInt(params.id)}>
-                    <NounPage project="Nouns" nounId={parseInt(params.id)} />
+            <NounSettlementProvider nounId={Number(params.id)}>
+                <NounMintProvider nounId={Number(params.id)}>
+                    <NounPage project="Nouns" nounId={Number(params.id)} />
                 </NounMintProvider>
             </NounSettlementProvider>
         </AuctionProvider>

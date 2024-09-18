@@ -6,7 +6,7 @@ import React from 'react'
 // 1. Get projectId at https://cloud.walletconnect.com
 const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID as string
 const infuraApiKey = process.env.NEXT_PUBLIC_INFURA_API_KEY as string
-const defaultChainId = parseInt(process.env.NEXT_PUBLIC_CHAIN_ID as string)
+const defaultChainId = Number(process.env.NEXT_PUBLIC_CHAIN_ID as string)
 const mainnetRpcUrl = `https://mainnet.infura.io/v3/${infuraApiKey}`
 const sepoliaRpcUrl = `https://sepolia.infura.io/v3/${infuraApiKey}`
 

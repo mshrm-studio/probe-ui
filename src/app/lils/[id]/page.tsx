@@ -9,9 +9,9 @@ type PageProps = {
 
 export default function Page({ params }: PageProps) {
     return (
-        <NounSettlementProvider nounId={parseInt(params.id)}>
-            <NounMintProvider nounId={parseInt(params.id)}>
-                <NounPage project="LilNouns" nounId={parseInt(params.id)} />
+        <NounSettlementProvider nounId={Number(params.id)}>
+            <NounMintProvider nounId={Number(params.id)}>
+                <NounPage project="LilNouns" nounId={Number(params.id)} />
             </NounMintProvider>
         </NounSettlementProvider>
     )
