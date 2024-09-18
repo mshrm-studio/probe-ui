@@ -1,6 +1,5 @@
 import NounPage from '@/components/NounPage/NounPage'
 import type { Metadata } from 'next'
-import NounSettlementProvider from '@/components/Provider/NounSettlement'
 import NounMintProvider from '@/components/Provider/NounMint'
 
 type PageProps = {
@@ -9,11 +8,9 @@ type PageProps = {
 
 export default function Page({ params }: PageProps) {
     return (
-        <NounSettlementProvider nounId={Number(params.id)}>
-            <NounMintProvider nounId={Number(params.id)}>
-                <NounPage project="LilNouns" nounId={Number(params.id)} />
-            </NounMintProvider>
-        </NounSettlementProvider>
+        <NounMintProvider nounId={Number(params.id)}>
+            <NounPage project="LilNouns" nounId={Number(params.id)} />
+        </NounMintProvider>
     )
 }
 
