@@ -1,5 +1,6 @@
 'use client'
 
+import AuctionHouseContractContext from '@/utils/contexts/AuctionHouseContractContext'
 import NounSettlementContext from '@/utils/contexts/NounSettlementContext'
 import RpcContext from '@/utils/contexts/RpcContext'
 import { formatEther } from 'ethers'
@@ -15,7 +16,9 @@ const NounSettlementProvider: React.FC<Props> = ({ nounId, children }) => {
     const [blockTimestamp, setBlockTimestamp] = useState<number>()
     const [clientId, setClientId] = useState<number>()
     const [winner, setWinner] = useState<string>()
-    const { httpNounsAuctionHouseContract: contract } = useContext(RpcContext)
+    const { httpAuctionHouseContract: contract } = useContext(
+        AuctionHouseContractContext
+    )
 
     useEffect(() => {
         if (!contract || !nounId) return

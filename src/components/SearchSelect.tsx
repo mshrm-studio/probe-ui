@@ -35,9 +35,18 @@ const SearchSelect: React.FC<Props> = ({
     }
 
     const searchFilteredOptions = useMemo(() => {
-        return options.filter((option) => {
+        const startsWithOptions = options.filter((option) => {
             return option.label.toLowerCase().startsWith(search.toLowerCase())
         })
+
+        const includesOptions = options.filter((option) => {
+            return (
+                option.label.toLowerCase().includes(search.toLowerCase()) &&
+                !startsWithOptions.some((swo) => swo.label === option.label)
+            )
+        })
+
+        return startsWithOptions.concat(includesOptions)
     }, [options, search])
 
     function clearSelected() {

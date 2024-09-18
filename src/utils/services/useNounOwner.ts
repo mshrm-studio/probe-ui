@@ -1,10 +1,10 @@
 'use client'
 
 import { useContext, useEffect, useState } from 'react'
-import RpcContext from '@/utils/contexts/RpcContext'
+import TokenContractContext from '@/utils/contexts/TokenContractContext'
 
 const useNounOwner = (nounId?: number) => {
-    const { httpNounsTokenContract: contract } = useContext(RpcContext)
+    const { httpTokenContract: contract } = useContext(TokenContractContext)
     const [owner, setOwner] = useState<string>()
 
     useEffect(() => {

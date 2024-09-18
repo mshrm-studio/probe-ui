@@ -1,8 +1,8 @@
 'use client'
 
-import RpcContext from '@/utils/contexts/RpcContext'
 import React, { useContext, useEffect, useState } from 'react'
 import NounImage from '@/components/Noun/Image'
+import TokenContractContext from '@/utils/contexts/TokenContractContext'
 
 type Props = {
     className?: string
@@ -10,7 +10,7 @@ type Props = {
 }
 
 const NounImageFromId: React.FC<Props> = ({ className, nounId }) => {
-    const { httpNounsTokenContract: contract } = useContext(RpcContext)
+    const { httpTokenContract: contract } = useContext(TokenContractContext)
     const [tokenUri, setTokenUri] = useState<string>()
 
     useEffect(() => {

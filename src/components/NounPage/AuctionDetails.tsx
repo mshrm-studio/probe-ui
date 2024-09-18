@@ -37,8 +37,22 @@ const NounPageAuctionDetails: React.FC<{
             : false
     }, [auctionActive, auction, nounId])
 
+    const showWinningBid = useMemo(() => {
+        return (
+            winner !== undefined &&
+            winner !== ZeroAddress &&
+            amount !== undefined &&
+            amount !== '0.0'
+        )
+    }, [amount, winner])
+
     const nounWentToNounders = useMemo(() => {
-        return winner === ZeroAddress && amount === '0.0'
+        return (
+            winner === ZeroAddress &&
+            amount === '0.0' &&
+            auction &&
+            auction.nounId % 10 === 0
+        )
     }, [amount, winner])
 
     return (
@@ -99,7 +113,7 @@ const NounPageAuctionDetails: React.FC<{
                 </div>
             )}
 
-            {!nounIsUpForAuction && amount && winner && (
+            {!nounIsUpForAuction && amount && winner && showWinningBid && (
                 <div className={styles.dlItemInline}>
                     <dt className={styles.dt}>Winning bid:</dt>
                     <dd className={styles.dd}>
@@ -125,47 +139,20 @@ const NounPageAuctionDetails: React.FC<{
                 </div>
             )}
 
-            {/* {!nounIsUpForAuction &&
-                amount &&
-                winner &&
-                (nounWentToNounders ? (
-                    <div className={styles.dlItemInline}>
-                        <dt className={styles.dt}>Allocated to:</dt>
-                        <dd className={styles.dd}>
-                            <Link
-                                href="https://nouns.wtf/nounders"
-                                target="_blank"
-                                className="text-link"
-                            >
-                                Nounders
-                            </Link>
-                        </dd>
-                    </div>
-                ) : (
-                    <div className={styles.dlItemInline}>
-                        <dt className={styles.dt}>Winning bid:</dt>
-                        <dd className={styles.dd}>
-                            <EthPrice amount={amount} /> by{' '}
-                            <EtherscanLink
-                                className="text-link"
-                                address={winner}
-                                type="Address"
-                            >
-                                <EthAddress address={winner} />
-                            </EtherscanLink>
-                            {auctionClient && (
-                                <span>
-                                    {' '}
-                                    via{' '}
-                                    <AuctionClient
-                                        className="text-link"
-                                        client={auctionClient}
-                                    />
-                                </span>
-                            )}
-                        </dd>
-                    </div>
-                ))} */}
+            {!nounIsUpForAuction && amount && winner && nounWentToNounders && (
+                <div className={styles.dlItemInline}>
+                    <dt className={styles.dt}>Allocated to:</dt>
+                    <dd className={styles.dd}>
+                        <Link
+                            href="https://nouns.wtf/nounders"
+                            target="_blank"
+                            className="text-link"
+                        >
+                            Nounders
+                        </Link>
+                    </dd>
+                </div>
+            )}
 
             {!nounIsUpForAuction && currentNounOwner && (
                 <div className={styles.dlItemInline}>
