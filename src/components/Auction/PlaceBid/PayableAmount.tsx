@@ -7,22 +7,17 @@ import AuctionContext from '@/utils/contexts/AuctionContext'
 const AuctionPlaceBidPayableAmount: React.FC<{ disabled?: boolean }> = ({
     disabled,
 }) => {
-    const { auction, minBidIncrementPercentage, reservePrice } =
-        useContext(AuctionContext)
+    const { auction, minBidIncrementPercentage } = useContext(AuctionContext)
 
     const minBid = useMemo(() => {
-        if (!auction) return
-
-        if (!minBidIncrementPercentage) return
-
-        if (!reservePrice) return
+        if (!auction || minBidIncrementPercentage === undefined) return
 
         const currentBid = parseFloat(auction.amount)
 
         const minBidIncrease = currentBid * (minBidIncrementPercentage / 100)
 
         return currentBid + minBidIncrease
-    }, [auction, minBidIncrementPercentage, reservePrice])
+    }, [auction, minBidIncrementPercentage])
 
     const placeholder = useMemo(() => {
         if (!minBid) return
@@ -33,10 +28,6 @@ const AuctionPlaceBidPayableAmount: React.FC<{ disabled?: boolean }> = ({
     }, [minBid])
 
     if (!auction) return null
-
-    if (!minBidIncrementPercentage) return null
-
-    if (!reservePrice) return null
 
     return (
         <Input
