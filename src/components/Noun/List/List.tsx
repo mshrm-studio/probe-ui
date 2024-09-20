@@ -33,7 +33,7 @@ const NounList: React.FC<Props> = ({ project, nouns }) => {
     }, [nouns])
 
     const auctionNounInList = useMemo(() => {
-        return nouns.find((noun) => noun.token_id === auction?.nounId)
+        return nouns.find((noun) => noun.token_id == auction?.nounId)
             ? true
             : false
     }, [auction, nouns])
@@ -41,7 +41,7 @@ const NounList: React.FC<Props> = ({ project, nouns }) => {
     return (
         <div className={styles.listWrapper}>
             <ul className="grid gap-2 grid-cols-5 md:grid-cols-10 xl:grid-cols-18">
-                {auction && !auctionNounInList && (
+                {project === 'Nouns' && auction && !auctionNounInList && (
                     <li className={styles.nounLink}>
                         <Link
                             href={`${linkPrefix}/auction`}
