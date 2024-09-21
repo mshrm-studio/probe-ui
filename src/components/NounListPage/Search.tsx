@@ -113,7 +113,7 @@ const NounListPageSearch: React.FC<Props> = ({
                     <XMarkIcon className={styles.closeButtonIcon} />
                 </button>
 
-                <div>
+                <div className="w-full md:w-[377px]">
                     <SearchSelect
                         disabled={requesting}
                         options={options}

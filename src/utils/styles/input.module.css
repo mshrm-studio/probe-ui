@@ -1,12 +1,13 @@
 .input {
-    height: 40px;
+    height: 36px;
     border-style: solid;
     border-width: 2px;
-    border-color: black;
+    border-color: #c2c2c2;
     padding-left: 1rem;
     padding-right: 1rem;
     font-size: theme('fontSize.sm');
     font-weight: theme('fontWeight.bold');
+    width: 100%;
 }
 
 .input:focus {
