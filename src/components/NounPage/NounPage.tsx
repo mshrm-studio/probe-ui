@@ -2,34 +2,27 @@
 
 import Project from '@/utils/dto/Project'
 import useNoun from '@/utils/services/useNoun'
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import NounImage from '@/components/Noun/Image'
 import styles from '@/utils/styles/nounPage.module.css'
-import { startCase } from 'lodash'
 import DimensionsContext from '@/utils/contexts/DimensionsContext'
-import { usePathname } from 'next/navigation'
-import useHref from '@/utils/services/useHref'
 import Link from 'next/link'
 import SpacesImage from '@/components/SpacesImage'
-import NounColorHistogram from '@/components/Noun/ColorHistogram'
 import NounPageAuctionDetails from '@/components/NounPage/AuctionDetails'
-import AuctionPlaceBid from '@/components/Auction/PlaceBid/PlaceBid'
-import AuctionPlaceBidPayableAmount from '../Auction/PlaceBid/PayableAmount'
-import Button from '@/components/Button'
-import { useWeb3ModalAccount } from '@web3modal/ethers/react'
 import ContractTransactionReceipt from '@/utils/dto/ContractTransactionReceipt'
-import CryptoWalletConnect from '@/components/CryptoWallet/Connect'
 import AuctionContext from '@/utils/contexts/AuctionContext'
 import useAuctionStatus from '@/utils/services/useAuctionStatus'
 import Header from '@/components/NounPage/Header'
 import useLiveAuction from '@/utils/services/useLiveAuction'
+import AuctionBid from '@/components/NounPage/AuctionBid'
+import NounPageColorHistogram from '@/components/NounPage/ColorHistogram'
+import NounPageTraits from '@/components/NounPage/Traits'
 
 const NounPage: React.FC<{ project: Project; nounId: number }> = ({
     project,
     nounId,
 }) => {
     const { error, fetching, fetchNoun, noun } = useNoun(project)
-    const { isConnected } = useWeb3ModalAccount()
     const [receipt, setReceipt] = useState<ContractTransactionReceipt>()
     const { auction } = useContext(AuctionContext)
     const auctionActive = useAuctionStatus(auction)
@@ -50,12 +43,6 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
     }, [noun])
 
     const { dimensions } = useContext(DimensionsContext)
-    const { lilsLink, nounsLink } = useHref()
-    const pathname = usePathname()
-
-    const listHref = useMemo(() => {
-        return pathname.includes('/lils') ? lilsLink : nounsLink
-    }, [pathname])
 
     if (fetching) {
         return (
@@ -100,7 +87,7 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
 
                     <div className={styles.detailsWrapper}>
                         <h1 className={styles.heading}>
-                            <span className="block text-[85px] leading-[.69] xl:text-[126px]">
+                            <span className="block text-[25.5px] leading-[.69] xl:text-[37.8px]">
                                 {project === 'LilNouns' ? 'Lil' : 'Noun'}
                             </span>
 
@@ -122,56 +109,11 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
                                     auction &&
                                     auctionActive &&
                                     auction.nounId == noun.token_id && (
-                                        <section className="space-y-2">
-                                            {isConnected ? (
-                                                <AuctionPlaceBid
-                                                    setReceipt={setReceipt}
-                                                >
-                                                    <div className="flex space-x-2">
-                                                        <div>
-                                                            <AuctionPlaceBidPayableAmount
-                                                                disabled={
-                                                                    !isConnected
-                                                                }
-                                                            />
-                                                        </div>
-
-                                                        <div>
-                                                            <Button
-                                                                disabled={
-                                                                    !isConnected
-                                                                }
-                                                                nativeType="submit"
-                                                            >
-                                                                Bid
-                                                            </Button>
-                                                        </div>
-                                                    </div>
-                                                </AuctionPlaceBid>
-                                            ) : (
-                                                <CryptoWalletConnect>
-                                                    Login to bid
-                                                </CryptoWalletConnect>
-                                            )}
-                                        </section>
+                                        <AuctionBid setReceipt={setReceipt} />
                                     )}
 
                                 <div>
-                                    {noun.color_histogram && (
-                                        <section className="mb-6">
-                                            <h3 className={styles.sectionTitle}>
-                                                Colors
-                                            </h3>
-
-                                            <NounColorHistogram
-                                                className={styles.colorList}
-                                                bgColorHex={
-                                                    noun.background_name
-                                                }
-                                                histogram={noun.color_histogram}
-                                            />
-                                        </section>
-                                    )}
+                                    <NounPageColorHistogram noun={noun} />
 
                                     <section>
                                         <h3 className={styles.sectionTitle}>
@@ -181,143 +123,7 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
                                             Stats
                                         </h3>
 
-                                        <dl className="space-y-1">
-                                            <div
-                                                className={styles.dlItemInline}
-                                            >
-                                                <dt className={styles.dt}>
-                                                    Body:
-                                                </dt>
-                                                <dd className={styles.dd}>
-                                                    <Link
-                                                        href={`${listHref}&body=${noun.body_name}`}
-                                                        className={
-                                                            styles.attributeLink
-                                                        }
-                                                    >
-                                                        {startCase(
-                                                            noun.body_name.replace(
-                                                                new RegExp(
-                                                                    `^body-`
-                                                                ),
-                                                                ''
-                                                            )
-                                                        )}
-                                                    </Link>
-                                                </dd>
-                                            </div>
-
-                                            <div
-                                                className={styles.dlItemInline}
-                                            >
-                                                <dt className={styles.dt}>
-                                                    Accessory:
-                                                </dt>
-                                                <dd className={styles.dd}>
-                                                    <Link
-                                                        href={`${listHref}&accessory=${noun.accessory_name}`}
-                                                        className={
-                                                            styles.attributeLink
-                                                        }
-                                                    >
-                                                        {startCase(
-                                                            noun.accessory_name.replace(
-                                                                new RegExp(
-                                                                    `^accessory-`
-                                                                ),
-                                                                ''
-                                                            )
-                                                        )}
-                                                    </Link>
-                                                </dd>
-                                            </div>
-
-                                            <div
-                                                className={styles.dlItemInline}
-                                            >
-                                                <dt className={styles.dt}>
-                                                    Head:
-                                                </dt>
-                                                <dd className={styles.dd}>
-                                                    <Link
-                                                        href={`${listHref}&head=${noun.head_name}`}
-                                                        className={
-                                                            styles.attributeLink
-                                                        }
-                                                    >
-                                                        {startCase(
-                                                            noun.head_name.replace(
-                                                                new RegExp(
-                                                                    `^head-`
-                                                                ),
-                                                                ''
-                                                            )
-                                                        )}
-                                                    </Link>
-                                                </dd>
-                                            </div>
-
-                                            <div
-                                                className={styles.dlItemInline}
-                                            >
-                                                <dt className={styles.dt}>
-                                                    Glasses:
-                                                </dt>
-                                                <dd className={styles.dd}>
-                                                    <Link
-                                                        href={`${listHref}&glasses=${noun.glasses_name}`}
-                                                        className={
-                                                            styles.attributeLink
-                                                        }
-                                                    >
-                                                        {startCase(
-                                                            noun.glasses_name.replace(
-                                                                new RegExp(
-                                                                    `^glasses-`
-                                                                ),
-                                                                ''
-                                                            )
-                                                        )}
-                                                    </Link>
-                                                </dd>
-                                            </div>
-
-                                            {noun.area && (
-                                                <div
-                                                    className={
-                                                        styles.dlItemInline
-                                                    }
-                                                >
-                                                    <dt className={styles.dt}>
-                                                        Area:
-                                                    </dt>
-                                                    <dd className={styles.dd}>
-                                                        {noun.area}
-                                                        <span className="lowercase">
-                                                            px
-                                                        </span>
-                                                    </dd>
-                                                </div>
-                                            )}
-
-                                            {noun.weight && (
-                                                <div
-                                                    className={
-                                                        styles.dlItemInline
-                                                    }
-                                                >
-                                                    <dt className={styles.dt}>
-                                                        Brightness:
-                                                    </dt>
-                                                    <dd className={styles.dd}>
-                                                        {noun.weight}
-                                                        <span className="lowercase">
-                                                            lm
-                                                        </span>
-                                                    </dd>
-                                                </div>
-                                            )}
-                                        </dl>
+                                        <NounPageTraits noun={noun} />
                                     </section>
 
                                     <div className="mt-4 text-[13px]">
