@@ -54,6 +54,39 @@ const Select: React.FC<Props> = ({
         return options.find((option) => option.value == selected)
     }, [options, selected])
 
+    const optionsRefs = useRef<(HTMLLIElement | null)[]>([])
+
+    useEffect(() => {
+        function handleKeyDown(event: KeyboardEvent) {
+            if (!optionsVisible || disabled) return
+
+            const pressedKey = event.key.toLowerCase()
+
+            // Find the index of the first option whose label starts with the pressed letter
+            const matchingIndex = options.findIndex((option) =>
+                option.label.toLowerCase().startsWith(pressedKey)
+            )
+
+            // If a matching option is found, scroll to it
+            if (matchingIndex !== -1 && optionsRefs.current[matchingIndex]) {
+                optionsRefs.current[matchingIndex]?.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'nearest',
+                })
+            }
+        }
+
+        // Only add the event listener when options are visible
+        if (optionsVisible) {
+            window.addEventListener('keydown', handleKeyDown)
+        }
+
+        // Clean up the event listener when the options dropdown is closed
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown)
+        }
+    }, [optionsVisible, disabled, options])
+
     return (
         <div
             ref={selectRef}
@@ -119,8 +152,11 @@ const Select: React.FC<Props> = ({
                         </button>
                     </li>
 
-                    {options.map((option) => (
-                        <li key={option.value}>
+                    {options.map((option, index) => (
+                        <li
+                            key={option.value}
+                            ref={(el) => (optionsRefs.current[index] = el)}
+                        >
                             <button
                                 type="button"
                                 className={styles.optionsButton}
