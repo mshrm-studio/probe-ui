@@ -49,6 +49,10 @@
     transition: transform 0.1s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
+.select > .heading > .button:focus {
+    outline: none;
+}
+
 .select[data-state='closed'] > .heading > .button {
     transform: translate(5px, -5px);
 }
