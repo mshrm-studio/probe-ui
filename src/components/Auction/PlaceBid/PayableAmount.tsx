@@ -34,7 +34,9 @@ const AuctionPlaceBidPayableAmount: React.FC<{ disabled?: boolean }> = ({
             disabled={disabled}
             name="payableAmount"
             min={0}
-            step={process.env.NEXT_PUBLIC_CHAIN_ID === '1' ? '0.1' : '0.000001'}
+            step={
+                process.env.NEXT_PUBLIC_CHAIN_ID === '1' ? '0.0001' : '0.000001'
+            }
             nativeType="number"
             placeholder={placeholder}
         />
