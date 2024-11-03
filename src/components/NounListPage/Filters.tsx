@@ -4,14 +4,14 @@ import React, { useState, useEffect, useContext } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import NounFiltersDto from '@/utils/dto/NounFilters'
 import useFilters from '@/utils/services/useFilters'
-import SelectNounColor from '@/components/Select/NounColor'
-import SelectNounTrait from '@/components/Select/NounTrait'
 import Project from '@/utils/dto/Project'
 import styles from '@/utils/styles/nounListPageFilters.module.css'
 import { XMarkIcon } from '@heroicons/react/24/solid'
 import DimensionsContext from '@/utils/contexts/DimensionsContext'
 import RequestingContext from '@/utils/contexts/RequestingContext'
 import NounTrait from '@/utils/dto/NounTrait'
+import SearchSelectNounColor from '@/components/SearchSelect/NounColor'
+import SearchSelectNounTrait from '@/components/SearchSelect/NounTrait'
 
 type Props = {
     accessoryList?: NounTrait[] | null
@@ -90,16 +90,41 @@ const NounListPageFilters: React.FC<Props> = ({
         pushToNewQuery()
     }, [filters])
 
-    function updateFilters(
-        e:
-            | React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-            | { target: { name: string; value?: string | null } }
-    ) {
+    type FilterValue = string | number | null | undefined
+
+    const [accessory, setAccessory] = useState<FilterValue>(
+        searchParams.get('accessory')
+    )
+    const [background, setBackground] = useState<FilterValue>(
+        searchParams.get('background')
+    )
+    const [body, setBody] = useState<FilterValue>(searchParams.get('body'))
+    const [color, setColor] = useState<FilterValue>(searchParams.get('color'))
+    const [glasses, setGlasses] = useState<FilterValue>(
+        searchParams.get('glasses')
+    )
+    const [head, setHead] = useState<FilterValue>(searchParams.get('head'))
+
+    useEffect(() => {
+        const newAccessory =
+            typeof accessory === 'string' ? accessory : undefined
+        const newBackground =
+            typeof background === 'string' ? background : undefined
+        const newBody = typeof body === 'string' ? body : undefined
+        const newColor = typeof color === 'string' ? color : undefined
+        const newGlasses = typeof glasses === 'string' ? glasses : undefined
+        const newHead = typeof head === 'string' ? head : undefined
+
         setFilters((values) => ({
             ...values,
-            [e.target.name]: e.target.value || undefined,
+            accessory: newAccessory,
+            background: newBackground,
+            body: newBody,
+            color: newColor,
+            glasses: newGlasses,
+            head: newHead,
         }))
-    }
+    }, [accessory, background, body, color, glasses, head])
 
     return (
         <div className={styles.wrapper}>
@@ -113,16 +138,25 @@ const NounListPageFilters: React.FC<Props> = ({
                 </button>
 
                 <div className={styles.filters}>
-                    <div className={styles.filter}>
+                    {/* <div className={styles.filter}>
                         <SelectNounColor
                             disabled={requesting}
                             project={project}
                             selected={filters.color}
                             updateSelected={updateFilters}
                         />
+                    </div> */}
+
+                    <div className={styles.filter}>
+                        <SearchSelectNounColor
+                            disabled={requesting}
+                            project={project}
+                            selected={filters.color}
+                            setSelected={setColor}
+                        />
                     </div>
 
-                    {glassesList && (
+                    {/* {glassesList && (
                         <div className={styles.filter}>
                             <SelectNounTrait
                                 disabled={requesting}
@@ -133,9 +167,22 @@ const NounListPageFilters: React.FC<Props> = ({
                                 updateSelected={updateFilters}
                             />
                         </div>
+                    )} */}
+
+                    {glassesList && (
+                        <div className={styles.filter}>
+                            <SearchSelectNounTrait
+                                disabled={requesting}
+                                project={project}
+                                layer="glasses"
+                                options={glassesList}
+                                selected={filters.glasses}
+                                setSelected={setGlasses}
+                            />
+                        </div>
                     )}
 
-                    {headList && (
+                    {/* {headList && (
                         <div className={styles.filter}>
                             <SelectNounTrait
                                 disabled={requesting}
@@ -146,9 +193,22 @@ const NounListPageFilters: React.FC<Props> = ({
                                 updateSelected={updateFilters}
                             />
                         </div>
+                    )} */}
+
+                    {headList && (
+                        <div className={styles.filter}>
+                            <SearchSelectNounTrait
+                                disabled={requesting}
+                                project={project}
+                                layer="head"
+                                options={headList}
+                                selected={filters.head}
+                                setSelected={setHead}
+                            />
+                        </div>
                     )}
 
-                    {accessoryList && (
+                    {/* {accessoryList && (
                         <div className={styles.filter}>
                             <SelectNounTrait
                                 disabled={requesting}
@@ -159,9 +219,22 @@ const NounListPageFilters: React.FC<Props> = ({
                                 updateSelected={updateFilters}
                             />
                         </div>
+                    )} */}
+
+                    {accessoryList && (
+                        <div className={styles.filter}>
+                            <SearchSelectNounTrait
+                                disabled={requesting}
+                                project={project}
+                                layer="accessory"
+                                options={accessoryList}
+                                selected={filters.accessory}
+                                setSelected={setAccessory}
+                            />
+                        </div>
                     )}
 
-                    {bodyList && (
+                    {/* {bodyList && (
                         <div className={styles.filter}>
                             <SelectNounTrait
                                 disabled={requesting}
@@ -172,15 +245,38 @@ const NounListPageFilters: React.FC<Props> = ({
                                 updateSelected={updateFilters}
                             />
                         </div>
+                    )} */}
+
+                    {bodyList && (
+                        <div className={styles.filter}>
+                            <SearchSelectNounTrait
+                                disabled={requesting}
+                                project={project}
+                                layer="body"
+                                options={bodyList}
+                                selected={filters.body}
+                                setSelected={setBody}
+                            />
+                        </div>
                     )}
 
-                    <div className={styles.filter}>
+                    {/* <div className={styles.filter}>
                         <SelectNounTrait
                             disabled={requesting}
                             project={project}
                             layer="background"
                             selected={filters.background}
                             updateSelected={updateFilters}
+                        />
+                    </div> */}
+
+                    <div className={styles.filter}>
+                        <SearchSelectNounTrait
+                            disabled={requesting}
+                            project={project}
+                            layer="background"
+                            selected={filters.background}
+                            setSelected={setBackground}
                         />
                     </div>
                 </div>
