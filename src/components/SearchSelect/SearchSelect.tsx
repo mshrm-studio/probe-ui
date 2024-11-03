@@ -10,8 +10,8 @@ import {
     Label,
 } from '@headlessui/react'
 import { ChevronUpDownIcon } from '@heroicons/react/20/solid'
-import { useEffect, useMemo, useState } from 'react'
-import styles from '@/utils/styles/v2/searchSelect.module.css'
+import { useEffect, useState } from 'react'
+import styles from '@/utils/styles/searchSelect.module.css'
 
 type Props = {
     disabled?: boolean

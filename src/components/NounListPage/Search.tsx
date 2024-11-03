@@ -32,7 +32,7 @@ const NounListPageSearch: React.FC<Props> = ({
     const searchParams = useSearchParams()
     const [selected, setSelected] = useState<
         string | number | null | undefined
-    >('')
+    >(searchParams.get('search') || '')
 
     useEffect(() => {
         const incumbentSearch = searchParams.get('search')
@@ -48,13 +48,17 @@ const NounListPageSearch: React.FC<Props> = ({
         }
     }, [searchParams])
 
-    const pushToNewQuery = (search: string) => {
-        if (searchParams.get('search') !== search) {
-            const basePath = project === 'Nouns' ? '/nouns' : '/lils'
+    const basePath = useMemo(() => {
+        return project === 'Nouns' ? '/nouns' : '/lils'
+    }, [project])
 
+    const pushToNewQuery = (search: string) => {
+        const incumbentSearch = searchParams.get('search') || ''
+
+        if (search !== '' && search !== incumbentSearch) {
             const newSearchParams = new URLSearchParams(searchParams.toString())
 
-            if (search) {
+            if (search !== '') {
                 newSearchParams.set('search', search)
             } else {
                 newSearchParams.delete('search')
@@ -72,9 +76,7 @@ const NounListPageSearch: React.FC<Props> = ({
     }
 
     useEffect(() => {
-        if (typeof selected === 'string' && selected !== '') {
-            pushToNewQuery(selected)
-        }
+        pushToNewQuery(typeof selected === 'string' ? selected : '')
     }, [selected])
 
     const options = useMemo(() => {
@@ -104,13 +106,27 @@ const NounListPageSearch: React.FC<Props> = ({
             .sort((a, b) => a.label.localeCompare(b.label))
     }, [accessoryList, bodyList, glassesList, headList])
 
+    const closeSearch = () => {
+        const search = selected || ''
+
+        if (search === '') {
+            const newSearchParams = new URLSearchParams(searchParams.toString())
+
+            newSearchParams.delete('search')
+
+            router.push(`${basePath}?${newSearchParams.toString()}`)
+        }
+
+        setShowSearch(false)
+    }
+
     return (
         <div className={styles.wrapper}>
             <div className={styles.content}>
                 <button
                     type="button"
                     className={styles.closeButton}
-                    onClick={() => setShowSearch(false)}
+                    onClick={closeSearch}
                 >
                     <XMarkIcon className={styles.closeButtonIcon} />
                 </button>

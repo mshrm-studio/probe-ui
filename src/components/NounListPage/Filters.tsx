@@ -138,15 +138,6 @@ const NounListPageFilters: React.FC<Props> = ({
                 </button>
 
                 <div className={styles.filters}>
-                    {/* <div className={styles.filter}>
-                        <SelectNounColor
-                            disabled={requesting}
-                            project={project}
-                            selected={filters.color}
-                            updateSelected={updateFilters}
-                        />
-                    </div> */}
-
                     <div className={styles.filter}>
                         <SearchSelectNounColor
                             disabled={requesting}
@@ -155,19 +146,6 @@ const NounListPageFilters: React.FC<Props> = ({
                             setSelected={setColor}
                         />
                     </div>
-
-                    {/* {glassesList && (
-                        <div className={styles.filter}>
-                            <SelectNounTrait
-                                disabled={requesting}
-                                project={project}
-                                layer="glasses"
-                                options={glassesList}
-                                selected={filters.glasses}
-                                updateSelected={updateFilters}
-                            />
-                        </div>
-                    )} */}
 
                     {glassesList && (
                         <div className={styles.filter}>
@@ -182,19 +160,6 @@ const NounListPageFilters: React.FC<Props> = ({
                         </div>
                     )}
 
-                    {/* {headList && (
-                        <div className={styles.filter}>
-                            <SelectNounTrait
-                                disabled={requesting}
-                                project={project}
-                                layer="head"
-                                options={headList}
-                                selected={filters.head}
-                                updateSelected={updateFilters}
-                            />
-                        </div>
-                    )} */}
-
                     {headList && (
                         <div className={styles.filter}>
                             <SearchSelectNounTrait
@@ -207,19 +172,6 @@ const NounListPageFilters: React.FC<Props> = ({
                             />
                         </div>
                     )}
-
-                    {/* {accessoryList && (
-                        <div className={styles.filter}>
-                            <SelectNounTrait
-                                disabled={requesting}
-                                project={project}
-                                layer="accessory"
-                                options={accessoryList}
-                                selected={filters.accessory}
-                                updateSelected={updateFilters}
-                            />
-                        </div>
-                    )} */}
 
                     {accessoryList && (
                         <div className={styles.filter}>
@@ -234,19 +186,6 @@ const NounListPageFilters: React.FC<Props> = ({
                         </div>
                     )}
 
-                    {/* {bodyList && (
-                        <div className={styles.filter}>
-                            <SelectNounTrait
-                                disabled={requesting}
-                                project={project}
-                                layer="body"
-                                options={bodyList}
-                                selected={filters.body}
-                                updateSelected={updateFilters}
-                            />
-                        </div>
-                    )} */}
-
                     {bodyList && (
                         <div className={styles.filter}>
                             <SearchSelectNounTrait
@@ -259,16 +198,6 @@ const NounListPageFilters: React.FC<Props> = ({
                             />
                         </div>
                     )}
-
-                    {/* <div className={styles.filter}>
-                        <SelectNounTrait
-                            disabled={requesting}
-                            project={project}
-                            layer="background"
-                            selected={filters.background}
-                            updateSelected={updateFilters}
-                        />
-                    </div> */}
 
                     <div className={styles.filter}>
                         <SearchSelectNounTrait
