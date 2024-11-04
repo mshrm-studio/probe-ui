@@ -6,7 +6,7 @@ import Project from '@/utils/dto/Project'
 import styles from '@/utils/styles/nounListPageSearch.module.css'
 import { XMarkIcon } from '@heroicons/react/24/solid'
 import RequestingContext from '@/utils/contexts/RequestingContext'
-import SearchSelect from '@/components/SearchSelect'
+import SearchSelect from '@/components/SearchSelect/SearchSelect'
 import { startCase } from 'lodash'
 import NounTrait from '@/utils/dto/NounTrait'
 
@@ -30,7 +30,9 @@ const NounListPageSearch: React.FC<Props> = ({
     const { requesting } = useContext(RequestingContext)
     const router = useRouter()
     const searchParams = useSearchParams()
-    const [search, setSearch] = useState('')
+    const [selected, setSelected] = useState<
+        string | number | null | undefined
+    >(searchParams.get('search') || '')
 
     useEffect(() => {
         const incumbentSearch = searchParams.get('search')
@@ -41,18 +43,41 @@ const NounListPageSearch: React.FC<Props> = ({
             )
 
             if (matchingOption) {
-                setSearch(matchingOption.label)
+                setSelected(matchingOption.value)
             }
         }
     }, [searchParams])
 
-    const updateSelected = (value?: string | number) => {
-        if (typeof value === 'string') {
-            pushToNewQuery(value)
-        } else {
-            pushToNewQuery()
+    const basePath = useMemo(() => {
+        return project === 'Nouns' ? '/nouns' : '/lils'
+    }, [project])
+
+    const pushToNewQuery = (search: string) => {
+        const incumbentSearch = searchParams.get('search') || ''
+
+        if (search !== '' && search !== incumbentSearch) {
+            const newSearchParams = new URLSearchParams(searchParams.toString())
+
+            if (search !== '') {
+                newSearchParams.set('search', search)
+            } else {
+                newSearchParams.delete('search')
+            }
+
+            newSearchParams.delete('accessory')
+            newSearchParams.delete('body')
+            newSearchParams.delete('glasses')
+            newSearchParams.delete('head')
+
+            router.push(`${basePath}?${newSearchParams.toString()}`)
+
+            setShowSearch(false)
         }
     }
+
+    useEffect(() => {
+        pushToNewQuery(typeof selected === 'string' ? selected : '')
+    }, [selected])
 
     const options = useMemo(() => {
         const listOfAllLayers = [
@@ -81,23 +106,16 @@ const NounListPageSearch: React.FC<Props> = ({
             .sort((a, b) => a.label.localeCompare(b.label))
     }, [accessoryList, bodyList, glassesList, headList])
 
-    const pushToNewQuery = (search?: string) => {
-        const basePath = project === 'Nouns' ? '/nouns' : '/lils'
+    const closeSearch = () => {
+        const search = selected || ''
 
-        const newSearchParams = new URLSearchParams(searchParams.toString())
+        if (search === '') {
+            const newSearchParams = new URLSearchParams(searchParams.toString())
 
-        if (search) {
-            newSearchParams.set('search', search)
-        } else {
             newSearchParams.delete('search')
+
+            router.push(`${basePath}?${newSearchParams.toString()}`)
         }
-
-        newSearchParams.delete('accessory')
-        newSearchParams.delete('body')
-        newSearchParams.delete('glasses')
-        newSearchParams.delete('head')
-
-        router.push(`${basePath}?${newSearchParams.toString()}`)
 
         setShowSearch(false)
     }
@@ -108,7 +126,7 @@ const NounListPageSearch: React.FC<Props> = ({
                 <button
                     type="button"
                     className={styles.closeButton}
-                    onClick={() => setShowSearch(false)}
+                    onClick={closeSearch}
                 >
                     <XMarkIcon className={styles.closeButtonIcon} />
                 </button>
@@ -116,9 +134,10 @@ const NounListPageSearch: React.FC<Props> = ({
                 <div className="w-full md:w-[377px]">
                     <SearchSelect
                         disabled={requesting}
+                        label="Search"
                         options={options}
-                        selected={search}
-                        updateSelected={updateSelected}
+                        selected={selected}
+                        setSelected={setSelected}
                     />
                 </div>
             </div>

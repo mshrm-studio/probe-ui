@@ -5,27 +5,27 @@ import { NounTraitLayer } from '@/utils/dto/NounTraitLayer'
 import useNounTraitList from '@/utils/services/useNounTraitList'
 import { debounce, startCase } from 'lodash'
 import Project from '@/utils/dto/Project'
-import Select from '@/components/Select/Select'
 import NounTrait, { isNounTraitList } from '@/utils/dto/NounTrait'
+import SearchSelect from '@/components/SearchSelect/SearchSelect'
 
 type Props = {
     disabled?: boolean
     project: Project
     layer: NounTraitLayer
     options?: NounTrait[] | null
-    selected?: string | null
-    updateSelected: (e: {
-        target: { name: string; value?: string | null }
-    }) => void
+    selected: string | null | undefined
+    setSelected: React.Dispatch<
+        React.SetStateAction<string | number | null | undefined>
+    >
 }
 
-const SelectNounTrait: React.FC<Props> = ({
+const SearchSelectNounTrait: React.FC<Props> = ({
     disabled,
     project,
     layer,
     options,
     selected,
-    updateSelected,
+    setSelected,
 }) => {
     const { fetchNounTraitList, nounTraitList } = useNounTraitList(project)
 
@@ -38,17 +38,12 @@ const SelectNounTrait: React.FC<Props> = ({
         }, 500)
 
         if (!isNounTraitList(options)) {
+            console.log('fetching noun trait list')
             debouncedFetch()
         }
 
         return () => debouncedFetch.cancel()
     }, [layer])
-
-    function handleSelect(value?: number | string | null) {
-        if (typeof value === 'string' || value === undefined) {
-            updateSelected({ target: { name: layer, value } })
-        }
-    }
 
     const traitList = useMemo(() => {
         return isNounTraitList(options)
@@ -91,14 +86,14 @@ const SelectNounTrait: React.FC<Props> = ({
     }, [listWithImgSrc])
 
     return (
-        <Select
+        <SearchSelect
             disabled={disabled}
-            label={layer}
+            label={startCase(layer)}
             options={curatedList}
             selected={selected}
-            updateSelected={handleSelect}
+            setSelected={setSelected}
         />
     )
 }
 
-export default SelectNounTrait
+export default SearchSelectNounTrait

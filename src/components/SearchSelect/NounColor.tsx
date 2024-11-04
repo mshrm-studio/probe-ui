@@ -1,31 +1,32 @@
 'use client'
 
 import React, { useEffect, useMemo } from 'react'
-import useNounColorList from '@/utils/services/useNounColorList'
 import { debounce } from 'lodash'
 import Project from '@/utils/dto/Project'
-import Select from '@/components/Select/Select'
+import SearchSelect from '@/components/SearchSelect/SearchSelect'
 import chroma from 'chroma-js'
+import useNounColorList from '@/utils/services/useNounColorList'
 
 type Props = {
     disabled?: boolean
     project: Project
-    selected?: string | null
-    updateSelected: (e: {
-        target: { name: string; value?: string | null }
-    }) => void
+    selected: string | null | undefined
+    setSelected: React.Dispatch<
+        React.SetStateAction<string | number | null | undefined>
+    >
 }
 
-const SelectNounColor: React.FC<Props> = ({
+const SearchSelectNounColor: React.FC<Props> = ({
     disabled,
     project,
     selected,
-    updateSelected,
+    setSelected,
 }) => {
     const { fetchNounColorList, nounColorList } = useNounColorList(project)
 
     useEffect(() => {
         const debouncedFetch = debounce(() => {
+            console.log('fetching noun color list')
             fetchNounColorList()
         }, 500)
 
@@ -33,12 +34,6 @@ const SelectNounColor: React.FC<Props> = ({
 
         return () => debouncedFetch.cancel()
     }, [])
-
-    function handleSelect(value?: number | string | null) {
-        if (typeof value === 'string' || value === undefined) {
-            updateSelected({ target: { name: 'color', value } })
-        }
-    }
 
     const colorListWithHue = useMemo(() => {
         return nounColorList
@@ -51,24 +46,36 @@ const SelectNounColor: React.FC<Props> = ({
 
     const sortedList = useMemo(() => {
         return colorListWithHue
-            .map((color) => ({
-                colorHex: color.hex,
-                hue: color.hue,
-                label: color.hex,
-                value: color.hex,
-            }))
+            .map((color) => {
+                const canvas = document.createElement('canvas')
+                canvas.width = 24
+                canvas.height = 24
+
+                const ctx = canvas.getContext('2d')
+                if (ctx) {
+                    ctx.fillStyle = color.hex
+                    ctx.fillRect(0, 0, 24, 24)
+                }
+
+                return {
+                    ...color,
+                    imgSrc: canvas.toDataURL(),
+                    label: color.hex,
+                    value: color.hex,
+                }
+            })
             .sort((a, b) => a.hue - b.hue)
     }, [colorListWithHue])
 
     return (
-        <Select
+        <SearchSelect
             disabled={disabled}
             label="Color"
             options={sortedList}
             selected={selected}
-            updateSelected={handleSelect}
+            setSelected={setSelected}
         />
     )
 }
 
-export default SelectNounColor
+export default SearchSelectNounColor
