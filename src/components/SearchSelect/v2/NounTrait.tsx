@@ -1,55 +1,37 @@
 'use client'
 
-import React, { use, useEffect, useMemo, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { NounTraitLayer } from '@/utils/dto/NounTraitLayer'
-import useNounTraitList from '@/utils/services/useNounTraitList'
-import { debounce, startCase } from 'lodash'
-import Project from '@/utils/dto/Project'
-import NounTrait, { isNounTraitList } from '@/utils/dto/NounTrait'
+import { startCase } from 'lodash'
 import SearchSelect from '@/components/SearchSelect/SearchSelect'
 import SearchSelectSelected from '@/utils/dto/SearchSelectSelected'
+import NounTraitsContext from '@/utils/contexts/NounTraitsContext'
 
 type Props = {
     disabled?: boolean
-    project: Project
     layer: NounTraitLayer
-    options?: NounTrait[] | null
     selected: string | undefined
     setSelected: (value: string | undefined) => void
 }
 
 const SearchSelectNounTrait: React.FC<Props> = ({
     disabled,
-    project,
     layer,
-    options,
     selected,
     setSelected,
 }) => {
-    const { fetchNounTraitList, nounTraitList } = useNounTraitList(project)
-
-    useEffect(() => {
-        const debouncedFetch = debounce(() => {
-            const params = new URLSearchParams()
-            params.set('per_page', '300')
-            params.set('layer', layer)
-            fetchNounTraitList(params)
-        }, 500)
-
-        if (!isNounTraitList(options)) {
-            debouncedFetch()
-        }
-
-        return () => debouncedFetch.cancel()
-    }, [layer])
+    const { accessoryList, backgroundList, bodyList, glassesList, headList } =
+        useContext(NounTraitsContext)
 
     const traitList = useMemo(() => {
-        return isNounTraitList(options)
-            ? options
-            : isNounTraitList(nounTraitList)
-            ? nounTraitList
-            : []
-    }, [options, nounTraitList])
+        return {
+            accessory: accessoryList,
+            background: backgroundList,
+            body: bodyList,
+            glasses: glassesList,
+            head: headList,
+        }[layer]
+    }, [accessoryList, backgroundList, bodyList, glassesList, headList, layer])
 
     const listWithImgSrc = useMemo(() => {
         return traitList

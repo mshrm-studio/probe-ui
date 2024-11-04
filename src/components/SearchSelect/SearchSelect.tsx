@@ -12,15 +12,14 @@ import {
 import { ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import { useEffect, useState } from 'react'
 import styles from '@/utils/styles/searchSelect.module.css'
+import SearchSelectSelected from '@/utils/dto/SearchSelectSelected'
 
 type Props = {
     disabled?: boolean
     label?: string
     options: SelectOption[]
     selected?: string | number | null
-    setSelected: React.Dispatch<
-        React.SetStateAction<string | number | null | undefined>
-    >
+    setSelected: React.Dispatch<React.SetStateAction<SearchSelectSelected>>
 }
 
 export default function SearchSelect({

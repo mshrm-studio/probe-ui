@@ -1,33 +1,26 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useState } from 'react'
 import ApiError from '@/utils/dto/ApiError'
 import axios from 'axios'
 import { isObject } from 'lodash'
 import { isRawLaravelApiError } from '@/utils/dto/RawLaravelApiError'
 
 const useApi = () => {
-    const api = useMemo(
-        () =>
-            axios.create({
-                baseURL: process.env.NEXT_PUBLIC_API_URL,
-            }),
-        []
-    )
+    const api = axios.create({
+        baseURL: process.env.NEXT_PUBLIC_API_URL,
+    })
 
     const [processing, setProcessing] = useState(false)
 
     const [error, setError] = useState<ApiError | null>(null)
 
-    const internalError = useMemo(
-        () => ({
-            status: 500,
-            data: {
-                message: 'Internal Error. Please try again later.',
-            },
-        }),
-        []
-    )
+    const internalError = {
+        status: 500,
+        data: {
+            message: 'Internal Error. Please try again later.',
+        },
+    }
 
-    const parseRawApiError = useCallback((err: unknown) => {
+    const parseRawApiError = (err: unknown) => {
         if (isRawLaravelApiError(err)) {
             return {
                 statusText: err.response?.statusText,
@@ -44,7 +37,7 @@ const useApi = () => {
         } else {
             return internalError
         }
-    }, [])
+    }
 
     return {
         api,
