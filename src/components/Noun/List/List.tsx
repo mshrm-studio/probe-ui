@@ -10,6 +10,7 @@ import NounListBidBage from '@/components/Noun/List/BidBadge'
 import AuctionContext from '@/utils/contexts/AuctionContext'
 import useAuctionStatus from '@/utils/services/useAuctionStatus'
 import NounImageFromId from '@/components/Noun/ImageFromId'
+import { useSearchParams } from 'next/navigation'
 
 type Props = {
     project: Project
@@ -38,25 +39,40 @@ const NounList: React.FC<Props> = ({ project, nouns }) => {
             : false
     }, [auction, nouns])
 
+    const searchParams = useSearchParams()
+
+    const nounListIsFiltered = useMemo(() => {
+        // Convert searchParams to an object to filter and check
+        const entries = Array.from(searchParams.entries())
+        // Check if there are any filters other than per_page, sort_property, or sort_method
+        return entries.some(
+            ([key]) =>
+                !['per_page', 'sort_property', 'sort_method'].includes(key)
+        )
+    }, [searchParams])
+
     return (
         <div className={styles.listWrapper}>
             <ul className="grid gap-2 grid-cols-5 md:grid-cols-10 xl:grid-cols-18">
-                {project === 'Nouns' && auction && !auctionNounInList && (
-                    <li className={styles.nounLink}>
-                        <Link
-                            href={`${linkPrefix}/auction`}
-                            className={`${styles.nounLink} ${styles.auctionedNoun}`}
-                        >
-                            <NounImageFromId nounId={auction.nounId} />
+                {project === 'Nouns' &&
+                    auction &&
+                    !auctionNounInList &&
+                    !nounListIsFiltered && (
+                        <li className={styles.nounLink}>
+                            <Link
+                                href={`${linkPrefix}/auction`}
+                                className={`${styles.nounLink} ${styles.auctionedNoun}`}
+                            >
+                                <NounImageFromId nounId={auction.nounId} />
 
-                            <label className={styles.nounLinkLabel}>
-                                {auction.nounId}
-                            </label>
+                                <label className={styles.nounLinkLabel}>
+                                    {auction.nounId}
+                                </label>
 
-                            <NounListBidBage nounId={auction.nounId} />
-                        </Link>
-                    </li>
-                )}
+                                <NounListBidBage nounId={auction.nounId} />
+                            </Link>
+                        </li>
+                    )}
 
                 {nounsWithSvgUrl.map((noun) => (
                     <li key={noun.token_id}>

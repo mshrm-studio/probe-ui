@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { debounce } from 'lodash'
 import Project from '@/utils/dto/Project'
 import SearchSelect from '@/components/SearchSelect/SearchSelect'
@@ -11,9 +11,7 @@ type Props = {
     disabled?: boolean
     project: Project
     selected: string | null | undefined
-    setSelected: React.Dispatch<
-        React.SetStateAction<string | number | null | undefined>
-    >
+    setSelected: (value: string | undefined) => void
 }
 
 const SearchSelectNounColor: React.FC<Props> = ({
@@ -26,7 +24,6 @@ const SearchSelectNounColor: React.FC<Props> = ({
 
     useEffect(() => {
         const debouncedFetch = debounce(() => {
-            console.log('fetching noun color list')
             fetchNounColorList()
         }, 500)
 
@@ -67,13 +64,27 @@ const SearchSelectNounColor: React.FC<Props> = ({
             .sort((a, b) => a.hue - b.hue)
     }, [colorListWithHue])
 
+    const [selectedColor, setSelectedColor] = useState<
+        string | number | null | undefined
+    >(selected)
+
+    useEffect(() => {
+        setSelectedColor(selected)
+    }, [selected])
+
+    useEffect(() => {
+        setSelected(
+            typeof selectedColor === 'string' ? selectedColor : undefined
+        )
+    }, [selectedColor])
+
     return (
         <SearchSelect
             disabled={disabled}
             label="Color"
             options={sortedList}
             selected={selected}
-            setSelected={setSelected}
+            setSelected={setSelectedColor}
         />
     )
 }

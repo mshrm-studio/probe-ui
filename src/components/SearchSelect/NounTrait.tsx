@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useMemo } from 'react'
+import React, { use, useEffect, useMemo, useState } from 'react'
 import { NounTraitLayer } from '@/utils/dto/NounTraitLayer'
 import useNounTraitList from '@/utils/services/useNounTraitList'
 import { debounce, startCase } from 'lodash'
@@ -13,10 +13,8 @@ type Props = {
     project: Project
     layer: NounTraitLayer
     options?: NounTrait[] | null
-    selected: string | null | undefined
-    setSelected: React.Dispatch<
-        React.SetStateAction<string | number | null | undefined>
-    >
+    selected: string | undefined
+    setSelected: (value: string | undefined) => void
 }
 
 const SearchSelectNounTrait: React.FC<Props> = ({
@@ -38,7 +36,6 @@ const SearchSelectNounTrait: React.FC<Props> = ({
         }, 500)
 
         if (!isNounTraitList(options)) {
-            console.log('fetching noun trait list')
             debouncedFetch()
         }
 
@@ -85,13 +82,27 @@ const SearchSelectNounTrait: React.FC<Props> = ({
         }))
     }, [listWithImgSrc])
 
+    const [selectedTrait, setSelectedTrait] = useState<
+        string | number | null | undefined
+    >(selected)
+
+    useEffect(() => {
+        setSelectedTrait(selected)
+    }, [selected])
+
+    useEffect(() => {
+        setSelected(
+            typeof selectedTrait === 'string' ? selectedTrait : undefined
+        )
+    }, [selectedTrait])
+
     return (
         <SearchSelect
             disabled={disabled}
             label={startCase(layer)}
             options={curatedList}
-            selected={selected}
-            setSelected={setSelected}
+            selected={selectedTrait}
+            setSelected={setSelectedTrait}
         />
     )
 }
