@@ -1,3 +1,5 @@
+'use client'
+
 import AuctionPlaceBid from '@/components/Auction/PlaceBid/PlaceBid'
 import { useWeb3ModalAccount } from '@web3modal/ethers/react'
 import Button from '@/components/Button'
