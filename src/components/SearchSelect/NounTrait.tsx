@@ -33,10 +33,6 @@ const SearchSelectNounTrait: React.FC<Props> = ({
         }[layer]
     }, [accessoryList, backgroundList, bodyList, glassesList, headList, layer])
 
-    useEffect(() => {
-        console.log('traitList', traitList)
-    })
-
     const listWithImgSrc = useMemo(() => {
         return traitList
             .map((item) => ({

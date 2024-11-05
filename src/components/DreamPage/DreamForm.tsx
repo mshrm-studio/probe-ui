@@ -56,11 +56,27 @@ export default function DreamPageDreamForm() {
         })
     }
 
+    useEffect(() => {
+        generate()
+    }, [seed])
+
     const [generatedSvg, setGeneratedSvg] = useState('')
 
     const generate = async () => {
         try {
             const { parts, background } = getNounData(seed)
+
+            parts.forEach((part) => {
+                console.log('part:', part.filename, part.data)
+            })
+
+            const accessory = accessoryList.find(
+                (a) => a.name === form.accessory
+            )
+
+            if (accessory) {
+                console.log('accessory:', accessory.name, accessory.rle_data)
+            }
 
             const response = await fetch('/api/build-svg', {
                 method: 'POST',
@@ -102,7 +118,7 @@ export default function DreamPageDreamForm() {
                 <Button onClick={randomise}>Randomise</Button>
             </div>
 
-            <Button onClick={generate}>Dream</Button>
+            {/* <Button onClick={generate}>Dream</Button> */}
         </div>
     )
 }
