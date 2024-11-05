@@ -8,31 +8,23 @@ import { XMarkIcon } from '@heroicons/react/24/solid'
 import RequestingContext from '@/utils/contexts/RequestingContext'
 import SearchSelect from '@/components/SearchSelect/SearchSelect'
 import { startCase } from 'lodash'
-import NounTrait from '@/utils/dto/NounTrait'
+import SearchSelectSelected from '@/utils/dto/SearchSelectSelected'
+import NounTraitsContext from '@/utils/contexts/NounTraitsContext'
 
 type Props = {
-    accessoryList: NounTrait[]
-    bodyList: NounTrait[]
-    glassesList: NounTrait[]
-    headList: NounTrait[]
     project: Project
     setShowSearch: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const NounListPageSearch: React.FC<Props> = ({
-    accessoryList,
-    bodyList,
-    glassesList,
-    headList,
-    project,
-    setShowSearch,
-}) => {
+const NounListPageSearch: React.FC<Props> = ({ project, setShowSearch }) => {
     const { requesting } = useContext(RequestingContext)
     const router = useRouter()
     const searchParams = useSearchParams()
-    const [selected, setSelected] = useState<
-        string | number | null | undefined
-    >(searchParams.get('search') || '')
+    const [selected, setSelected] = useState<SearchSelectSelected>(
+        searchParams.get('search') || ''
+    )
+    const { accessoryList, bodyList, glassesList, headList } =
+        useContext(NounTraitsContext)
 
     useEffect(() => {
         const incumbentSearch = searchParams.get('search')

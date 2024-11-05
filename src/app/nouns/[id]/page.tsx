@@ -2,16 +2,27 @@ import NounPage from '@/components/NounPage/NounPage'
 import type { Metadata } from 'next'
 import NounMintProvider from '@/components/Provider/NounMint'
 import NounSettlementProvider from '@/components/Provider/NounSettlement'
+import useApi from '@/utils/services/v2/useApi'
+import { isNoun } from '@/utils/dto/Noun'
+import StaticAlert from '@/components/StaticAlert'
 
 type PageProps = {
     params: { id: string }
 }
 
-export default function Page({ params }: PageProps) {
+export default async function Page({ params }: PageProps) {
+    const api = useApi()
+
+    const { data } = await api
+        .get(`/nouns/${params.id}`)
+        .then((res) => res.data)
+
+    if (!isNoun(data)) return <StaticAlert>Unknown Error</StaticAlert>
+
     return (
         <NounSettlementProvider nounId={Number(params.id)}>
             <NounMintProvider nounId={Number(params.id)}>
-                <NounPage project="Nouns" nounId={Number(params.id)} />
+                <NounPage project="Nouns" noun={data} />
             </NounMintProvider>
         </NounSettlementProvider>
     )

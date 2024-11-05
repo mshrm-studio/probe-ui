@@ -1,26 +1,20 @@
 'use client'
 
 import NounFilters from '@/components/NounListPage/Filters'
-import {
-    useCallback,
-    useContext,
-    useEffect,
-    useMemo,
-    useRef,
-    useState,
-} from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { debounce } from 'lodash'
 import NounList from '@/components/Noun/List/List'
 import Project from '@/utils/dto/Project'
 import DimensionsContext from '@/utils/contexts/DimensionsContext'
-import Noun from '@/utils/dto/Noun'
+import Noun, { isNounList } from '@/utils/dto/Noun'
 import { useSearchParams } from 'next/navigation'
-import useNounList from '@/utils/services/useNounList'
 import RequestingContext from '@/utils/contexts/RequestingContext'
-import SpacesImage from '@/components/SpacesImage'
 import Header from '@/components/NounListPage/Header'
 import NounSearch from '@/components/NounListPage/Search'
-import useNounTraitList from '@/utils/services/useNounTraitList'
+import useApi from '@/utils/services/v2/useApi'
+import ConditionalFeedback from '@/components/ConditionalFeedback'
+import ApiMeta, { isApiMeta } from '@/utils/dto/ApiMeta'
+import FetchingImage from '@/components/FetchingImage'
 
 const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
     const { dimensions } = useContext(DimensionsContext)
@@ -31,21 +25,55 @@ const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
     const { setRequesting } = useContext(RequestingContext)
     const [showFilters, setShowFilters] = useState(false)
     const [showSearch, setShowSearch] = useState(false)
+    const api = useApi()
+    const [fetching, setFetching] = useState(false)
+    const [error, setError] = useState<unknown>(null)
+    const [meta, setMeta] = useState<ApiMeta>()
 
-    const { error, fetching, fetchNounList, nounList, meta } =
-        useNounList(project)
+    // Effect to fetch nouns when the page resets
+    useEffect(() => {
+        async function fetchNouns() {
+            setFetching(true)
 
-    // Function to handle fetching based on parameters
-    const fetchNouns = useCallback(
-        (pageNumber: number) => {
+            const path = project === 'LilNouns' ? '/lil-nouns' : '/nouns'
+
             const params = new URLSearchParams(searchParams)
 
-            params.set('page', Math.max(1, pageNumber).toString())
+            params.set('page', Math.max(1, page).toString())
 
-            fetchNounList(params)
-        },
-        [fetchNounList, searchParams]
-    )
+            try {
+                const { data, meta } = await api
+                    .get(`${path}?${params}`)
+                    .then((res) => res.data)
+
+                if (isNounList(data)) {
+                    setNouns((prev) => {
+                        const nounMap = new Map(
+                            prev.map((noun) => [noun.token_id, noun])
+                        )
+
+                        data.forEach((noun) => {
+                            if (!nounMap.has(noun.token_id)) {
+                                nounMap.set(noun.token_id, noun)
+                            }
+                        })
+
+                        return Array.from(nounMap.values())
+                    })
+                }
+
+                if (isApiMeta(meta)) {
+                    setMeta(meta)
+                }
+            } catch (error) {
+                setError(error)
+            } finally {
+                setFetching(false)
+            }
+        }
+
+        fetchNouns()
+    }, [page])
 
     useEffect(() => {
         setRequesting(fetching)
@@ -57,30 +85,7 @@ const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
         setPage((prev) => (prev === 1 ? 0 : 1)) // 0 or 1 to make sure re-fetch is always triggered
     }, [searchParams])
 
-    // Effect to fetch nouns when the page resets
-    useEffect(() => {
-        fetchNouns(page)
-    }, [page])
-
-    // useEffect to manage nounList updates
-    useEffect(() => {
-        if (nounList) {
-            setNouns((prev) => {
-                const nounMap = new Map(
-                    prev.map((noun) => [noun.token_id, noun])
-                )
-
-                nounList.forEach((noun) => {
-                    if (!nounMap.has(noun.token_id)) {
-                        nounMap.set(noun.token_id, noun)
-                    }
-                })
-
-                return Array.from(nounMap.values())
-            })
-        }
-    }, [nounList])
-
+    // useEffect to manage scroll, get next page when near bottom
     useEffect(() => {
         const handleScroll = debounce(() => {
             if (fetching) return
@@ -109,43 +114,7 @@ const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
             window.removeEventListener('scroll', handleScroll)
             handleScroll.cancel()
         }
-    }, [fetching, page, meta]) // Only re-run if fetching, page, or meta changes
-
-    const {
-        fetchNounTraitList: fetchAccessoryList,
-        nounTraitList: accessoryList,
-    } = useNounTraitList(project)
-
-    const { fetchNounTraitList: fetchBodyList, nounTraitList: bodyList } =
-        useNounTraitList(project)
-
-    const { fetchNounTraitList: fetchGlassesList, nounTraitList: glassesList } =
-        useNounTraitList(project)
-
-    const { fetchNounTraitList: fetchHeadList, nounTraitList: headList } =
-        useNounTraitList(project)
-
-    useEffect(() => {
-        const accessoryListParams = new URLSearchParams()
-        accessoryListParams.set('per_page', '300')
-        accessoryListParams.set('layer', 'accessory')
-        fetchAccessoryList(accessoryListParams)
-
-        const bodyListParams = new URLSearchParams()
-        bodyListParams.set('per_page', '300')
-        bodyListParams.set('layer', 'body')
-        fetchBodyList(bodyListParams)
-
-        const glassesListParams = new URLSearchParams()
-        glassesListParams.set('per_page', '300')
-        glassesListParams.set('layer', 'glasses')
-        fetchGlassesList(glassesListParams)
-
-        const headListParams = new URLSearchParams()
-        headListParams.set('per_page', '300')
-        headListParams.set('layer', 'head')
-        fetchHeadList(headListParams)
-    }, [])
+    }, [fetching, page, meta])
 
     const minHeight = useMemo(() => {
         return dimensions.viewportHeight - dimensions.headerHeight
@@ -158,20 +127,9 @@ const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
                 setShowSearch={setShowSearch}
             />
 
-            {accessoryList &&
-                bodyList &&
-                glassesList &&
-                headList &&
-                showSearch && (
-                    <NounSearch
-                        accessoryList={accessoryList}
-                        bodyList={bodyList}
-                        glassesList={glassesList}
-                        headList={headList}
-                        project={project}
-                        setShowSearch={setShowSearch}
-                    />
-                )}
+            {showSearch && (
+                <NounSearch project={project} setShowSearch={setShowSearch} />
+            )}
 
             <main className="w-full px-4">
                 <div
@@ -181,46 +139,44 @@ const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
                     <div className="space-y-3 w-full">
                         {(showFilters || dimensions.viewportWidth >= 1280) && (
                             <NounFilters
-                                accessoryList={accessoryList}
-                                bodyList={bodyList}
-                                glassesList={glassesList}
-                                headList={headList}
                                 project={project}
                                 setShowFilters={setShowFilters}
                             />
                         )}
 
-                        {error && (
-                            <p className="text-center text-red-500 font-bold">
-                                {error.data.message}
-                            </p>
-                        )}
+                        <ConditionalFeedback
+                            error={error}
+                            fetching={fetching && nouns.length === 0}
+                        >
+                            {nouns.length > 0 ? (
+                                <>
+                                    <NounList nouns={nouns} project={project} />
 
-                        {nouns.length > 0 && (
-                            <NounList nouns={nouns} project={project} />
-                        )}
-
-                        {fetching && (
-                            <div className="pt-32">
-                                <SpacesImage
-                                    className="mx-auto h-10 w-10"
-                                    src="misc/probe-loader.gif"
-                                    alt="Loader"
-                                />
-                            </div>
-                        )}
-
-                        {!fetching &&
-                            meta &&
-                            meta.current_page === meta.last_page && (
+                                    {fetching ? (
+                                        <FetchingImage />
+                                    ) : (
+                                        meta &&
+                                        meta.current_page ===
+                                            meta.last_page && (
+                                            <p className="text-center font-bold">
+                                                All {nouns.length}{' '}
+                                                {project === 'LilNouns'
+                                                    ? 'Lil Nouns'
+                                                    : 'Nouns'}{' '}
+                                                Loaded
+                                            </p>
+                                        )
+                                    )}
+                                </>
+                            ) : (
                                 <p className="text-center font-bold">
-                                    All {nouns.length}{' '}
+                                    No{' '}
                                     {project === 'LilNouns'
                                         ? 'Lil Nouns'
-                                        : 'Nouns'}{' '}
-                                    loaded
+                                        : 'Nouns'}
                                 </p>
                             )}
+                        </ConditionalFeedback>
                     </div>
                 </div>
             </main>

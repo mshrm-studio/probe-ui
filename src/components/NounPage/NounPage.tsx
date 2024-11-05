@@ -1,13 +1,11 @@
 'use client'
 
 import Project from '@/utils/dto/Project'
-import useNoun from '@/utils/services/useNoun'
 import { useContext, useEffect, useState } from 'react'
 import NounImage from '@/components/Noun/Image'
 import styles from '@/utils/styles/nounPage.module.css'
 import DimensionsContext from '@/utils/contexts/DimensionsContext'
 import Link from 'next/link'
-import SpacesImage from '@/components/SpacesImage'
 import NounPageAuctionDetails from '@/components/NounPage/AuctionDetails'
 import ContractTransactionReceipt from '@/utils/dto/ContractTransactionReceipt'
 import AuctionContext from '@/utils/contexts/AuctionContext'
@@ -17,20 +15,18 @@ import useLiveAuction from '@/utils/services/useLiveAuction'
 import AuctionBid from '@/components/NounPage/AuctionBid'
 import NounPageColorHistogram from '@/components/NounPage/ColorHistogram'
 import NounPageTraits from '@/components/NounPage/Traits'
+import Noun from '@/utils/dto/Noun'
 
-const NounPage: React.FC<{ project: Project; nounId: number }> = ({
-    project,
-    nounId,
-}) => {
-    const { error, fetching, fetchNoun, noun } = useNoun(project)
+type Props = {
+    project: Project
+    noun: Noun
+}
+
+const NounPage: React.FC<Props> = ({ project, noun }) => {
     const [receipt, setReceipt] = useState<ContractTransactionReceipt>()
     const { auction } = useContext(AuctionContext)
     const auctionActive = useAuctionStatus(auction)
-    useLiveAuction(nounId, auction?.nounId)
-
-    useEffect(() => {
-        fetchNoun(nounId)
-    }, [nounId])
+    useLiveAuction(noun.token_id, auction?.nounId)
 
     useEffect(() => {
         if (!noun) return
@@ -43,24 +39,6 @@ const NounPage: React.FC<{ project: Project; nounId: number }> = ({
     }, [noun])
 
     const { dimensions } = useContext(DimensionsContext)
-
-    if (fetching) {
-        return (
-            <div className="pt-32">
-                <SpacesImage
-                    className="mx-auto h-10 w-10"
-                    src="misc/probe-loader.gif"
-                    alt="Loader"
-                />
-            </div>
-        )
-    }
-
-    if (noun === null) {
-        return (
-            <p className="text-center text-red-500 font-bold">Noun not found</p>
-        )
-    }
 
     return (
         <>

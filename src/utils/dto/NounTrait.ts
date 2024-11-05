@@ -4,6 +4,8 @@ import { NounTraitLayer } from '@/utils/dto/NounTraitLayer'
 export default interface NounTrait {
     name: string
     layer: NounTraitLayer
+    png_path: string | null
+    rle_data: string | null
     seed_id: number
     svg_path: string
     svg_url: string

@@ -3,7 +3,7 @@ import NounTraits from '@/components/NounTraits'
 
 export default async function Page() {
     return (
-        <NounTraits>
+        <NounTraits project="Nouns">
             <DreamForm />
         </NounTraits>
     )

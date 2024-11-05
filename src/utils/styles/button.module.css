@@ -1,14 +1,11 @@
 .button {
-    box-shadow: -5px 5px 0px 0px #e0e0e0;
+    box-shadow: 8px 6px 0px 0px #000000;
     border: 2px;
     height: 35px;
     padding-left: 1.5rem;
     padding-right: 1.5rem;
     font-size: theme('fontSize.xl');
     font-weight: theme('fontWeight.bold');
-    transition:
-        box-shadow 0.1s ease,
-        transform 0.1s ease;
 }
 
 .button:global(.yellow) {
@@ -22,5 +19,4 @@
 
 .button:not(:disabled):active {
     box-shadow: none;
-    transform: translate(-5px, 5px);
 }

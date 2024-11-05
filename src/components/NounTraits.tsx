@@ -2,23 +2,34 @@ import NounTrait from '@/utils/dto/NounTrait'
 import { NounTraitLayer } from '@/utils/dto/NounTraitLayer'
 import useApi from '@/utils/services/v2/useApi'
 import NounTraitsProvider from '@/components/Provider/NounTraits'
+import Project from '@/utils/dto/Project'
 
-async function getNounTraits(layer: NounTraitLayer) {
+async function getNounTraits(project: Project, layer: NounTraitLayer) {
     const api = useApi()
 
-    const path = `/noun-traits?layer=${layer}&per_page=300`
+    const path = project === 'LilNouns' ? `/lil-noun-traits` : `/noun-traits`
 
-    const { data } = await api.get(path).then((res) => res.data)
+    const params = `?layer=${layer}&per_page=300`
+
+    const { data } = await api.get(path + params).then((res) => res.data)
 
     return data
 }
 
-async function NounTraits({ children }: { children: React.ReactNode }) {
-    const accessoryList: NounTrait[] = await getNounTraits('accessory')
-    const backgroundList: NounTrait[] = await getNounTraits('background')
-    const bodyList: NounTrait[] = await getNounTraits('body')
-    const glassesList: NounTrait[] = await getNounTraits('glasses')
-    const headList: NounTrait[] = await getNounTraits('head')
+type Props = {
+    children: React.ReactNode
+    project: Project
+}
+
+async function NounTraits({ children, project }: Props) {
+    const accessoryList: NounTrait[] = await getNounTraits(project, 'accessory')
+    const backgroundList: NounTrait[] = await getNounTraits(
+        project,
+        'background'
+    )
+    const bodyList: NounTrait[] = await getNounTraits(project, 'body')
+    const glassesList: NounTrait[] = await getNounTraits(project, 'glasses')
+    const headList: NounTrait[] = await getNounTraits(project, 'head')
 
     const value = {
         accessoryList,
@@ -28,12 +39,7 @@ async function NounTraits({ children }: { children: React.ReactNode }) {
         headList,
     }
 
-    return (
-        <NounTraitsProvider traits={value}>
-            {children}
-            {JSON.stringify(accessoryList)}
-        </NounTraitsProvider>
-    )
+    return <NounTraitsProvider traits={value}>{children}</NounTraitsProvider>
 }
 
 export default NounTraits

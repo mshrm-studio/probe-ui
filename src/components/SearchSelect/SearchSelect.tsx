@@ -103,7 +103,7 @@ export default function SearchSelect({
                                     {option.imgSrc && (
                                         <img
                                             src={option.imgSrc}
-                                            alt=""
+                                            alt={option.label}
                                             className={
                                                 styles.searchSelectOptionImg
                                             }

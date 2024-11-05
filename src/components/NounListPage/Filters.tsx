@@ -11,25 +11,14 @@ import DimensionsContext from '@/utils/contexts/DimensionsContext'
 import RequestingContext from '@/utils/contexts/RequestingContext'
 import SearchSelectNounColor from '@/components/SearchSelect/NounColor'
 import SearchSelectNounTrait from '@/components/SearchSelect/NounTrait'
-import NounTrait from '@/utils/dto/NounTrait'
+import { nounTraitLayers } from '@/utils/dto/NounTraitLayer'
 
 type Props = {
-    accessoryList?: NounTrait[] | null
-    bodyList?: NounTrait[] | null
-    glassesList?: NounTrait[] | null
-    headList?: NounTrait[] | null
     project: Project
     setShowFilters: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const NounListPageFilters: React.FC<Props> = ({
-    accessoryList,
-    bodyList,
-    glassesList,
-    headList,
-    project,
-    setShowFilters,
-}) => {
+const NounListPageFilters: React.FC<Props> = ({ project, setShowFilters }) => {
     const { dimensions } = useContext(DimensionsContext)
     const { requesting } = useContext(RequestingContext)
     const { parseFilters } = useFilters()
@@ -106,67 +95,16 @@ const NounListPageFilters: React.FC<Props> = ({
                         />
                     </div>
 
-                    {glassesList && (
+                    {nounTraitLayers.map((layer) => (
                         <SearchSelectNounTrait
-                            disabled={requesting}
-                            project={project}
-                            layer="glasses"
-                            options={glassesList}
-                            selected={filters.glasses}
+                            key={layer}
+                            layer={layer}
+                            selected={filters[layer]}
                             setSelected={(value) =>
-                                setFilters({ ...filters, glasses: value })
+                                setFilters({ ...filters, [layer]: value || '' })
                             }
                         />
-                    )}
-
-                    {headList && (
-                        <SearchSelectNounTrait
-                            disabled={requesting}
-                            project={project}
-                            layer="head"
-                            options={headList}
-                            selected={filters.head}
-                            setSelected={(value) =>
-                                setFilters({ ...filters, head: value })
-                            }
-                        />
-                    )}
-
-                    {accessoryList && (
-                        <SearchSelectNounTrait
-                            disabled={requesting}
-                            project={project}
-                            layer="accessory"
-                            options={accessoryList}
-                            selected={filters.accessory}
-                            setSelected={(value) =>
-                                setFilters({ ...filters, accessory: value })
-                            }
-                        />
-                    )}
-
-                    {bodyList && (
-                        <SearchSelectNounTrait
-                            disabled={requesting}
-                            project={project}
-                            layer="body"
-                            options={bodyList}
-                            selected={filters.body}
-                            setSelected={(value) =>
-                                setFilters({ ...filters, body: value })
-                            }
-                        />
-                    )}
-
-                    <SearchSelectNounTrait
-                        disabled={requesting}
-                        project={project}
-                        layer="background"
-                        selected={filters.background}
-                        setSelected={(value) =>
-                            setFilters({ ...filters, background: value })
-                        }
-                    />
+                    ))}
                 </div>
             </div>
         </div>

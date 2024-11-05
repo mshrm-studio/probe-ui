@@ -1,15 +1,26 @@
 import NounPage from '@/components/NounPage/NounPage'
 import type { Metadata } from 'next'
 import NounMintProvider from '@/components/Provider/NounMint'
+import { isNoun } from '@/utils/dto/Noun'
+import StaticAlert from '@/components/StaticAlert'
+import useApi from '@/utils/services/v2/useApi'
 
 type PageProps = {
     params: { id: string }
 }
 
-export default function Page({ params }: PageProps) {
+export default async function Page({ params }: PageProps) {
+    const api = useApi()
+
+    const { data } = await api
+        .get(`/lil-nouns/${params.id}`)
+        .then((res) => res.data)
+
+    if (!isNoun(data)) return <StaticAlert>Unknown Error</StaticAlert>
+
     return (
         <NounMintProvider nounId={Number(params.id)}>
-            <NounPage project="LilNouns" nounId={Number(params.id)} />
+            <NounPage project="LilNouns" noun={data} />
         </NounMintProvider>
     )
 }

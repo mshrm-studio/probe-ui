@@ -1,7 +1,10 @@
-'use client'
-
 import NounListPage from '@/components/NounListPage/NounListPage'
+import NounTraits from '@/components/NounTraits'
 
-export default function Page() {
-    return <NounListPage project="LilNouns" />
+export default async function Page() {
+    return (
+        <NounTraits project="LilNouns">
+            <NounListPage project="LilNouns" />
+        </NounTraits>
+    )
 }

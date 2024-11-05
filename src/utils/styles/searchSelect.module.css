@@ -1,10 +1,9 @@
 .searchSelectWrapper {
-    box-shadow: -5px 5px 0px #dfdfdf;
-    transition: box-shadow 0.3s ease;
+    box-shadow: 8px 6px 0px #dfdfdf;
 }
 
-.searchSelectWrapper:focus-within {
-    box-shadow: -2.5px 2.5px 0px #dfdfdf;
+.searchSelectWrapper:not(:disabled):focus-within {
+    box-shadow: none;
 }
 
 .searchSelectLabel {
