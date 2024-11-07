@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import NounMintProvider from '@/components/Provider/NounMint'
 import { isNoun } from '@/utils/dto/Noun'
 import StaticAlert from '@/components/StaticAlert'
-import useApi from '@/utils/services/v2/useApi'
+import useApi from '@/utils/hooks/v2/useApi'
 
 type PageProps = {
     params: { id: string }

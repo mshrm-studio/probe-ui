@@ -1,6 +1,6 @@
 import NounTrait from '@/utils/dto/NounTrait'
 import { NounTraitLayer } from '@/utils/dto/NounTraitLayer'
-import useApi from '@/utils/services/v2/useApi'
+import useApi from '@/utils/hooks/v2/useApi'
 import NounTraitsProvider from '@/components/Provider/NounTraits'
 import Project from '@/utils/dto/Project'
 

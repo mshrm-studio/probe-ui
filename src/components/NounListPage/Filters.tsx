@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import NounFiltersDto from '@/utils/dto/NounFilters'
-import useFilters from '@/utils/services/useFilters'
+import useFilters from '@/utils/hooks/useFilters'
 import Project from '@/utils/dto/Project'
 import styles from '@/utils/styles/nounListPageFilters.module.css'
 import { XMarkIcon } from '@heroicons/react/24/solid'

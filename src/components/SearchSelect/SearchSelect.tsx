@@ -15,6 +15,7 @@ import styles from '@/utils/styles/searchSelect.module.css'
 import SearchSelectSelected from '@/utils/dto/SearchSelectSelected'
 
 type Props = {
+    boxShadowStyle?: 'solid' | 'blurred'
     disabled?: boolean
     label?: string
     options: SelectOption[]
@@ -23,6 +24,7 @@ type Props = {
 }
 
 export default function SearchSelect({
+    boxShadowStyle = 'solid',
     disabled,
     label,
     options,
@@ -59,7 +61,11 @@ export default function SearchSelect({
     return (
         <Combobox
             as="div"
-            className={styles.searchSelectWrapper}
+            className={`${styles.searchSelectWrapper} ${
+                boxShadowStyle === 'blurred'
+                    ? styles.blurredBoxShadow
+                    : styles.solidBoxShadow
+            }`}
             value={selectedOption}
             onChange={(option) => {
                 setQuery('')

@@ -2,7 +2,7 @@ import NounPage from '@/components/NounPage/NounPage'
 import type { Metadata } from 'next'
 import NounMintProvider from '@/components/Provider/NounMint'
 import NounSettlementProvider from '@/components/Provider/NounSettlement'
-import useApi from '@/utils/services/v2/useApi'
+import useApi from '@/utils/hooks/v2/useApi'
 import { isNoun } from '@/utils/dto/Noun'
 import StaticAlert from '@/components/StaticAlert'
 

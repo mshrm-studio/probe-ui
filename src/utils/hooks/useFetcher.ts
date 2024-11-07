@@ -1,4 +1,4 @@
-import useApi from '@/utils/services/useApi'
+import useApi from '@/utils/hooks/useApi'
 import { useCallback, useState } from 'react'
 import ApiMeta, { isApiMeta } from '@/utils/dto/ApiMeta'
 import { ReadonlyURLSearchParams } from 'next/navigation'

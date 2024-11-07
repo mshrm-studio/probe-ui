@@ -3,7 +3,7 @@
 import React, { useContext, useEffect, useState, useCallback } from 'react'
 import { DateTime } from 'luxon'
 import AuctionContext from '@/utils/contexts/AuctionContext'
-import useAuctionStatus from '@/utils/services/useAuctionStatus'
+import useAuctionStatus from '@/utils/hooks/useAuctionStatus'
 
 const AuctionCountdown: React.FC<{ className?: string }> = ({ className }) => {
     const { auction } = useContext(AuctionContext)

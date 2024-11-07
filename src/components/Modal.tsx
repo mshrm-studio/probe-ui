@@ -3,7 +3,7 @@
 import React, { useRef } from 'react'
 import styles from '@/utils/styles/modal.module.css'
 import { motion } from 'framer-motion'
-import useOutsideClick from '@/utils/services/useClickOutside'
+import useOutsideClick from '@/utils/hooks/useClickOutside'
 
 type Props = {
     children: React.ReactNode

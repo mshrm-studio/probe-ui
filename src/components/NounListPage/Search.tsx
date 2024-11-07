@@ -7,9 +7,8 @@ import styles from '@/utils/styles/nounListPageSearch.module.css'
 import { XMarkIcon } from '@heroicons/react/24/solid'
 import RequestingContext from '@/utils/contexts/RequestingContext'
 import SearchSelect from '@/components/SearchSelect/SearchSelect'
-import { startCase } from 'lodash'
 import SearchSelectSelected from '@/utils/dto/SearchSelectSelected'
-import NounTraitsContext from '@/utils/contexts/NounTraitsContext'
+import useNounTraitList from '@/utils/hooks/useNounTraitList'
 
 type Props = {
     project: Project
@@ -23,14 +22,13 @@ const NounListPageSearch: React.FC<Props> = ({ project, setShowSearch }) => {
     const [selected, setSelected] = useState<SearchSelectSelected>(
         searchParams.get('search') || ''
     )
-    const { accessoryList, bodyList, glassesList, headList } =
-        useContext(NounTraitsContext)
+    const { traitListOptions } = useNounTraitList()
 
     useEffect(() => {
         const incumbentSearch = searchParams.get('search')
 
         if (incumbentSearch) {
-            const matchingOption = options.find(
+            const matchingOption = traitListOptions.find(
                 (o) => o.value === incumbentSearch
             )
 
@@ -71,33 +69,6 @@ const NounListPageSearch: React.FC<Props> = ({ project, setShowSearch }) => {
         pushToNewQuery(typeof selected === 'string' ? selected : '')
     }, [selected])
 
-    const options = useMemo(() => {
-        const listOfAllLayers = [
-            ...accessoryList,
-            ...bodyList,
-            ...glassesList,
-            ...headList,
-        ]
-
-        return listOfAllLayers
-            .map((item) => ({
-                imgSrc: item.svg_url,
-                label: `${startCase(
-                    item.name.replace(new RegExp(`^${item.layer}-`), '')
-                )} (${startCase(item.layer)})`,
-                value: item.name,
-            }))
-            .reduce(
-                (unique, item) => {
-                    return unique.some((uItem) => uItem.value === item.value)
-                        ? unique
-                        : [...unique, item]
-                },
-                [] as { imgSrc: string; label: string; value: string }[]
-            )
-            .sort((a, b) => a.label.localeCompare(b.label))
-    }, [accessoryList, bodyList, glassesList, headList])
-
     const closeSearch = () => {
         const search = selected || ''
 
@@ -127,7 +98,7 @@ const NounListPageSearch: React.FC<Props> = ({ project, setShowSearch }) => {
                     <SearchSelect
                         disabled={requesting}
                         label="Search"
-                        options={options}
+                        options={traitListOptions}
                         selected={selected}
                         setSelected={setSelected}
                     />

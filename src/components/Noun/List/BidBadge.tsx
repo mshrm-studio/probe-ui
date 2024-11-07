@@ -1,5 +1,5 @@
 import AuctionContext from '@/utils/contexts/AuctionContext'
-import useAuctionStatus from '@/utils/services/useAuctionStatus'
+import useAuctionStatus from '@/utils/hooks/useAuctionStatus'
 import { useContext } from 'react'
 
 type Props = {

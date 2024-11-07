@@ -5,7 +5,7 @@ import { debounce } from 'lodash'
 import Project from '@/utils/dto/Project'
 import SearchSelect from '@/components/SearchSelect/SearchSelect'
 import chroma from 'chroma-js'
-import useNounColorList from '@/utils/services/useNounColorList'
+import useNounColorList from '@/utils/hooks/useNounColorList'
 
 type Props = {
     disabled?: boolean

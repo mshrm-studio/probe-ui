@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react'
-import useFetcher from '@/utils/services/useFetcher'
+import useFetcher from '@/utils/hooks/useFetcher'
 import Project from '@/utils/dto/Project'
 
 const useNounColorList = (project: Project) => {

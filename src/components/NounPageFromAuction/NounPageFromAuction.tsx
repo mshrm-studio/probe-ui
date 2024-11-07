@@ -11,7 +11,7 @@ import NounImageFromAuction from '@/components/Noun/ImageFromAuction'
 import Header from '@/components/NounPage/Header'
 import CryptoWalletConnect from '@/components/CryptoWallet/Connect'
 import AuctionContext from '@/utils/contexts/AuctionContext'
-import useLiveAuction from '@/utils/services/useLiveAuction'
+import useLiveAuction from '@/utils/hooks/useLiveAuction'
 
 const NounPageFromAuction: React.FC<{}> = () => {
     const { isConnected } = useWeb3ModalAccount()

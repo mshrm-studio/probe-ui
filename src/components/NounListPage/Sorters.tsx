@@ -1,11 +1,11 @@
 'use client'
 
 import { ChevronRightIcon } from '@heroicons/react/24/solid'
-import styles from '@/utils/styles/header.module.css'
+import styles from '@/utils/styles/header/header.module.css'
 import { useContext, useMemo } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import RequestingContext from '@/utils/contexts/RequestingContext'
-import useHref from '@/utils/services/useHref'
+import useHref from '@/utils/hooks/useHref'
 
 export default function NounListPageSorters() {
     const { requesting } = useContext(RequestingContext)

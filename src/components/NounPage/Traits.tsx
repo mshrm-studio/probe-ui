@@ -5,7 +5,7 @@ import styles from '@/utils/styles/nounPage.module.css'
 import { startCase } from 'lodash'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import useHref from '@/utils/services/useHref'
+import useHref from '@/utils/hooks/useHref'
 import { useMemo } from 'react'
 
 type Props = {

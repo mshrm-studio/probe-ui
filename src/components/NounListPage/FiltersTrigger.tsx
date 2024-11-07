@@ -1,6 +1,6 @@
 import { ChevronDownIcon } from '@heroicons/react/24/solid'
 import React from 'react'
-import styles from '@/utils/styles/header.module.css'
+import styles from '@/utils/styles/header/header.module.css'
 
 type Props = {
     setShowFilters: React.Dispatch<React.SetStateAction<boolean>>

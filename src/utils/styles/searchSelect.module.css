@@ -1,5 +1,9 @@
-.searchSelectWrapper {
+.searchSelectWrapper.solidBoxShadow {
     box-shadow: 8px 6px 0px #dfdfdf;
+}
+
+.searchSelectWrapper.blurredBoxShadow {
+    box-shadow: 0px 4px 16.5px rgba(0, 0, 0, 0.1);
 }
 
 .searchSelectWrapper:not(:disabled):focus-within {
@@ -45,6 +49,7 @@
     background-color: #fff;
     padding-top: 0.25rem;
     border: 1px solid #d5d7e1;
+    box-shadow: 0px 4px 16.5px 4px rgba(0, 0, 0, 0.1);
 }
 
 .searchSelectOption {

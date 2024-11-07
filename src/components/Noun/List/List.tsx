@@ -8,7 +8,7 @@ import Link from 'next/link'
 import Project from '@/utils/dto/Project'
 import NounListBidBage from '@/components/Noun/List/BidBadge'
 import AuctionContext from '@/utils/contexts/AuctionContext'
-import useAuctionStatus from '@/utils/services/useAuctionStatus'
+import useAuctionStatus from '@/utils/hooks/useAuctionStatus'
 import NounImageFromId from '@/components/Noun/ImageFromId'
 import { useSearchParams } from 'next/navigation'
 
