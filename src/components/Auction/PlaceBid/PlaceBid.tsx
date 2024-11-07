@@ -92,8 +92,6 @@ const AuctionPlaceBid: React.FC<{
 
             setReceipt(receipt)
         } catch (error: any) {
-            console.log('error', error)
-
             alert(error?.info?.error?.message || error.code || 'Unknown Error')
         }
     }

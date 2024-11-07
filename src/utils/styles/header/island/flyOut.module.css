@@ -3,22 +3,40 @@
     top: calc(100% + 1rem);
 }
 
+.flyOut.auth,
+.flyOut.probe {
+    border: 2px solid rgba(0, 0, 0, 0.18);
+    background-color: #fff;
+    box-shadow: 0px 4px 16.5px 4px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+}
+
+.flyOut.auth {
+    width: 10rem;
+    right: -2.5rem;
+}
+
+.flyOut.probe {
+    width: 7.75rem;
+    left: -2rem;
+}
+
 .flyOut.search {
     left: 50%;
     transform: translateX(-50%);
     width: 16rem;
 }
 
-.flyOut.auth {
-    border: 2px solid rgba(0, 0, 0, 0.18);
-    background-color: #fff;
-    box-shadow: 0px 4px 16.5px 4px rgba(0, 0, 0, 0.1);
-    padding: 1rem;
-    width: 10rem;
-    right: 0;
+@media screen and (min-width: theme('screens.sm')) {
+    .flyOut.auth,
+    .flyOut.probe {
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+    }
 }
 
-@media screen and (min-width: theme('screens.sm')) {
+@media screen and (min-width: theme('screens.xl')) {
     .flyOut.search {
         width: 30.5rem;
     }

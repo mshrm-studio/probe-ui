@@ -10,10 +10,6 @@ export async function POST(req: NextRequest) {
 
         const PALETTE_COLORS = encoder.data.palette
 
-        console.log('RLE_PARTS', RLE_PARTS)
-        console.log('PALETTE_COLORS', PALETTE_COLORS)
-        console.log('BACKGROUND_COLOR', BACKGROUND_COLOR)
-
         const svg = buildSVG(RLE_PARTS, PALETTE_COLORS, BACKGROUND_COLOR)
 
         return NextResponse.json({ svg })

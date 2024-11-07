@@ -1,15 +1,12 @@
-.spacer {
-    height: calc(42px + 1rem); /* header height + padding-top */
-}
-
 .header {
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
+    width: 100%;
     padding-top: 1rem;
     padding-left: 1rem;
     padding-right: 1rem;
+    z-index: 9999;
 }
 
 .nav {
@@ -37,4 +34,12 @@
 
 .listItem:not(:first-child) {
     margin-left: 2rem;
+}
+
+@media (min-width: theme('screens.sm')) and (orientation: landscape) {
+    .header {
+        width: 40%;
+        padding-left: 2.5rem;
+        padding-right: 2.5rem;
+    }
 }

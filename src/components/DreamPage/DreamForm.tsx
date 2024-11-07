@@ -2,23 +2,45 @@
 
 import SearchSelectNounTrait from '@/components/SearchSelect/NounTrait'
 import { nounTraitLayers } from '@/utils/dto/NounTraitLayer'
-import { useContext, useEffect, useState } from 'react'
+import { FormEvent, useContext, useEffect, useState } from 'react'
 import Button from '@/components/Button'
 import NounTraitsContext from '@/utils/contexts/NounTraitsContext'
 import NounTrait from '@/utils/dto/NounTrait'
 import { getNounData } from '@nouns/assets'
+import styles from '@/utils/styles/nouns/dreams/create.module.css'
 
 export default function DreamPageDreamForm() {
     const { accessoryList, backgroundList, bodyList, glassesList, headList } =
         useContext(NounTraitsContext)
 
+    const randomTraitName = (list: NounTrait[]) =>
+        list[Math.floor(Math.random() * list.length)].name
+
     const [form, setForm] = useState({
-        accessory: '',
-        background: '',
-        body: '',
-        glasses: '',
-        head: '',
+        accessory: randomTraitName(accessoryList),
+        background: randomTraitName(backgroundList),
+        body: randomTraitName(bodyList),
+        glasses: randomTraitName(glassesList),
+        head: randomTraitName(headList),
     })
+
+    useEffect(() => {
+        const accessory = accessoryList.find((a) => a.name === form.accessory),
+            background = backgroundList.find((b) => b.name === form.background),
+            body = bodyList.find((b) => b.name === form.body),
+            glasses = glassesList.find((g) => g.name === form.glasses),
+            head = headList.find((h) => h.name === form.head)
+
+        if (!accessory || !background || !body || !glasses || !head) return
+
+        setSeed({
+            accessory: accessory.seed_id,
+            background: background.seed_id,
+            body: body.seed_id,
+            glasses: glasses.seed_id,
+            head: head.seed_id,
+        })
+    }, [form])
 
     const [seed, setSeed] = useState({
         accessory: 0,
@@ -29,34 +51,6 @@ export default function DreamPageDreamForm() {
     })
 
     useEffect(() => {
-        setSeed({
-            accessory:
-                accessoryList.find((a) => a.name === form.accessory)?.seed_id ||
-                0,
-            background:
-                backgroundList.find((b) => b.name === form.background)
-                    ?.seed_id || 0,
-            body: bodyList.find((b) => b.name === form.body)?.seed_id || 0,
-            glasses:
-                glassesList.find((g) => g.name === form.glasses)?.seed_id || 0,
-            head: headList.find((h) => h.name === form.head)?.seed_id || 0,
-        })
-    }, [form])
-
-    const randomise = () => {
-        const getRandomItem = (list: NounTrait[]) =>
-            list[Math.floor(Math.random() * list.length)].name
-
-        setForm({
-            accessory: getRandomItem(accessoryList),
-            background: getRandomItem(backgroundList),
-            body: getRandomItem(bodyList),
-            glasses: getRandomItem(glassesList),
-            head: getRandomItem(headList),
-        })
-    }
-
-    useEffect(() => {
         generate()
     }, [seed])
 
@@ -65,18 +59,6 @@ export default function DreamPageDreamForm() {
     const generate = async () => {
         try {
             const { parts, background } = getNounData(seed)
-
-            parts.forEach((part) => {
-                console.log('part:', part.filename, part.data)
-            })
-
-            const accessory = accessoryList.find(
-                (a) => a.name === form.accessory
-            )
-
-            if (accessory) {
-                console.log('accessory:', accessory.name, accessory.rle_data)
-            }
 
             const response = await fetch('/api/build-svg', {
                 method: 'POST',
@@ -93,32 +75,46 @@ export default function DreamPageDreamForm() {
 
             setGeneratedSvg(svg)
         } catch (error) {
-            console.error(error)
+            alert(error)
         }
     }
 
+    const dream = (e: FormEvent) => {
+        e.preventDefault()
+
+        alert('Dreaming...')
+    }
+
     return (
-        <div className="py-4 mx-auto max-w-xs space-y-4">
+        <div className={styles.pageContainer}>
             {generatedSvg && (
-                <div dangerouslySetInnerHTML={{ __html: generatedSvg }} />
+                <div
+                    className={styles.image}
+                    style={{ backgroundColor: `#${form.background}` }}
+                >
+                    <div
+                        className={styles.generatedSvgContainer}
+                        dangerouslySetInnerHTML={{ __html: generatedSvg }}
+                    />
+                </div>
             )}
 
-            {nounTraitLayers.map((layer) => (
-                <SearchSelectNounTrait
-                    key={layer}
-                    layer={layer}
-                    selected={form[layer]}
-                    setSelected={(value) =>
-                        setForm({ ...form, [layer]: value || '' })
-                    }
-                />
-            ))}
+            <div className={styles.formContainer}>
+                <form className={styles.form} onSubmit={dream}>
+                    {nounTraitLayers.map((layer) => (
+                        <SearchSelectNounTrait
+                            key={layer}
+                            layer={layer}
+                            selected={form[layer]}
+                            setSelected={(value) =>
+                                setForm({ ...form, [layer]: value || '' })
+                            }
+                        />
+                    ))}
 
-            <div>
-                <Button onClick={randomise}>Randomise</Button>
+                    <Button nativeType="submit">Dream</Button>
+                </form>
             </div>
-
-            {/* <Button onClick={generate}>Dream</Button> */}
         </div>
     )
 }
