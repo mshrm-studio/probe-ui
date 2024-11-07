@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { debounce } from 'lodash'
 import Project from '@/utils/dto/Project'
 import SearchSelect from '@/components/SearchSelect/SearchSelect'

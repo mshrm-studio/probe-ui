@@ -10,7 +10,7 @@ import {
     Label,
 } from '@headlessui/react'
 import { ChevronUpDownIcon } from '@heroicons/react/20/solid'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styles from '@/utils/styles/searchSelect.module.css'
 import SearchSelectSelected from '@/utils/dto/SearchSelectSelected'
 
@@ -41,14 +41,21 @@ export default function SearchSelect({
         setSelected(selectedOption?.value || null)
     }, [selectedOption])
 
-    const filteredOptions =
-        query === ''
-            ? options
-            : options.filter((option) => {
-                  return option.label
-                      .toLowerCase()
-                      .includes(query.toLowerCase())
-              })
+    const filteredOptions = useMemo(() => {
+        if (query === '') return options
+
+        const optionsStartingWithQuery = options.filter((option) =>
+            option.label.toLowerCase().startsWith(query.toLowerCase())
+        )
+
+        const optionsIncludingQuery = options.filter(
+            (option) =>
+                option.label.toLowerCase().includes(query.toLowerCase()) &&
+                !optionsStartingWithQuery.includes(option)
+        )
+
+        return [...optionsStartingWithQuery, ...optionsIncludingQuery]
+    }, [query])
 
     useEffect(() => {
         if (selected) {
@@ -66,6 +73,7 @@ export default function SearchSelect({
                     ? styles.blurredBoxShadow
                     : styles.solidBoxShadow
             }`}
+            immediate
             value={selectedOption}
             onChange={(option) => {
                 setQuery('')
@@ -76,6 +84,7 @@ export default function SearchSelect({
                 {label && (
                     <Label className={styles.searchSelectLabel}>{label}</Label>
                 )}
+
                 <ComboboxInput
                     className={styles.searchSelectInput}
                     disabled={disabled}
