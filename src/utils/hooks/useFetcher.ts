@@ -1,6 +1,8 @@
 import useApi from '@/utils/hooks/useApi'
 import { useCallback, useState } from 'react'
-import ApiMeta, { isApiMeta } from '@/utils/dto/ApiMeta'
+import ApiPaginationMeta, {
+    isApiPaginationMeta,
+} from '@/utils/dto/ApiPaginationMeta'
 import { ReadonlyURLSearchParams } from 'next/navigation'
 
 const useFetcher = () => {
@@ -14,7 +16,7 @@ const useFetcher = () => {
     } = useApi()
 
     const [response, setResponse] = useState<any>()
-    const [meta, setMeta] = useState<ApiMeta>()
+    const [meta, setMeta] = useState<ApiPaginationMeta>()
 
     const fetchData = useCallback(
         (
@@ -37,7 +39,7 @@ const useFetcher = () => {
                         if (
                             'data' in response &&
                             'meta' in response.data &&
-                            isApiMeta(response.data.meta)
+                            isApiPaginationMeta(response.data.meta)
                         ) {
                             setMeta(response.data.meta)
                         }

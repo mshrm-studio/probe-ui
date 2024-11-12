@@ -13,7 +13,9 @@ import Header from '@/components/NounListPage/Header'
 import NounSearch from '@/components/NounListPage/Search'
 import useApi from '@/utils/hooks/v2/useApi'
 import ConditionalFeedback from '@/components/ConditionalFeedback'
-import ApiMeta, { isApiMeta } from '@/utils/dto/ApiMeta'
+import ApiPaginationMeta, {
+    isApiPaginationMeta,
+} from '@/utils/dto/ApiPaginationMeta'
 import FetchingImage from '@/components/FetchingImage'
 
 const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
@@ -28,7 +30,7 @@ const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
     const api = useApi()
     const [fetching, setFetching] = useState(false)
     const [error, setError] = useState<unknown>(null)
-    const [meta, setMeta] = useState<ApiMeta>()
+    const [meta, setMeta] = useState<ApiPaginationMeta>()
 
     // Effect to fetch nouns when the page resets
     useEffect(() => {
@@ -62,7 +64,7 @@ const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
                     })
                 }
 
-                if (isApiMeta(meta)) {
+                if (isApiPaginationMeta(meta)) {
                     setMeta(meta)
                 }
             } catch (error) {

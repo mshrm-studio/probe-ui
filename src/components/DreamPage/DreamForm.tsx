@@ -8,8 +8,16 @@ import NounTraitsContext from '@/utils/contexts/NounTraitsContext'
 import NounTrait from '@/utils/dto/NounTrait'
 import { getNounData } from '@nouns/assets'
 import styles from '@/utils/styles/nouns/dreams/create.module.css'
+import { useWeb3Modal, useWeb3ModalAccount } from '@web3modal/ethers/react'
+import useApi from '@/utils/hooks/v2/useApi'
+import { isDreamNounResponse } from '@/utils/dto/DreamNoun'
 
 export default function DreamPageDreamForm() {
+    const { address, isConnected } = useWeb3ModalAccount()
+    const { open } = useWeb3Modal()
+
+    const api = useApi()
+
     const { accessoryList, backgroundList, bodyList, glassesList, headList } =
         useContext(NounTraitsContext)
 
@@ -79,10 +87,34 @@ export default function DreamPageDreamForm() {
         }
     }
 
-    const dream = (e: FormEvent) => {
+    const dream = async (e: FormEvent) => {
         e.preventDefault()
 
-        alert('Dreaming...')
+        if (!isConnected) {
+            open()
+            return
+        }
+
+        const data = {
+            dreamer: address,
+            accessory_seed_id: seed.accessory,
+            background_seed_id: seed.background,
+            body_seed_id: seed.body,
+            glasses_seed_id: seed.glasses,
+            head_seed_id: seed.head,
+        }
+
+        try {
+            const res = await api.post('/dream-nouns', data)
+
+            if (!isDreamNounResponse(res.data)) {
+                throw new Error('Dream created but unexpected response.')
+            }
+
+            alert('Dream created!')
+        } catch (error) {
+            alert(error)
+        }
     }
 
     return (
