@@ -6,11 +6,12 @@ import { FormEvent, useContext, useEffect, useState } from 'react'
 import Button from '@/components/Button'
 import NounTraitsContext from '@/utils/contexts/NounTraitsContext'
 import NounTrait from '@/utils/dto/NounTrait'
-import { getNounData } from '@nouns/assets'
 import styles from '@/utils/styles/nouns/dreams/create.module.css'
 import { useWeb3Modal, useWeb3ModalAccount } from '@web3modal/ethers/react'
 import useApi from '@/utils/hooks/v2/useApi'
 import { isDreamNounResponse } from '@/utils/dto/DreamNoun'
+import NounImageFromSeed from '@/components/Noun/ImageFromSeed'
+import NounSeed from '@/utils/dto/NounSeed'
 
 export default function DreamPageDreamForm() {
     const { address, isConnected } = useWeb3ModalAccount()
@@ -50,42 +51,13 @@ export default function DreamPageDreamForm() {
         })
     }, [form])
 
-    const [seed, setSeed] = useState({
+    const [seed, setSeed] = useState<NounSeed>({
         accessory: 0,
         background: 0,
         body: 0,
         glasses: 0,
         head: 0,
     })
-
-    useEffect(() => {
-        generate()
-    }, [seed])
-
-    const [generatedSvg, setGeneratedSvg] = useState('')
-
-    const generate = async () => {
-        try {
-            const { parts, background } = getNounData(seed)
-
-            const response = await fetch('/api/build-svg', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    RLE_PARTS: parts,
-                    BACKGROUND_COLOR: background,
-                }),
-            })
-
-            if (!response.ok) throw new Error('Failed to generate SVG')
-
-            const { svg } = await response.json()
-
-            setGeneratedSvg(svg)
-        } catch (error) {
-            alert(error)
-        }
-    }
 
     const dream = async (e: FormEvent) => {
         e.preventDefault()
@@ -119,17 +91,12 @@ export default function DreamPageDreamForm() {
 
     return (
         <div className={styles.pageContainer}>
-            {generatedSvg && (
-                <div
-                    className={styles.image}
-                    style={{ backgroundColor: `#${form.background}` }}
-                >
-                    <div
-                        className={styles.generatedSvgContainer}
-                        dangerouslySetInnerHTML={{ __html: generatedSvg }}
-                    />
-                </div>
-            )}
+            <div
+                className={styles.image}
+                style={{ backgroundColor: `#${form.background}` }}
+            >
+                <NounImageFromSeed seed={seed} />
+            </div>
 
             <div className={styles.formContainer}>
                 <form className={styles.form} onSubmit={dream}>

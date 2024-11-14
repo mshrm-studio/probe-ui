@@ -8,18 +8,6 @@
     align-items: end;
 }
 
-.generatedSvgContainer {
-    max-height: 100%;
-    max-width: 100%;
-    width: 100%;
-    aspect-ratio: 1 / 1;
-}
-
-.generatedSvgContainer :global(svg) {
-    width: 100%;
-    height: 100%;
-}
-
 .formContainer {
     padding-top: 2rem;
     padding-bottom: 2rem;

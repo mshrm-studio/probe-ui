@@ -1,11 +1,10 @@
 'use client'
 
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { NounTraitLayer } from '@/utils/dto/NounTraitLayer'
 import { startCase } from 'lodash'
 import SearchSelect from '@/components/SearchSelect/SearchSelect'
 import SearchSelectSelected from '@/utils/dto/SearchSelectSelected'
-import NounTraitsContext from '@/utils/contexts/NounTraitsContext'
 import useNounTraitList from '@/utils/hooks/useNounTraitList'
 
 type Props = {

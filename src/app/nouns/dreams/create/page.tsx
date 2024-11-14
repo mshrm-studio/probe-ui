@@ -1,5 +1,5 @@
 import HeaderIsland from '@/components/Header/Island/Island'
-import DreamForm from '@/components/DreamPage/DreamForm'
+import DreamForm from '@/app/nouns/dreams/create/_components/DreamForm'
 import NounTraits from '@/components/NounTraits'
 import ProjectProvider from '@/components/Provider/Project'
 

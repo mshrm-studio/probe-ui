@@ -1,27 +1,31 @@
 'use client'
 
-import DreamNoun from '@/utils/dto/DreamNoun'
+import DreamNoun, { isDreamNoun } from '@/utils/dto/DreamNoun'
 import { getNounData } from '@nouns/assets'
 import { useEffect, useState } from 'react'
+import styles from '@/utils/styles/nounImage/fromSeed.module.css'
+import NounSeed from '@/utils/dto/NounSeed'
 
 type Props = {
-    dreamNoun: DreamNoun
+    seed: NounSeed | DreamNoun
 }
 
-const NounImageFromSeed: React.FC<Props> = ({ dreamNoun }) => {
+const NounImageFromSeed: React.FC<Props> = ({ seed }) => {
     const [generatedSvg, setGeneratedSvg] = useState('')
 
     const generate = async () => {
         try {
-            const seed = {
-                accessory: dreamNoun.accessory_seed_id || 0,
-                background: dreamNoun.background_seed_id || 0,
-                body: dreamNoun.body_seed_id || 0,
-                glasses: dreamNoun.glasses_seed_id || 0,
-                head: dreamNoun.head_seed_id || 0,
-            }
+            const data = isDreamNoun(seed)
+                ? {
+                      accessory: seed.accessory_seed_id || 0,
+                      background: seed.background_seed_id || 0,
+                      body: seed.body_seed_id || 0,
+                      glasses: seed.glasses_seed_id || 0,
+                      head: seed.head_seed_id || 0,
+                  }
+                : seed
 
-            const { parts, background } = getNounData(seed)
+            const { parts, background } = getNounData(data)
 
             const response = await fetch('/api/build-svg', {
                 method: 'POST',
@@ -44,9 +48,14 @@ const NounImageFromSeed: React.FC<Props> = ({ dreamNoun }) => {
 
     useEffect(() => {
         generate()
-    }, [dreamNoun])
+    }, [seed])
 
-    return <div dangerouslySetInnerHTML={{ __html: generatedSvg }} />
+    return (
+        <div
+            className={styles.svgContainer}
+            dangerouslySetInnerHTML={{ __html: generatedSvg }}
+        />
+    )
 }
 
 export default NounImageFromSeed
