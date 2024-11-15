@@ -3,7 +3,7 @@ import NounTraitsContext from '@/utils/contexts/NounTraitsContext'
 import { startCase } from 'lodash'
 import NounTrait from '@/utils/dto/NounTrait'
 
-const useNounTraitList = () => {
+const useNounTraitList = (valueKey?: 'name' | 'seed_id') => {
     const { accessoryList, backgroundList, bodyList, glassesList, headList } =
         useContext(NounTraitsContext)
 
@@ -29,7 +29,7 @@ const useNounTraitList = () => {
                 : startCase(
                       trait.name.replace(new RegExp(`^${trait.layer}-`), '')
                   ),
-        value: trait.name,
+        value: trait[valueKey || 'name'],
     })
 
     const traitSelectOptions = (traits: NounTrait[]) =>

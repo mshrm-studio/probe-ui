@@ -10,8 +10,9 @@ import useNounTraitList from '@/utils/hooks/useNounTraitList'
 type Props = {
     disabled?: boolean
     layer: NounTraitLayer
-    selected: string | undefined
-    setSelected: (value: string | undefined) => void
+    selected: number | string | undefined
+    setSelected: (value: number | string | undefined) => void
+    valueKey?: 'name' | 'seed_id'
 }
 
 const SearchSelectNounTrait: React.FC<Props> = ({
@@ -19,6 +20,7 @@ const SearchSelectNounTrait: React.FC<Props> = ({
     layer,
     selected,
     setSelected,
+    valueKey = 'name',
 }) => {
     const {
         accessoryListOptions,
@@ -26,9 +28,9 @@ const SearchSelectNounTrait: React.FC<Props> = ({
         bodyListOptions,
         glassesListOptions,
         headListOptions,
-    } = useNounTraitList()
+    } = useNounTraitList(valueKey)
 
-    const traitList = useMemo(() => {
+    const options = useMemo(() => {
         return {
             accessory: accessoryListOptions,
             background: backgroundListOptions,
@@ -54,7 +56,10 @@ const SearchSelectNounTrait: React.FC<Props> = ({
 
     useEffect(() => {
         setSelected(
-            typeof selectedTrait === 'string' ? selectedTrait : undefined
+            typeof selectedTrait === 'string' ||
+                typeof selectedTrait === 'number'
+                ? selectedTrait
+                : undefined
         )
     }, [selectedTrait])
 
@@ -62,7 +67,7 @@ const SearchSelectNounTrait: React.FC<Props> = ({
         <SearchSelect
             disabled={disabled}
             label={startCase(layer)}
-            options={traitList}
+            options={options}
             selected={selectedTrait}
             setSelected={setSelectedTrait}
         />

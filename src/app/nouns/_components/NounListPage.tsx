@@ -1,6 +1,6 @@
 'use client'
 
-import NounFilters from '@/components/NounListPage/Filters'
+import NounFilters from '@/app/nouns/_components/Filters'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { debounce } from 'lodash'
 import NounList from '@/components/Noun/List/List'
@@ -9,8 +9,8 @@ import DimensionsContext from '@/utils/contexts/DimensionsContext'
 import Noun, { isNounList } from '@/utils/dto/Noun'
 import { useSearchParams } from 'next/navigation'
 import RequestingContext from '@/utils/contexts/RequestingContext'
-import Header from '@/components/NounListPage/Header'
-import NounSearch from '@/components/NounListPage/Search'
+import Header from '@/app/nouns/_components/Header'
+import NounSearch from '@/app/nouns/_components/Search'
 import useApi from '@/utils/hooks/v2/useApi'
 import ConditionalFeedback from '@/components/ConditionalFeedback'
 import ApiPaginationMeta, {

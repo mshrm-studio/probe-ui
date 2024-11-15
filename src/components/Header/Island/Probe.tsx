@@ -4,12 +4,9 @@ import useOutsideClick from '@/utils/hooks/useClickOutside'
 import { useRef, useState } from 'react'
 import styles from '@/utils/styles/header/island/flyOut.module.css'
 import Link from 'next/link'
+import SpacesImage from '@/components/SpacesImage'
 
-type Props = {
-    children: React.ReactNode
-}
-
-export default function HeaderIslandProbe({ children }: Props) {
+export default function HeaderIslandProbe() {
     const [showProbeMenu, setShowProbeMenu] = useState(false)
 
     const probeRef = useRef<HTMLDivElement>(null)
@@ -26,7 +23,7 @@ export default function HeaderIslandProbe({ children }: Props) {
     return (
         <div ref={probeRef}>
             <button onClick={() => setShowProbeMenu((value) => !value)}>
-                {children}
+                <SpacesImage src="header/probe.svg" />
             </button>
 
             {showProbeMenu && (

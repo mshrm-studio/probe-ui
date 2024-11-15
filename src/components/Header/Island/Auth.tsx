@@ -9,12 +9,9 @@ import {
 import { useRef, useState } from 'react'
 import styles from '@/utils/styles/header/island/flyOut.module.css'
 import EthAddress from '@/components/EthAddress'
+import SpacesImage from '@/components/SpacesImage'
 
-type Props = {
-    children: React.ReactNode
-}
-
-export default function HeaderIslandAuth({ children }: Props) {
+export default function HeaderIslandAuth() {
     const { address, isConnected } = useWeb3ModalAccount()
     const { open } = useWeb3Modal()
     const { disconnect } = useDisconnect()
@@ -35,7 +32,9 @@ export default function HeaderIslandAuth({ children }: Props) {
 
     return (
         <div ref={authRef}>
-            <button onClick={handleClick}>{children}</button>
+            <button onClick={handleClick}>
+                <SpacesImage src="header/user.svg" />
+            </button>
 
             {isConnected && address && showAuthMenu && (
                 <div className={`${styles.flyOut} ${styles.auth}`}>

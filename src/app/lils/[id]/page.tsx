@@ -1,4 +1,4 @@
-import NounPage from '@/components/NounPage/NounPage'
+import NounPage from '@/app/nouns/[id]/_components/NounPage'
 import type { Metadata } from 'next'
 import NounMintProvider from '@/components/Provider/NounMint'
 import { isNoun } from '@/utils/dto/Noun'

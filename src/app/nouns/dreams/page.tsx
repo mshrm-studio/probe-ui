@@ -1,15 +1,17 @@
-import Filters from '@/app/nouns/dreams/_components/Filters'
 import DreamList from '@/app/nouns/dreams/_components/DreamList'
 import ProjectProvider from '@/components/Provider/Project'
 import NounTraits from '@/components/NounTraits'
+import HeaderIsland from '@/components/Header/Island/Island'
 
 export default function Page() {
     return (
         <ProjectProvider project="Nouns">
             <NounTraits project="Nouns">
-                <Filters />
+                <HeaderIsland />
 
-                <DreamList />
+                <main>
+                    <DreamList />
+                </main>
             </NounTraits>
         </ProjectProvider>
     )

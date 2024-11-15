@@ -1,4 +1,4 @@
-import NounListPage from '@/components/NounListPage/NounListPage'
+import NounListPage from '@/app/nouns/_components/NounListPage'
 import NounTraits from '@/components/NounTraits'
 
 export default async function Page() {

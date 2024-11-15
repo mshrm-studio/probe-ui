@@ -1,10 +1,10 @@
-import Sorters from '@/components/NounListPage/Sorters'
+import Sorters from '@/app/nouns/_components/Sorters'
 import Header from '@/components/Header/Header'
 import { useContext } from 'react'
 import DimensionsContext from '@/utils/contexts/DimensionsContext'
-import FiltersTrigger from '@/components/NounListPage/FiltersTrigger'
-import ProjectSwitcher from '@/components/NounListPage/ProjectSwitcher'
-import SearchTrigger from '@/components/NounListPage/SearchTrigger'
+import FiltersTrigger from '@/app/nouns/_components/FiltersTrigger'
+import ProjectSwitcher from '@/app/nouns/_components/ProjectSwitcher'
+import SearchTrigger from '@/app/nouns/_components/SearchTrigger'
 
 type Props = {
     setShowFilters: React.Dispatch<React.SetStateAction<boolean>>

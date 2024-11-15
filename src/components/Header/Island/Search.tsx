@@ -8,12 +8,9 @@ import SearchSelectSelected from '@/utils/dto/SearchSelectSelected'
 import styles from '@/utils/styles/header/island/flyOut.module.css'
 import useOutsideClick from '@/utils/hooks/useClickOutside'
 import ProjectContext from '@/utils/contexts/ProjectContext'
+import SpacesImage from '@/components/SpacesImage'
 
-type Props = {
-    children: React.ReactNode
-}
-
-export default function HeaderIslandSearch({ children }: Props) {
+export default function HeaderIslandSearch() {
     const router = useRouter()
 
     const [showSearch, setShowSearch] = useState(false)
@@ -37,7 +34,7 @@ export default function HeaderIslandSearch({ children }: Props) {
     return (
         <div ref={searchRef}>
             <button onClick={() => setShowSearch((value) => !value)}>
-                {children}
+                <SpacesImage src="header/search.svg" />
             </button>
 
             {showSearch && (

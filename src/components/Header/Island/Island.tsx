@@ -1,8 +1,8 @@
 import styles from '@/utils/styles/header/island/island.module.css'
-import SpacesImage from '@/components/SpacesImage'
 import HeaderIslandSearch from '@/components/Header/Island/Search'
 import HeaderIslandAuth from '@/components/Header/Island/Auth'
 import HeaderIslandProbe from '@/components/Header/Island/Probe'
+import HeaderIslandDreamFilters from '@/components/Header/Island/DreamFilters'
 
 export default function HeaderIsland() {
     return (
@@ -10,21 +10,19 @@ export default function HeaderIsland() {
             <nav className={styles.nav}>
                 <ul className={styles.list}>
                     <li className={styles.listItem}>
-                        <HeaderIslandProbe>
-                            <SpacesImage src="header/probe.svg" />
-                        </HeaderIslandProbe>
+                        <HeaderIslandProbe />
                     </li>
 
                     <li className={styles.listItem}>
-                        <HeaderIslandSearch>
-                            <SpacesImage src="header/search.svg" />
-                        </HeaderIslandSearch>
+                        <HeaderIslandSearch />
                     </li>
 
                     <li className={styles.listItem}>
-                        <HeaderIslandAuth>
-                            <SpacesImage src="header/user.svg" />
-                        </HeaderIslandAuth>
+                        <HeaderIslandDreamFilters />
+                    </li>
+
+                    <li className={styles.listItem}>
+                        <HeaderIslandAuth />
                     </li>
                 </ul>
             </nav>
