@@ -1,6 +1,7 @@
 .flyOut {
     position: absolute;
     top: calc(100% + 1rem);
+    z-index: 9999;
 }
 
 .flyOut.auth,

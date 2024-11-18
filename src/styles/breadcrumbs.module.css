@@ -1,0 +1,17 @@
+.list {
+    display: flex;
+    align-items: center;
+    font-size: theme('fontSize.sm');
+}
+
+.list > :global(*:not(:last-child)) {
+    margin-right: 0.5rem;
+}
+
+.divider {
+    padding-left: 0.5rem;
+}
+
+.link[data-active='true'] {
+    color: rgba(0, 0, 0, 0.4);
+}

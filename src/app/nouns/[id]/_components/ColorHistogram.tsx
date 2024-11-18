@@ -1,6 +1,6 @@
 import NounColorHistogram from '@/components/Noun/ColorHistogram'
 import Noun from '@/utils/dto/Noun'
-import styles from '@/utils/styles/nounPage.module.css'
+import styles from '@/app/nouns/[id]/styles/nounPage.module.css'
 
 type Props = {
     noun: Noun

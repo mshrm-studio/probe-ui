@@ -2,7 +2,7 @@
 
 import AuctionContext from '@/utils/contexts/AuctionContext'
 import { useContext, useMemo } from 'react'
-import styles from '@/utils/styles/nounPage.module.css'
+import styles from '@/app/nouns/[id]/styles/nounPage.module.css'
 import AuctionCountdown from '@/components/Auction/Countdown'
 import ContractTransactionReceipt from '@/utils/dto/ContractTransactionReceipt'
 import EtherscanLink from '@/components/EtherscanLink'

@@ -3,7 +3,7 @@
 import DreamNoun, { isDreamNoun } from '@/utils/dto/DreamNoun'
 import { getNounData } from '@nouns/assets'
 import { useEffect, useState } from 'react'
-import styles from '@/utils/styles/nounImage/fromSeed.module.css'
+import styles from '@/styles/nounImage/fromSeed.module.css'
 import NounSeed from '@/utils/dto/NounSeed'
 
 type Props = {
@@ -42,7 +42,7 @@ const NounImageFromSeed: React.FC<Props> = ({ seed }) => {
 
             setGeneratedSvg(svg)
         } catch (error) {
-            alert(error)
+            console.error(error)
         }
     }
 

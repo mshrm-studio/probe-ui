@@ -5,7 +5,7 @@ import { useContext, useMemo } from 'react'
 import { ChevronRightIcon } from '@heroicons/react/24/solid'
 import Header from '@/components/Header/Header'
 import Link from 'next/link'
-import styles from '@/utils/styles/header/header.module.css'
+import styles from '@/styles/header/header.module.css'
 import useHref from '@/utils/hooks/useHref'
 import AuctionContext from '@/utils/contexts/AuctionContext'
 

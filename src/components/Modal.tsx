@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useRef } from 'react'
-import styles from '@/utils/styles/modal.module.css'
+import styles from '@/styles/modal.module.css'
 import { motion } from 'framer-motion'
 import useOutsideClick from '@/utils/hooks/useClickOutside'
 

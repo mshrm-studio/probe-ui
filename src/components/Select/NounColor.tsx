@@ -6,17 +6,20 @@ import Project from '@/utils/dto/Project'
 import SearchSelect from '@/components/SearchSelect/SearchSelect'
 import chroma from 'chroma-js'
 import useNounColorList from '@/utils/hooks/useNounColorList'
+import Select from '@/components/Select/Select'
 
 type Props = {
     disabled?: boolean
     project: Project
+    search?: boolean
     selected: string | null | undefined
     setSelected: (value: string | undefined) => void
 }
 
-const SearchSelectNounColor: React.FC<Props> = ({
+const SelectNounColor: React.FC<Props> = ({
     disabled,
     project,
+    search,
     selected,
     setSelected,
 }) => {
@@ -78,8 +81,19 @@ const SearchSelectNounColor: React.FC<Props> = ({
         )
     }, [selectedColor])
 
+    if (search)
+        return (
+            <SearchSelect
+                disabled={disabled}
+                label="Color"
+                options={sortedList}
+                selected={selected}
+                setSelected={setSelectedColor}
+            />
+        )
+
     return (
-        <SearchSelect
+        <Select
             disabled={disabled}
             label="Color"
             options={sortedList}
@@ -89,4 +103,4 @@ const SearchSelectNounColor: React.FC<Props> = ({
     )
 }
 
-export default SearchSelectNounColor
+export default SelectNounColor

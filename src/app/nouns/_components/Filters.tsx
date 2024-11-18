@@ -5,11 +5,11 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import NounFiltersDto from '@/utils/dto/NounFilters'
 import useFilters from '@/utils/hooks/useFilters'
 import Project from '@/utils/dto/Project'
-import styles from '@/utils/styles/nounListPageFilters.module.css'
+import styles from '@/app/nouns/_styles/filters.module.css'
 import { XMarkIcon } from '@heroicons/react/24/solid'
 import DimensionsContext from '@/utils/contexts/DimensionsContext'
 import RequestingContext from '@/utils/contexts/RequestingContext'
-import SearchSelectNounColor from '@/components/SearchSelect/NounColor'
+import SelectNounColor from '@/components/Select/NounColor'
 import SelectNounTrait from '@/components/Select/NounTrait'
 import { nounTraitLayers } from '@/utils/dto/NounTraitLayer'
 
@@ -85,9 +85,12 @@ const NounListPageFilters: React.FC<Props> = ({ project, setShowFilters }) => {
 
                 <div className={styles.filters}>
                     <div className={styles.filter}>
-                        <SearchSelectNounColor
+                        <SelectNounColor
                             disabled={requesting}
                             project={project}
+                            search={
+                                dimensions.viewportWidth < 768 ? false : true
+                            }
                             selected={filters.color}
                             setSelected={(value) =>
                                 setFilters({ ...filters, color: value })
@@ -99,6 +102,9 @@ const NounListPageFilters: React.FC<Props> = ({ project, setShowFilters }) => {
                         <SelectNounTrait
                             key={layer}
                             layer={layer}
+                            search={
+                                dimensions.viewportWidth < 768 ? false : true
+                            }
                             selected={filters[layer]}
                             setSelected={(value) =>
                                 setFilters({ ...filters, [layer]: value || '' })

@@ -1,5 +1,5 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
-import styles from '@/utils/styles/nounListPageSearchTrigger.module.css'
+import styles from '@/app/nouns/_styles/searchTrigger.module.css'
 
 type Props = {
     setShowSearch: React.Dispatch<React.SetStateAction<boolean>>

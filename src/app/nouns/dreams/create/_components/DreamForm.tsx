@@ -12,11 +12,12 @@ import useApi from '@/utils/hooks/v2/useApi'
 import { isDreamNounResponse } from '@/utils/dto/DreamNoun'
 import NounImageFromSeed from '@/components/Noun/ImageFromSeed'
 import NounSeed from '@/utils/dto/NounSeed'
+import DimensionsContext from '@/utils/contexts/DimensionsContext'
 
 export default function DreamPageDreamForm() {
     const { address, isConnected } = useWeb3ModalAccount()
     const { open } = useWeb3Modal()
-
+    const { dimensions } = useContext(DimensionsContext)
     const api = useApi()
 
     const { accessoryList, backgroundList, bodyList, glassesList, headList } =
@@ -104,6 +105,9 @@ export default function DreamPageDreamForm() {
                         <SelectNounTrait
                             key={layer}
                             layer={layer}
+                            search={
+                                dimensions.viewportWidth < 768 ? false : true
+                            }
                             selected={form[layer]}
                             setSelected={(value) =>
                                 setForm({ ...form, [layer]: value || '' })

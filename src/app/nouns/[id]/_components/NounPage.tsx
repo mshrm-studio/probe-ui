@@ -3,7 +3,7 @@
 import Project from '@/utils/dto/Project'
 import { useContext, useEffect, useState } from 'react'
 import NounImage from '@/components/Noun/Image'
-import styles from '@/utils/styles/nounPage.module.css'
+import styles from '@/app/nouns/[id]/styles/nounPage.module.css'
 import DimensionsContext from '@/utils/contexts/DimensionsContext'
 import Link from 'next/link'
 import NounPageAuctionDetails from '@/app/nouns/[id]/_components/AuctionDetails'

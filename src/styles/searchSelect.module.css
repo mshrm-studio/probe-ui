@@ -2,22 +2,23 @@
     box-shadow: 8px 6px 0px #dfdfdf;
 }
 
-.searchSelectWrapper.blurredBoxShadow {
-    box-shadow: 0px 4px 16.5px rgba(0, 0, 0, 0.1);
-}
-
-.searchSelectWrapper.solidBoxShadow:hover {
+.searchSelectWrapper.solidBoxShadow:not(:disabled):not(:focus-within):hover {
     box-shadow: 4px 3px 0px #dfdfdf;
 }
 
-.searchSelectWrapper:not(:disabled):focus-within {
-    box-shadow: none;
+.searchSelectWrapper.solidBoxShadow:not(:disabled):focus-within {
+    box-shadow: 0px 0px 0px #dfdfdf;
+}
+
+.searchSelectWrapper.blurredBoxShadow {
+    box-shadow: 0px 4px 16.5px rgba(0, 0, 0, 0.1);
 }
 
 .searchSelectLabel {
     position: absolute;
     left: 1rem;
     top: 0.375rem;
+    color: #838383;
 }
 
 .searchSelectInput {

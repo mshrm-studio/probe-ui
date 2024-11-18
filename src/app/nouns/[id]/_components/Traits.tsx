@@ -1,7 +1,7 @@
 'use client'
 
 import Noun from '@/utils/dto/Noun'
-import styles from '@/utils/styles/nounPage.module.css'
+import styles from '@/app/nouns/[id]/styles/nounPage.module.css'
 import { startCase } from 'lodash'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'

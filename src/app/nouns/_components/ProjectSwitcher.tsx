@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname, useSearchParams } from 'next/navigation'
-import styles from '@/utils/styles/header/header.module.css'
+import styles from '@/styles/header/header.module.css'
 import { useContext } from 'react'
 import RequestingContext from '@/utils/contexts/RequestingContext'
 

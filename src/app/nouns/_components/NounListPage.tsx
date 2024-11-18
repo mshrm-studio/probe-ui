@@ -3,7 +3,7 @@
 import NounFilters from '@/app/nouns/_components/Filters'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { debounce } from 'lodash'
-import NounList from '@/components/Noun/List/List'
+import NounList from '@/app/nouns/_components/NounList/NounList'
 import Project from '@/utils/dto/Project'
 import DimensionsContext from '@/utils/contexts/DimensionsContext'
 import Noun, { isNounList } from '@/utils/dto/Noun'

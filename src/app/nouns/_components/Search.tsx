@@ -3,7 +3,7 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Project from '@/utils/dto/Project'
-import styles from '@/utils/styles/nounListPageSearch.module.css'
+import styles from '@/app/nouns/_styles/search.module.css'
 import { XMarkIcon } from '@heroicons/react/24/solid'
 import RequestingContext from '@/utils/contexts/RequestingContext'
 import SearchSelect from '@/components/SearchSelect/SearchSelect'

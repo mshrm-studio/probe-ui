@@ -1,8 +1,4 @@
-'use client'
-
-import NounMintContext from '@/utils/contexts/NounMintContext'
 import { DateTime } from 'luxon'
-import { useContext } from 'react'
 
 type Props = {
     className?: string

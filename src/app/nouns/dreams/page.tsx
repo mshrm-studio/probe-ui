@@ -1,11 +1,10 @@
 import Dreams from '@/app/nouns/dreams/_components/Dreams'
 import ProjectProvider from '@/components/Provider/Project'
 import NounTraits from '@/components/NounTraits'
-import HeaderIsland from '@/components/Header/Island/Island'
-import HeaderIslandSpacer from '@/components/Header/Island/Spacer'
 import FilterDisplayProvider from '@/components/Provider/FilterDisplay'
 import Filters from '@/app/nouns/dreams/_components/Filters'
 import DimensionsProvider from '@/components/Provider/Dimensions'
+import Header from '@/app/nouns/dreams/_components/Header'
 
 export default function Page() {
     return (
@@ -13,15 +12,17 @@ export default function Page() {
             <NounTraits project="Nouns">
                 <FilterDisplayProvider>
                     <DimensionsProvider>
-                        <HeaderIsland />
+                        <div className="p-4 space-y-4">
+                            <Header />
 
-                        <HeaderIslandSpacer />
+                            <main className="space-y-6">
+                                <div className="pr-2">
+                                    <Filters />
+                                </div>
 
-                        <main className="mt-4 px-4 space-y-4">
-                            <Filters />
-
-                            <Dreams />
-                        </main>
+                                <Dreams />
+                            </main>
+                        </div>
                     </DimensionsProvider>
                 </FilterDisplayProvider>
             </NounTraits>

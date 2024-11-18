@@ -1,7 +1,7 @@
 'use client'
 
 import { ChevronRightIcon } from '@heroicons/react/24/solid'
-import styles from '@/utils/styles/header/header.module.css'
+import styles from '@/styles/header/header.module.css'
 import { useContext, useMemo } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import RequestingContext from '@/utils/contexts/RequestingContext'

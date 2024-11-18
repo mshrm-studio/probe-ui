@@ -48,6 +48,7 @@ export default function Filters() {
     }))
 
     const { dimensions } = useContext(DimensionsContext)
+
     const { show } = useContext(FilterDisplayContext)
 
     if (!show) return null
@@ -64,7 +65,11 @@ export default function Filters() {
                         setFilters({
                             ...filters,
                             [layer.filterKey]:
-                                typeof value === 'number' ? value : undefined,
+                                typeof value === 'number'
+                                    ? value
+                                    : typeof value === 'string'
+                                    ? Number(value)
+                                    : undefined,
                         })
                     }
                     valueKey="seed_id"

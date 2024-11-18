@@ -1,7 +1,7 @@
 import SelectOption from '@/utils/dto/SelectOption'
 import SelectValue from '@/utils/dto/SelectValue'
-import styles from '@/utils/styles/select.module.css'
-import SearchSelect from '../SearchSelect/SearchSelect'
+import styles from '@/styles/select.module.css'
+import SearchSelect from '@/components/SearchSelect/SearchSelect'
 
 type Props = {
     disabled?: boolean
@@ -27,7 +27,7 @@ export default function Select({
     setSelected,
 }: Props) {
     const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelected(e.target.value)
+        setSelected(e.target.value === '' ? undefined : e.target.value)
     }
 
     if (search)
@@ -43,7 +43,13 @@ export default function Select({
         )
 
     return (
-        <div className="relative">
+        <div className={styles.selectWrapper}>
+            {label && (
+                <label className={styles.label} htmlFor={id}>
+                    {label}
+                </label>
+            )}
+
             <select
                 className={styles.select}
                 disabled={disabled}

@@ -7,7 +7,7 @@ import {
     useWeb3ModalAccount,
 } from '@web3modal/ethers/react'
 import { useRef, useState } from 'react'
-import styles from '@/utils/styles/header/island/flyOut.module.css'
+import styles from '@/styles/header/island/flyOut.module.css'
 import EthAddress from '@/components/EthAddress'
 import SpacesImage from '@/components/SpacesImage'
 
