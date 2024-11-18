@@ -24,7 +24,7 @@ const AuctionPlaceBidPayableAmount: React.FC<{ disabled?: boolean }> = ({
 
         if (minBid <= 0) return 'Ξ Max bid'
 
-        return `Ξ ${parseFloat(minBid.toFixed(4))} or more`
+        return `Ξ ${parseFloat(minBid.toFixed(8))} or more`
     }, [minBid])
 
     if (!auction) return null
@@ -34,11 +34,11 @@ const AuctionPlaceBidPayableAmount: React.FC<{ disabled?: boolean }> = ({
             disabled={disabled}
             name="payableAmount"
             min={0}
+            nativeType="number"
+            placeholder={placeholder}
             step={
                 process.env.NEXT_PUBLIC_CHAIN_ID === '1' ? '0.0001' : '0.000001'
             }
-            nativeType="number"
-            placeholder={placeholder}
         />
     )
 }
