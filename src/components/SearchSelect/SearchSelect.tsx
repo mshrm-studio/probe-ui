@@ -9,10 +9,11 @@ import {
     ComboboxOptions,
     Label,
 } from '@headlessui/react'
-import { ChevronUpDownIcon } from '@heroicons/react/20/solid'
+import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { useEffect, useMemo, useState } from 'react'
 import styles from '@/utils/styles/searchSelect.module.css'
 import SelectValue from '@/utils/dto/SelectValue'
+import SpacesImage from '@/components/SpacesImage'
 
 type Props = {
     boxShadowStyle?: 'solid' | 'blurred'
@@ -103,8 +104,15 @@ export default function SearchSelect({
                     placeholder="None"
                     required={required}
                 />
-                <ComboboxButton className="absolute inset-y-0 right-0 flex items-center px-2 focus:outline-none">
-                    <ChevronUpDownIcon className="h-5 w-5" aria-hidden="true" />
+                <ComboboxButton className="absolute inset-y-0 right-0 flex items-center px-4 focus:outline-none">
+                    {/* <SpacesImage
+                        className="h-2"
+                        src="misc/chevron-down.png"
+                        alt="Chevron Down"
+                        aria-hidden="true"
+                    />                     */}
+
+                    <ChevronDownIcon className="h-5 w-5" />
                 </ComboboxButton>
 
                 {filteredOptions.length > 0 && (

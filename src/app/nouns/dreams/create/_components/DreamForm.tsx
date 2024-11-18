@@ -1,6 +1,6 @@
 'use client'
 
-import SearchSelectNounTrait from '@/components/SearchSelect/NounTrait'
+import SelectNounTrait from '@/components/Select/NounTrait'
 import { nounTraitLayers } from '@/utils/dto/NounTraitLayer'
 import { FormEvent, useContext, useEffect, useState } from 'react'
 import Button from '@/components/Button'
@@ -101,7 +101,7 @@ export default function DreamPageDreamForm() {
             <div className={styles.formContainer}>
                 <form className={styles.form} onSubmit={dream}>
                     {nounTraitLayers.map((layer) => (
-                        <SearchSelectNounTrait
+                        <SelectNounTrait
                             key={layer}
                             layer={layer}
                             selected={form[layer]}

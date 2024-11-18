@@ -53,9 +53,7 @@ export default function Select({
                 value={selected || undefined}
                 onChange={onChange}
             >
-                <option value="">
-                    {required ? 'Select an option' : 'None'}
-                </option>
+                <option value="">{required ? 'Select' : 'Any'}</option>
 
                 {options.map((option) => (
                     <option key={option.value} value={option.value}>

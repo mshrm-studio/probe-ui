@@ -11,7 +11,7 @@
     text-transform: uppercase;
     appearance: none;
     background-image: url('https://probewtf.fra1.cdn.digitaloceanspaces.com/misc/chevron-down.png');
-    background-size: 1rem;
+    background-size: 0.5rem;
     background-repeat: no-repeat;
     background-position: top 50% right 1rem;
 }
