@@ -5,7 +5,7 @@
 .image {
     padding-top: calc(42px + 1rem); /* 42px header, 1rem spacer */
     display: flex;
-    align-items: end;
+    align-items: flex-end;
 }
 
 .formContainer {

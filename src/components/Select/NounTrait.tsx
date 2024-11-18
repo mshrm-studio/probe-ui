@@ -2,22 +2,24 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { NounTraitLayer } from '@/utils/dto/NounTraitLayer'
-import { startCase } from 'lodash'
-import SearchSelect from '@/components/SearchSelect/SearchSelect'
-import SearchSelectSelected from '@/utils/dto/SearchSelectSelected'
+import Select from '@/components/Select/Select'
+import SelectValue from '@/utils/dto/SelectValue'
 import useNounTraitList from '@/utils/hooks/useNounTraitList'
+import { startCase } from 'lodash'
 
 type Props = {
     disabled?: boolean
     layer: NounTraitLayer
-    selected: number | string | undefined
+    search?: boolean
+    selected: SelectValue
     setSelected: (value: number | string | undefined) => void
     valueKey?: 'name' | 'seed_id'
 }
 
-const SearchSelectNounTrait: React.FC<Props> = ({
+const SelectNounTrait: React.FC<Props> = ({
     disabled,
     layer,
+    search,
     selected,
     setSelected,
     valueKey = 'name',
@@ -47,8 +49,7 @@ const SearchSelectNounTrait: React.FC<Props> = ({
         layer,
     ])
 
-    const [selectedTrait, setSelectedTrait] =
-        useState<SearchSelectSelected>(selected)
+    const [selectedTrait, setSelectedTrait] = useState<SelectValue>(selected)
 
     useEffect(() => {
         setSelectedTrait(selected)
@@ -64,14 +65,15 @@ const SearchSelectNounTrait: React.FC<Props> = ({
     }, [selectedTrait])
 
     return (
-        <SearchSelect
+        <Select
             disabled={disabled}
             label={startCase(layer)}
             options={options}
+            search={search}
             selected={selectedTrait}
             setSelected={setSelectedTrait}
         />
     )
 }
 
-export default SearchSelectNounTrait
+export default SelectNounTrait

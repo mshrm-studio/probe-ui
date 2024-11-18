@@ -4,20 +4,24 @@ import { useRouter } from 'next/navigation'
 import { useContext, useEffect, useRef, useState } from 'react'
 import SearchSelect from '@/components/SearchSelect/SearchSelect'
 import useNounTraitList from '@/utils/hooks/useNounTraitList'
-import SearchSelectSelected from '@/utils/dto/SearchSelectSelected'
+import SelectValue from '@/utils/dto/SelectValue'
 import styles from '@/utils/styles/header/island/flyOut.module.css'
 import useOutsideClick from '@/utils/hooks/useClickOutside'
 import ProjectContext from '@/utils/contexts/ProjectContext'
 import SpacesImage from '@/components/SpacesImage'
 
-export default function HeaderIslandSearch() {
+export default function HeaderIslandSearch({
+    className,
+}: {
+    className: string
+}) {
     const router = useRouter()
 
     const [showSearch, setShowSearch] = useState(false)
 
     const { traitListOptions } = useNounTraitList()
 
-    const [selected, setSelected] = useState<SearchSelectSelected>('')
+    const [selected, setSelected] = useState<SelectValue>('')
 
     const { baseUrl } = useContext(ProjectContext)
 
@@ -32,22 +36,24 @@ export default function HeaderIslandSearch() {
     useOutsideClick(searchRef, () => setShowSearch(false))
 
     return (
-        <div ref={searchRef}>
-            <button onClick={() => setShowSearch((value) => !value)}>
-                <SpacesImage src="header/search.svg" />
-            </button>
+        <li className={className}>
+            <div ref={searchRef}>
+                <button onClick={() => setShowSearch((value) => !value)}>
+                    <SpacesImage src="header/search.svg" />
+                </button>
 
-            {showSearch && (
-                <div className={`${styles.flyOut} ${styles.search}`}>
-                    <SearchSelect
-                        boxShadowStyle="blurred"
-                        label="Search"
-                        options={traitListOptions}
-                        selected={selected}
-                        setSelected={setSelected}
-                    />
-                </div>
-            )}
-        </div>
+                {showSearch && (
+                    <div className={`${styles.flyOut} ${styles.search}`}>
+                        <SearchSelect
+                            boxShadowStyle="blurred"
+                            label="Search"
+                            options={traitListOptions}
+                            selected={selected}
+                            setSelected={setSelected}
+                        />
+                    </div>
+                )}
+            </div>
+        </li>
     )
 }

@@ -11,7 +11,7 @@ import styles from '@/utils/styles/header/island/flyOut.module.css'
 import EthAddress from '@/components/EthAddress'
 import SpacesImage from '@/components/SpacesImage'
 
-export default function HeaderIslandAuth() {
+export default function HeaderIslandAuth({ className }: { className: string }) {
     const { address, isConnected } = useWeb3ModalAccount()
     const { open } = useWeb3Modal()
     const { disconnect } = useDisconnect()
@@ -31,22 +31,24 @@ export default function HeaderIslandAuth() {
     useOutsideClick(authRef, () => setShowAuthMenu(false))
 
     return (
-        <div ref={authRef}>
-            <button onClick={handleClick}>
-                <SpacesImage src="header/user.svg" />
-            </button>
+        <li className={className}>
+            <div ref={authRef}>
+                <button onClick={handleClick}>
+                    <SpacesImage src="header/user.svg" />
+                </button>
 
-            {isConnected && address && showAuthMenu && (
-                <div className={`${styles.flyOut} ${styles.auth}`}>
-                    <p className="text-xs">
-                        Connected as <EthAddress address={address} />
-                    </p>
+                {isConnected && address && showAuthMenu && (
+                    <div className={`${styles.flyOut} ${styles.auth}`}>
+                        <p className="text-xs">
+                            Connected as <EthAddress address={address} />
+                        </p>
 
-                    <button className="mt-4" onClick={disconnect}>
-                        Disconnect
-                    </button>
-                </div>
-            )}
-        </div>
+                        <button className="mt-4" onClick={disconnect}>
+                            Disconnect
+                        </button>
+                    </div>
+                )}
+            </div>
+        </li>
     )
 }

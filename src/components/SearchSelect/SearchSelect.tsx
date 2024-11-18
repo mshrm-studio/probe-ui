@@ -12,15 +12,16 @@ import {
 import { ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import { useEffect, useMemo, useState } from 'react'
 import styles from '@/utils/styles/searchSelect.module.css'
-import SearchSelectSelected from '@/utils/dto/SearchSelectSelected'
+import SelectValue from '@/utils/dto/SelectValue'
 
 type Props = {
     boxShadowStyle?: 'solid' | 'blurred'
     disabled?: boolean
     label?: string
     options: SelectOption[]
-    selected?: string | number | null
-    setSelected: React.Dispatch<React.SetStateAction<SearchSelectSelected>>
+    required?: boolean
+    selected: SelectValue
+    setSelected: React.Dispatch<React.SetStateAction<SelectValue>>
 }
 
 export default function SearchSelect({
@@ -28,6 +29,7 @@ export default function SearchSelect({
     disabled,
     label,
     options,
+    required,
     selected,
     setSelected,
 }: Props) {
@@ -88,10 +90,6 @@ export default function SearchSelect({
                 <ComboboxInput
                     className={styles.searchSelectInput}
                     disabled={disabled}
-                    onChange={(event) => {
-                        setQuery(event.target.value)
-                    }}
-                    onBlur={() => setQuery('')}
                     displayValue={(option) =>
                         typeof option === 'object' &&
                         option &&
@@ -100,7 +98,10 @@ export default function SearchSelect({
                             ? option.label
                             : ''
                     }
+                    onBlur={() => setQuery('')}
+                    onChange={(event) => setQuery(event.target.value)}
                     placeholder="None"
+                    required={required}
                 />
                 <ComboboxButton className="absolute inset-y-0 right-0 flex items-center px-2 focus:outline-none">
                     <ChevronUpDownIcon className="h-5 w-5" aria-hidden="true" />

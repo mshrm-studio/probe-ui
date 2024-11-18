@@ -10,7 +10,7 @@ import { XMarkIcon } from '@heroicons/react/24/solid'
 import DimensionsContext from '@/utils/contexts/DimensionsContext'
 import RequestingContext from '@/utils/contexts/RequestingContext'
 import SearchSelectNounColor from '@/components/SearchSelect/NounColor'
-import SearchSelectNounTrait from '@/components/SearchSelect/NounTrait'
+import SelectNounTrait from '@/components/Select/NounTrait'
 import { nounTraitLayers } from '@/utils/dto/NounTraitLayer'
 
 type Props = {
@@ -96,7 +96,7 @@ const NounListPageFilters: React.FC<Props> = ({ project, setShowFilters }) => {
                     </div>
 
                     {nounTraitLayers.map((layer) => (
-                        <SearchSelectNounTrait
+                        <SelectNounTrait
                             key={layer}
                             layer={layer}
                             selected={filters[layer]}

@@ -1,10 +1,13 @@
 'use client'
 
-import SearchSelectNounTrait from '@/components/SearchSelect/NounTrait'
+import SelectNounTrait from '@/components/Select/NounTrait'
 import { nounTraitLayers } from '@/utils/dto/NounTraitLayer'
 import { useRouter, useSearchParams } from 'next/navigation'
 import DreamFilters from '@/utils/dto/DreamFilters'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
+import styles from '@/app/nouns/dreams/_styles/filters.module.css'
+import FilterDisplayContext from '@/utils/contexts/FilterDisplayContext'
+import DimensionsContext from '@/utils/contexts/DimensionsContext'
 
 export default function Filters() {
     const router = useRouter()
@@ -44,12 +47,18 @@ export default function Filters() {
         filterKey: `${layer}_seed_id` as keyof DreamFilters,
     }))
 
+    const { dimensions } = useContext(DimensionsContext)
+    const { show } = useContext(FilterDisplayContext)
+
+    if (!show) return null
+
     return (
-        <div>
+        <div className={styles.filters}>
             {mappedNounTraitLayers.map((layer) => (
-                <SearchSelectNounTrait
+                <SelectNounTrait
                     key={layer.name}
                     layer={layer.name}
+                    search={dimensions.viewportWidth < 768 ? false : true}
                     selected={filters[layer.filterKey]}
                     setSelected={(value) =>
                         setFilters({

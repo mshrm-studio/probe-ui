@@ -7,7 +7,7 @@ import styles from '@/utils/styles/nounListPageSearch.module.css'
 import { XMarkIcon } from '@heroicons/react/24/solid'
 import RequestingContext from '@/utils/contexts/RequestingContext'
 import SearchSelect from '@/components/SearchSelect/SearchSelect'
-import SearchSelectSelected from '@/utils/dto/SearchSelectSelected'
+import SelectValue from '@/utils/dto/SelectValue'
 import useNounTraitList from '@/utils/hooks/useNounTraitList'
 
 type Props = {
@@ -19,7 +19,7 @@ const NounListPageSearch: React.FC<Props> = ({ project, setShowSearch }) => {
     const { requesting } = useContext(RequestingContext)
     const router = useRouter()
     const searchParams = useSearchParams()
-    const [selected, setSelected] = useState<SearchSelectSelected>(
+    const [selected, setSelected] = useState<SelectValue>(
         searchParams.get('search') || ''
     )
     const { traitListOptions } = useNounTraitList()

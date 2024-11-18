@@ -5,13 +5,12 @@ import useSWR from 'swr'
 import StaticAlert from '@/components/StaticAlert'
 import { isDreamNounListResponse } from '@/utils/dto/DreamNoun'
 import useApi from '@/utils/hooks/v2/useApi'
-import NounImageFromSeed from '@/components/Noun/ImageFromSeed'
-import EthAddress from '@/components/EthAddress'
 import FetchingImage from '@/components/FetchingImage'
 import { useEffect, useState } from 'react'
 import { debounce } from 'lodash'
+import List from '@/app/nouns/dreams/_components/List'
 
-export default function DreamList() {
+export default function Dreams() {
     const api = useApi()
     const searchParams = useSearchParams()
     const [queryString, setQueryString] = useState(searchParams.toString())
@@ -43,19 +42,5 @@ export default function DreamList() {
     if (!isDreamNounListResponse(data) || error)
         return <StaticAlert>{error?.message || 'Unknown Error'}</StaticAlert>
 
-    if (data.data.length === 0) return <p>No nouns match query.</p>
-
-    return (
-        <ul className="grid gap-2 grid-cols-4 xl:grid-cols-12">
-            {data.data.map((dream) => (
-                <li key={dream.id} className="space-y-2 text-xs">
-                    <NounImageFromSeed seed={dream} />
-
-                    <div>
-                        <EthAddress address={dream.dreamer} />
-                    </div>
-                </li>
-            ))}
-        </ul>
-    )
+    return <List list={data.data} />
 }
