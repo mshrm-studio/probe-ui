@@ -7,9 +7,11 @@ type Props = {
 }
 
 export default function NounsLayout({ children }: Props) {
+    const project = 'Nouns'
+
     return (
-        <AuctionHouseContractProvider project="Nouns">
-            <TokenContractProvider project="Nouns">
+        <AuctionHouseContractProvider project={project}>
+            <TokenContractProvider project={project}>
                 <AuctionProvider>{children}</AuctionProvider>
             </TokenContractProvider>
         </AuctionHouseContractProvider>

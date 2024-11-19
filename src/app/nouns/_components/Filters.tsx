@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import NounFiltersDto from '@/utils/dto/NounFilters'
-import useFilters from '@/utils/hooks/useFilters'
 import Project from '@/utils/dto/Project'
 import styles from '@/app/nouns/_styles/filters.module.css'
 import { XMarkIcon } from '@heroicons/react/24/solid'
@@ -21,7 +20,6 @@ type Props = {
 const NounListPageFilters: React.FC<Props> = ({ project, setShowFilters }) => {
     const { dimensions } = useContext(DimensionsContext)
     const { requesting } = useContext(RequestingContext)
-    const { parseFilters } = useFilters()
     const router = useRouter()
     const searchParams = useSearchParams()
 
@@ -43,34 +41,29 @@ const NounListPageFilters: React.FC<Props> = ({ project, setShowFilters }) => {
 
     const [filters, setFilters] = useState<NounFiltersDto>(initializeFilters())
 
-    const pushToNewQuery = useCallback(() => {
-        const params = parseFilters(filters)
+    useEffect(() => {
+        const params = new URLSearchParams(searchParams.toString())
 
-        const basePath = project === 'Nouns' ? '/nouns' : '/lils'
+        Object.entries(filters).forEach(([key, value]) => {
+            if (value === undefined || value === '') {
+                params.delete(key)
+            } else {
+                params.set(key, value.toString())
+            }
+        })
 
-        const path = params.toString()
-            ? `${basePath}?${params.toString()}`
-            : basePath
-
-        router.push(path)
-    }, [filters, parseFilters, project, router])
+        router.push(`?${params.toString()}`)
+    }, [filters, router, searchParams])
 
     useEffect(() => {
         if (dimensions.viewportWidth < 1280) {
             document.body.style.overflowY = 'hidden'
         }
+
         return () => {
             document.body.style.overflowY = 'auto'
         }
     }, [dimensions.viewportWidth])
-
-    useEffect(() => {
-        setFilters(initializeFilters())
-    }, [searchParams, initializeFilters])
-
-    useEffect(() => {
-        pushToNewQuery()
-    }, [filters, pushToNewQuery])
 
     return (
         <div className={styles.wrapper}>
@@ -87,7 +80,6 @@ const NounListPageFilters: React.FC<Props> = ({ project, setShowFilters }) => {
                     <div className={styles.filter}>
                         <SelectNounColor
                             disabled={requesting}
-                            project={project}
                             search={
                                 dimensions.viewportWidth < 768 ? false : true
                             }
@@ -99,17 +91,23 @@ const NounListPageFilters: React.FC<Props> = ({ project, setShowFilters }) => {
                     </div>
 
                     {nounTraitLayers.map((layer) => (
-                        <SelectNounTrait
-                            key={layer}
-                            layer={layer}
-                            search={
-                                dimensions.viewportWidth < 768 ? false : true
-                            }
-                            selected={filters[layer]}
-                            setSelected={(value) =>
-                                setFilters({ ...filters, [layer]: value || '' })
-                            }
-                        />
+                        <div key={layer} className={styles.filter}>
+                            <SelectNounTrait
+                                layer={layer}
+                                search={
+                                    dimensions.viewportWidth < 768
+                                        ? false
+                                        : true
+                                }
+                                selected={filters[layer]}
+                                setSelected={(value) =>
+                                    setFilters({
+                                        ...filters,
+                                        [layer]: value || '',
+                                    })
+                                }
+                            />
+                        </div>
                     ))}
                 </div>
             </div>

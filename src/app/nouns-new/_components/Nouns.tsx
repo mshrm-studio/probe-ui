@@ -3,22 +3,20 @@
 import { useSearchParams } from 'next/navigation'
 import useSWR from 'swr'
 import StaticAlert from '@/components/StaticAlert'
-import {
-    DreamNounListResponse,
-    isDreamNounListResponse,
-} from '@/utils/dto/DreamNoun'
+import { NounListResponse, isNounListResponse } from '@/utils/dto/Noun'
 import useApi from '@/utils/hooks/v2/useApi'
-import FetchingImage from '@/components/FetchingImage'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { debounce } from 'lodash'
-import List from '@/app/nouns/dreams/_components/List'
+import List from '@/app/nouns-new/_components/List/List'
+import ProjectContext from '@/utils/contexts/ProjectContext'
 
 type Props = {
-    fallbackData: DreamNounListResponse
+    fallbackData: NounListResponse
 }
 
-export default function Dreams({ fallbackData }: Props) {
+export default function Nouns({ fallbackData }: Props) {
     const api = useApi()
+    const { apiBaseUrl } = useContext(ProjectContext)
     const searchParams = useSearchParams()
     const [query, setQuery] = useState(searchParams.toString())
 
@@ -40,17 +38,15 @@ export default function Dreams({ fallbackData }: Props) {
         return data
     }
 
-    const url = query ? `/dream-nouns?${query}` : '/dream-nouns'
+    const url = query ? `${apiBaseUrl}?${query}` : apiBaseUrl
 
-    const { data, error, isLoading } = useSWR(url, fetcher, {
+    const { data, error } = useSWR(url, fetcher, {
         fallbackData,
         revalidateOnMount: false,
     })
 
-    if (isLoading) return <FetchingImage />
-
-    if (!isDreamNounListResponse(data) || error)
+    if (!isNounListResponse(data) || error)
         return <StaticAlert>{error?.message || 'Internal Error'}</StaticAlert>
 
-    return <List list={data.data} />
+    return <List nounList={data.data} />
 }

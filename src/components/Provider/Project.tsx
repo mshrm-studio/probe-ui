@@ -1,20 +1,24 @@
 'use client'
 
 import ProjectContext from '@/utils/contexts/ProjectContext'
-import Project from '@/utils/dto/Project'
 import { kebabCase } from 'lodash'
+import { usePathname } from 'next/navigation'
 
 type Props = {
     children: React.ReactNode
-    project: Project
 }
 
-const ProjectProvider: React.FC<Props> = ({ children, project }) => {
+const ProjectProvider: React.FC<Props> = ({ children }) => {
+    const pathname = usePathname()
+
+    const project = pathname.startsWith('/lils') ? 'LilNouns' : 'Nouns'
+
     return (
         <ProjectContext.Provider
             value={{
-                baseUrl: `/${kebabCase(project)}`,
-                name: project,
+                apiBaseUrl: `/${kebabCase(project)}`,
+                baseUrl: project === 'LilNouns' ? '/lils' : '/nouns',
+                project,
             }}
         >
             {children}

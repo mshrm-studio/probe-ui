@@ -1,10 +1,14 @@
 import { createContext } from 'react'
 import Project from '@/utils/dto/Project'
 
-// Create the context with default values
-const ProjectContext = createContext<{ name: Project; baseUrl: string }>({
-    name: 'Nouns',
+const ProjectContext = createContext<{
+    apiBaseUrl: string
+    baseUrl: string
+    project: Project
+}>({
+    apiBaseUrl: '/nouns',
     baseUrl: '/nouns',
+    project: 'Nouns',
 })
 
 export default ProjectContext

@@ -2,7 +2,7 @@
 
 import NounFilters from '@/app/nouns/_components/Filters'
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
-import { debounce } from 'lodash'
+import { debounce, startCase } from 'lodash'
 import NounList from '@/app/nouns/_components/NounList/NounList'
 import Project from '@/utils/dto/Project'
 import DimensionsContext from '@/utils/contexts/DimensionsContext'
@@ -152,7 +152,7 @@ const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
                         >
                             {nouns.length > 0 ? (
                                 <>
-                                    <NounList nouns={nouns} project={project} />
+                                    <NounList nouns={nouns} />
 
                                     {fetching ? (
                                         <FetchingImage />
@@ -162,20 +162,14 @@ const NounListPage: React.FC<{ project: Project }> = ({ project }) => {
                                             meta.last_page && (
                                             <p className="text-center font-bold">
                                                 All {nouns.length}{' '}
-                                                {project === 'LilNouns'
-                                                    ? 'Lil Nouns'
-                                                    : 'Nouns'}{' '}
-                                                Loaded
+                                                {startCase(project)} Loaded
                                             </p>
                                         )
                                     )}
                                 </>
                             ) : (
                                 <p className="text-center font-bold">
-                                    No{' '}
-                                    {project === 'LilNouns'
-                                        ? 'Lil Nouns'
-                                        : 'Nouns'}
+                                    {`0 ${startCase(project)}`}
                                 </p>
                             )}
                         </ConditionalFeedback>

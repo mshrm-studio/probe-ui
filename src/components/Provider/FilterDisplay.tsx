@@ -7,7 +7,7 @@ type Props = {
     children: React.ReactNode
 }
 
-const ProjectProvider: React.FC<Props> = ({ children }) => {
+const FilterDisplayProvider: React.FC<Props> = ({ children }) => {
     const [show, setShow] = useState(false)
 
     return (
@@ -17,4 +17,4 @@ const ProjectProvider: React.FC<Props> = ({ children }) => {
     )
 }
 
-export default ProjectProvider
+export default FilterDisplayProvider

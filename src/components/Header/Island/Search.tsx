@@ -1,13 +1,12 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useContext, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import SearchSelect from '@/components/SearchSelect/SearchSelect'
 import useNounTraitList from '@/utils/hooks/useNounTraitList'
 import SelectValue from '@/utils/dto/SelectValue'
 import styles from '@/styles/header/island/flyOut.module.css'
 import useOutsideClick from '@/utils/hooks/useClickOutside'
-import ProjectContext from '@/utils/contexts/ProjectContext'
 import SpacesImage from '@/components/SpacesImage'
 
 export default function HeaderIslandSearch({
@@ -23,13 +22,11 @@ export default function HeaderIslandSearch({
 
     const [selected, setSelected] = useState<SelectValue>('')
 
-    const { baseUrl } = useContext(ProjectContext)
-
     useEffect(() => {
         if (selected) {
-            router.push(`${baseUrl}?search=${selected}`)
+            router.push(`?search=${selected}`)
         }
-    }, [baseUrl, selected])
+    }, [selected])
 
     const searchRef = useRef<HTMLDivElement>(null)
 

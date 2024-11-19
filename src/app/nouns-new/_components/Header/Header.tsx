@@ -1,19 +1,13 @@
 import HeaderIsland from '@/components/Header/Island/Island'
-import styles from '@/app/nouns/dreams/_styles/header.module.css'
-import Breadcrumbs from '@/components/Breadcrumbs/Breadcrumbs'
+import styles from '@/app/nouns-new/_styles/header.module.css'
+import Breadcrumbs from '@/app/nouns-new/_components/Header/Breadcrumbs'
 import SpacesImage from '@/components/SpacesImage'
 
 export default async function Header() {
     return (
         <header className={styles.header}>
             <div className="hidden xl:block">
-                <Breadcrumbs
-                    breadcrumbs={[
-                        { label: 'Probe', href: '/' },
-                        { label: 'Nouns', href: '/nouns' },
-                        { label: 'Dreams', href: '/nouns/dreams' },
-                    ]}
-                />
+                <Breadcrumbs />
             </div>
 
             <HeaderIsland />

@@ -6,7 +6,7 @@ import styles from '@/app/nouns/dreams/create/_styles/header.module.css'
 
 export default async function Page() {
     return (
-        <ProjectProvider project="Nouns">
+        <ProjectProvider>
             <NounTraits project="Nouns">
                 <header className={styles.header}>
                     <HeaderIsland />

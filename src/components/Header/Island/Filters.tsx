@@ -14,7 +14,9 @@ export default function HeaderIslandDreamFilters({
 
     const pathname = usePathname()
 
-    if (pathname !== '/nouns/dreams') return null
+    const filterablePaths = ['/nouns/dreams', '/nouns', '/nouns-new', 'lils']
+
+    if (filterablePaths.includes(pathname) === false) return null
 
     return (
         <li className={className} data-active={show}>

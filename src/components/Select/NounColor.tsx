@@ -1,16 +1,15 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { debounce } from 'lodash'
-import Project from '@/utils/dto/Project'
 import SearchSelect from '@/components/SearchSelect/SearchSelect'
 import chroma from 'chroma-js'
 import useNounColorList from '@/utils/hooks/useNounColorList'
 import Select from '@/components/Select/Select'
+import ProjectContext from '@/utils/contexts/ProjectContext'
 
 type Props = {
     disabled?: boolean
-    project: Project
     search?: boolean
     selected: string | null | undefined
     setSelected: (value: string | undefined) => void
@@ -18,11 +17,11 @@ type Props = {
 
 const SelectNounColor: React.FC<Props> = ({
     disabled,
-    project,
     search,
     selected,
     setSelected,
 }) => {
+    const { project } = useContext(ProjectContext)
     const { fetchNounColorList, nounColorList } = useNounColorList(project)
 
     useEffect(() => {

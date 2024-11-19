@@ -1,4 +1,9 @@
 import { isObject } from 'lodash'
+import {
+    isModelResponse,
+    isPaginatedModelListResponse,
+    PaginatedModelListResponse,
+} from '@/utils/dto/ApiResponse'
 
 export default interface Noun {
     token_id: number
@@ -19,10 +24,27 @@ export default interface Noun {
     png_url: string | null
 }
 
-export const isNoun = (input: unknown): input is Noun => {
-    return isObject(input) && 'token_id' in input
+export interface NounResponse {
+    data: Noun
 }
 
-export const isNounList = (input: unknown): input is Noun[] => {
-    return Array.isArray(input) && input.every((item) => isNoun(item))
+export interface NounListResponse
+    extends Omit<PaginatedModelListResponse, 'data'> {
+    data: Noun[]
+}
+
+export const isNoun = (i: unknown): i is Noun => {
+    return isObject(i) && 'token_id' in i
+}
+
+export const isNounList = (i: unknown): i is Noun[] => {
+    return Array.isArray(i) && i.every((item) => isNoun(item))
+}
+
+export const isNounResponse = (i: unknown): i is NounResponse => {
+    return isModelResponse(i) && isNoun(i.data)
+}
+
+export const isNounListResponse = (i: unknown): i is NounListResponse => {
+    return isPaginatedModelListResponse(i) && isNounList(i.data)
 }

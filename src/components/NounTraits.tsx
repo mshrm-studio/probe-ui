@@ -1,26 +1,34 @@
-import NounTrait from '@/utils/dto/NounTrait'
+import { isNounTraitList } from '@/utils/dto/NounTrait'
 import { NounTraitLayer } from '@/utils/dto/NounTraitLayer'
 import useApi from '@/utils/hooks/v2/useApi'
 import NounTraitsProvider from '@/components/Provider/NounTraits'
 import Project from '@/utils/dto/Project'
 import { unstable_cache } from 'next/cache'
 
-const getNounTraits = unstable_cache(
-    async (project: Project, layer: NounTraitLayer) => {
-        const api = useApi()
+async function fetchTraits(project: Project, layer: NounTraitLayer) {
+    const fetchFn = unstable_cache(
+        async () => {
+            const api = useApi()
 
-        const path =
-            project === 'LilNouns' ? `/lil-noun-traits` : `/noun-traits`
+            const path =
+                project === 'LilNouns' ? `/lil-noun-traits` : `/noun-traits`
 
-        const params = `?layer=${layer}&per_page=300`
+            const params = `?layer=${layer}&per_page=300`
 
-        const { data } = await api.get(path + params).then((res) => res.data)
+            const { data } = await api
+                .get(path + params)
+                .then((res) => res.data)
 
-        return data
-    },
-    ['noun-traits'],
-    { revalidate: 86400, tags: ['noun-traits'] }
-)
+            if (!isNounTraitList(data)) throw new Error('Invalid data')
+
+            return data
+        },
+        ['noun-traits', layer],
+        { revalidate: 43200, tags: [`${layer}-noun-traits`] }
+    )
+
+    return fetchFn()
+}
 
 type Props = {
     children: React.ReactNode
@@ -28,14 +36,11 @@ type Props = {
 }
 
 async function NounTraits({ children, project }: Props) {
-    const accessoryList: NounTrait[] = await getNounTraits(project, 'accessory')
-    const backgroundList: NounTrait[] = await getNounTraits(
-        project,
-        'background'
-    )
-    const bodyList: NounTrait[] = await getNounTraits(project, 'body')
-    const glassesList: NounTrait[] = await getNounTraits(project, 'glasses')
-    const headList: NounTrait[] = await getNounTraits(project, 'head')
+    const accessoryList = await fetchTraits(project, 'accessory')
+    const backgroundList = await fetchTraits(project, 'background')
+    const bodyList = await fetchTraits(project, 'body')
+    const glassesList = await fetchTraits(project, 'glasses')
+    const headList = await fetchTraits(project, 'head')
 
     const value = {
         accessoryList,
