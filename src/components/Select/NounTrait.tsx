@@ -10,7 +10,6 @@ import { startCase } from 'lodash'
 type Props = {
     disabled?: boolean
     layer: NounTraitLayer
-    search?: boolean
     selected: SelectValue
     setSelected: (value: number | string | undefined) => void
     valueKey?: 'name' | 'seed_id'
@@ -19,49 +18,72 @@ type Props = {
 const SelectNounTrait: React.FC<Props> = ({
     disabled,
     layer,
-    search,
     selected,
     setSelected,
     valueKey = 'name',
 }) => {
-    const {
-        accessoryListOptions,
-        backgroundListOptions,
-        bodyListOptions,
-        glassesListOptions,
-        headListOptions,
-    } = useNounTraitList(valueKey)
+    const { accessoryList, backgroundList, bodyList, glassesList, headList } =
+        useNounTraitList()
+
+    const traits = useMemo(() => {
+        return {
+            accessory: accessoryList,
+            background: backgroundList,
+            body: bodyList,
+            glasses: glassesList,
+            head: headList,
+        }[layer]
+    }, [accessoryList, backgroundList, bodyList, glassesList, headList, layer])
 
     const options = useMemo(() => {
-        return {
-            accessory: accessoryListOptions,
-            background: backgroundListOptions,
-            body: bodyListOptions,
-            glasses: glassesListOptions,
-            head: headListOptions,
-        }[layer]
-    }, [
-        accessoryListOptions,
-        backgroundListOptions,
-        bodyListOptions,
-        glassesListOptions,
-        headListOptions,
-        layer,
-    ])
+        return traits.map((trait) => ({
+            ...trait,
+            imgSrc: trait.svg_url,
+            label:
+                trait.layer === 'background'
+                    ? trait.name.toLowerCase() === 'd5d7e1'
+                        ? 'cool'
+                        : 'warm'
+                    : startCase(
+                          trait.name.replace(new RegExp(`^${trait.layer}-`), '')
+                      ),
+            value: trait[valueKey || 'name'],
+        }))
+    }, [traits, valueKey])
 
     const [selectedTrait, setSelectedTrait] = useState<SelectValue>(selected)
 
     useEffect(() => {
-        setSelectedTrait(selected)
+        console.log('*****')
+        console.log('SelectNounTrait.tsx useEffect[selected]')
+
+        if (selected !== selectedTrait) {
+            console.log(`SelectNounTrait.tsx setSelectedTrait(${selected})`)
+            setSelectedTrait(selected)
+        }
     }, [selected])
 
     useEffect(() => {
-        setSelected(
-            typeof selectedTrait === 'string' ||
-                typeof selectedTrait === 'number'
-                ? selectedTrait
-                : undefined
-        )
+        console.log('*****')
+        console.log('SelectNounTrait.tsx useEffect[selectedTrait]')
+
+        if (selected !== selectedTrait) {
+            console.log(
+                `SelectNounTrait.tsx setSelected(${
+                    typeof selectedTrait === 'string' ||
+                    typeof selectedTrait === 'number'
+                        ? selectedTrait
+                        : undefined
+                })`
+            )
+
+            setSelected(
+                typeof selectedTrait === 'string' ||
+                    typeof selectedTrait === 'number'
+                    ? selectedTrait
+                    : undefined
+            )
+        }
     }, [selectedTrait])
 
     return (
@@ -69,7 +91,6 @@ const SelectNounTrait: React.FC<Props> = ({
             disabled={disabled}
             label={startCase(layer)}
             options={options}
-            search={search}
             selected={selectedTrait}
             setSelected={setSelectedTrait}
         />

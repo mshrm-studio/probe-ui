@@ -5,8 +5,8 @@ import AuctionContext from '@/utils/contexts/AuctionContext'
 import ProjectContext from '@/utils/contexts/ProjectContext'
 import Link from 'next/link'
 import { useContext } from 'react'
-import NounListBidBage from '@/app/nouns-new/_components/List/BidBadge'
-import styles from '@/app/nouns-new/_styles/list.module.css'
+import NounListBidBage from '@/app/nouns/_components/List/BidBadge'
+import styles from '@/app/nouns/_styles/list.module.css'
 
 export default function AuctionItem() {
     const { auction } = useContext(AuctionContext)

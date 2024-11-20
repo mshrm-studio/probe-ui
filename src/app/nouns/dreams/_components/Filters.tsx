@@ -7,7 +7,6 @@ import DreamFilters from '@/utils/dto/DreamFilters'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import styles from '@/app/nouns/dreams/_styles/filters.module.css'
 import FilterDisplayContext from '@/utils/contexts/FilterDisplayContext'
-import DimensionsContext from '@/utils/contexts/DimensionsContext'
 
 export default function Filters() {
     const router = useRouter()
@@ -47,8 +46,6 @@ export default function Filters() {
         filterKey: `${layer}_seed_id` as keyof DreamFilters,
     }))
 
-    const { dimensions } = useContext(DimensionsContext)
-
     const { show } = useContext(FilterDisplayContext)
 
     if (!show) return null
@@ -56,24 +53,24 @@ export default function Filters() {
     return (
         <div className={styles.filters}>
             {mappedNounTraitLayers.map((layer) => (
-                <SelectNounTrait
-                    key={layer.name}
-                    layer={layer.name}
-                    search={dimensions.viewportWidth < 768 ? false : true}
-                    selected={filters[layer.filterKey]}
-                    setSelected={(value) =>
-                        setFilters({
-                            ...filters,
-                            [layer.filterKey]:
-                                typeof value === 'number'
-                                    ? value
-                                    : typeof value === 'string'
-                                    ? Number(value)
-                                    : undefined,
-                        })
-                    }
-                    valueKey="seed_id"
-                />
+                <div key={layer.name}>
+                    <SelectNounTrait
+                        layer={layer.name}
+                        selected={filters[layer.filterKey]}
+                        setSelected={(value) =>
+                            setFilters({
+                                ...filters,
+                                [layer.filterKey]:
+                                    typeof value === 'number'
+                                        ? value
+                                        : typeof value === 'string'
+                                        ? Number(value)
+                                        : undefined,
+                            })
+                        }
+                        valueKey="seed_id"
+                    />
+                </div>
             ))}
         </div>
     )

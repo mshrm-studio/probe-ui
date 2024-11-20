@@ -1,11 +1,11 @@
-import Header from '@/app/nouns-new/_components/Header/Header'
+import Nouns from '@/app/nouns/_components/Nouns'
 import Project from '@/utils/dto/Project'
-import Controls from '@/app/nouns-new/_components/Controls'
 import { unstable_cache } from 'next/cache'
 import useApi from '@/utils/hooks/v2/useApi'
 import { isNounListResponse } from '@/utils/dto/Noun'
 import SearchParams from '@/utils/dto/SearchParams'
-import Nouns from '@/app/nouns-new/_components/Nouns'
+import CatalogueHeader from '@/components/Header/Catalogue'
+import useHref from '@/utils/hooks/useHref'
 
 async function fetchFallbackData(project: Project, searchParams: SearchParams) {
     const params = await searchParams
@@ -18,11 +18,19 @@ async function fetchFallbackData(project: Project, searchParams: SearchParams) {
 
             const path = project === 'LilNouns' ? '/lil-nouns' : '/nouns'
 
-            const { data } = await api.get(`${path}?${query.toString()}`)
+            try {
+                const { data } = await api.get(`${path}?${query.toString()}`)
 
-            if (!isNounListResponse(data)) throw new Error('Invalid data')
+                if (!isNounListResponse(data)) {
+                    throw new Error(
+                        `Invalid data format: ${JSON.stringify(data)}`
+                    )
+                }
 
-            return data
+                return data
+            } catch (error: any) {
+                throw new Error(error?.message || 'Internal Error')
+            }
         },
         [project, query.toString()],
         { revalidate: 43200, tags: [project] }
@@ -39,13 +47,18 @@ type Props = {
 export default async function NounsPage({ project, searchParams }: Props) {
     const fallbackData = await fetchFallbackData(project, searchParams)
 
+    const { nounsLink } = useHref()
+
     return (
         <div className="p-4 space-y-4">
-            <Header />
+            <CatalogueHeader
+                breadcrumbs={[
+                    { label: 'Probe', href: '/' },
+                    { label: 'Nouns', href: nounsLink },
+                ]}
+            />
 
-            <main className="space-y-4">
-                <Controls />
-
+            <main>
                 <Nouns fallbackData={fallbackData} />
             </main>
         </div>

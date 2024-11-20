@@ -1,37 +1,54 @@
 import NounPage from '@/app/nouns/[id]/_components/NounPage'
 import type { Metadata } from 'next'
 import NounMintProvider from '@/components/Provider/NounMint'
-import { isNoun } from '@/utils/dto/Noun'
-import StaticAlert from '@/components/StaticAlert'
+import NounSettlementProvider from '@/components/Provider/NounSettlement'
 import useApi from '@/utils/hooks/v2/useApi'
+import { isNounResponse } from '@/utils/dto/Noun'
+import { unstable_cache } from 'next/cache'
 
-type PageProps = {
-    params: { id: string }
+type Params = Promise<{ id: string }>
+
+async function fetchFallbackData(id: string) {
+    const fetchFn = unstable_cache(
+        async () => {
+            const api = useApi()
+
+            const { data } = await api.get(`/lil-nouns/${id}`)
+
+            if (!isNounResponse(data)) throw new Error('Invalid data')
+
+            return data
+        },
+        [`lil-nouns-${id}`],
+        { revalidate: 43200, tags: [`lil-nouns-${id}`] }
+    )
+
+    return fetchFn()
 }
 
-export default async function Page({ params }: PageProps) {
-    const api = useApi()
+type PageProps = {
+    params: Params
+}
 
-    const { data } = await api
-        .get(`/lil-nouns/${params.id}`)
-        .then((res) => res.data)
+export default async function Page(props: PageProps) {
+    const { id } = await props.params
 
-    if (!isNoun(data)) return <StaticAlert>Unknown Error</StaticAlert>
+    const data = await fetchFallbackData(id)
 
     return (
-        <NounMintProvider nounId={Number(params.id)}>
-            <NounPage project="LilNouns" noun={data} />
-        </NounMintProvider>
+        <NounSettlementProvider nounId={Number(id)}>
+            <NounMintProvider nounId={Number(id)}>
+                <NounPage project="LilNouns" noun={data.data} />
+            </NounMintProvider>
+        </NounSettlementProvider>
     )
 }
 
-export async function generateMetadata({
-    params,
-}: PageProps): Promise<Metadata> {
-    const id = params.id
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
+    const { id } = await props.params
     const title = `Lil Noun ${id}`
     const description = `Probe the colors and stats for Lil Noun ${id}.`
-    const pageUrl = `https://www.probe.wtf/lils/${id}`
+    const pageUrl = `https://probe.wtf/lils/${id}`
     const images = [
         {
             url: `${process.env.NEXT_PUBLIC_DO_STORAGE_URL}/lils/pngs/${id}.png`,
@@ -43,12 +60,12 @@ export async function generateMetadata({
     return {
         title: title,
         description: description,
-        keywords: ['Nouns', 'Lil Nouns'],
+        keywords: ['Lil Nouns'],
         openGraph: {
-            title: title,
-            description: description,
             url: pageUrl,
             siteName: 'probe.wtf',
+            title: title,
+            description: description,
             images: images,
             type: 'website',
         },

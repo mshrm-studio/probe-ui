@@ -14,7 +14,7 @@ export default function HeaderIslandDreamFilters({
 
     const pathname = usePathname()
 
-    const filterablePaths = ['/nouns/dreams', '/nouns', '/nouns-new', 'lils']
+    const filterablePaths = ['/nouns', 'lils']
 
     if (filterablePaths.includes(pathname) === false) return null
 

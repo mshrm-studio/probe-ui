@@ -13,7 +13,6 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { useEffect, useMemo, useState } from 'react'
 import styles from '@/styles/searchSelect.module.css'
 import SelectValue from '@/utils/dto/SelectValue'
-import SpacesImage from '@/components/SpacesImage'
 
 type Props = {
     boxShadowStyle?: 'solid' | 'blurred'
@@ -36,12 +35,20 @@ export default function SearchSelect({
 }: Props) {
     const [query, setQuery] = useState('')
 
-    type SelectedOption = SelectOption | null | undefined
+    type SelectedOption = SelectOption | null
 
-    const [selectedOption, setSelectedOption] = useState<SelectedOption>(null)
+    const [selectedOption, setSelectedOption] = useState<SelectedOption>(
+        options.find((option) => option.value == selected) || null
+    )
 
     useEffect(() => {
-        setSelected(selectedOption?.value || null)
+        console.log('*****')
+        console.log('SearchSelect.tsx, useEffect[selectedOption]')
+
+        if (selectedOption?.value !== selected) {
+            console.log(`setSelected(${selectedOption?.value})`)
+            setSelected(selectedOption?.value)
+        }
     }, [selectedOption])
 
     const filteredOptions = useMemo(() => {
@@ -62,11 +69,19 @@ export default function SearchSelect({
 
     useEffect(() => {
         if (selected) {
-            const option = options.find((option) => option.value === selected)
+            const option = options.find((option) => option.value == selected)
 
-            setSelectedOption(option)
+            console.log('*****')
+            console.log('SearchSelect.tsx, useEffect[selected]')
+            console.log('options', options)
+
+            if (selectedOption !== option) {
+                console.log(`setSelectedOption(${option || null})`)
+
+                setSelectedOption(option || null)
+            }
         }
-    }, [selected])
+    }, [options, selected])
 
     return (
         <Combobox

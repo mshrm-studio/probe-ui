@@ -5,6 +5,7 @@ import { useRef, useState } from 'react'
 import styles from '@/styles/header/island/flyOut.module.css'
 import Link from 'next/link'
 import SpacesImage from '@/components/SpacesImage'
+import useHref from '@/utils/hooks/useHref'
 
 export default function HeaderIslandProbe({
     className,
@@ -17,9 +18,11 @@ export default function HeaderIslandProbe({
 
     useOutsideClick(probeRef, () => setShowProbeMenu(false))
 
+    const { nounsLink, lilsLink } = useHref()
+
     const menu = [
-        { href: '/nouns', text: 'Nouns' },
-        { href: '/lils', text: 'Lils' },
+        { href: nounsLink, text: 'Nouns' },
+        { href: lilsLink, text: 'Lils' },
         { href: '/nouns/dreams/create', text: 'Dream' },
     ]
 

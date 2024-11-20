@@ -2,12 +2,14 @@
 
 import DreamNoun, { isDreamNoun } from '@/utils/dto/DreamNoun'
 import { getNounData } from '@nouns/assets'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import styles from '@/styles/nounImage/fromSeed.module.css'
 import NounSeed from '@/utils/dto/NounSeed'
+import Noun, { isNoun } from '@/utils/dto/Noun'
+import { debounce } from 'lodash'
 
 type Props = {
-    seed: NounSeed | DreamNoun
+    seed: NounSeed | DreamNoun | Noun
 }
 
 const NounImageFromSeed: React.FC<Props> = ({ seed }) => {
@@ -23,7 +25,17 @@ const NounImageFromSeed: React.FC<Props> = ({ seed }) => {
                       glasses: seed.glasses_seed_id || 0,
                       head: seed.head_seed_id || 0,
                   }
+                : isNoun(seed)
+                ? {
+                      accessory: seed.accessory_index,
+                      background: seed.background_index,
+                      body: seed.body_index,
+                      glasses: seed.glasses_index,
+                      head: seed.head_index,
+                  }
                 : seed
+
+            console.log('data', data)
 
             const { parts, background } = getNounData(data)
 

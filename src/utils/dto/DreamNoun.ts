@@ -31,7 +31,7 @@ export interface DreamNounListResponse
 }
 
 export const isDreamNoun = (i: unknown): i is DreamNoun => {
-    return isObject(i) && 'accessory_seed_id' in i
+    return isObject(i) && 'dreamer' in i
 }
 
 export const isDreamNounList = (i: unknown): i is DreamNoun[] => {

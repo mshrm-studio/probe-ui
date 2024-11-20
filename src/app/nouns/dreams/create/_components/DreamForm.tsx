@@ -2,9 +2,8 @@
 
 import SelectNounTrait from '@/components/Select/NounTrait'
 import { nounTraitLayers } from '@/utils/dto/NounTraitLayer'
-import { FormEvent, useContext, useEffect, useState } from 'react'
+import { FormEvent, useCallback, useMemo, useState } from 'react'
 import Button from '@/components/Button'
-import NounTraitsContext from '@/utils/contexts/NounTraitsContext'
 import NounTrait from '@/utils/dto/NounTrait'
 import styles from '@/app/nouns/dreams/create/_styles/create.module.css'
 import { useWeb3Modal, useWeb3ModalAccount } from '@web3modal/ethers/react'
@@ -12,45 +11,21 @@ import useApi from '@/utils/hooks/v2/useApi'
 import { isDreamNounResponse } from '@/utils/dto/DreamNoun'
 import NounImageFromSeed from '@/components/Noun/ImageFromSeed'
 import NounSeed from '@/utils/dto/NounSeed'
-import DimensionsContext from '@/utils/contexts/DimensionsContext'
+import useNounTraitList from '@/utils/hooks/useNounTraitList'
 
-export default function DreamPageDreamForm() {
+export default function DreamForm() {
     const { address, isConnected } = useWeb3ModalAccount()
     const { open } = useWeb3Modal()
-    const { dimensions } = useContext(DimensionsContext)
     const api = useApi()
 
     const { accessoryList, backgroundList, bodyList, glassesList, headList } =
-        useContext(NounTraitsContext)
+        useNounTraitList()
 
-    const randomTraitName = (list: NounTrait[]) =>
-        list[Math.floor(Math.random() * list.length)].name
-
-    const [form, setForm] = useState({
-        accessory: randomTraitName(accessoryList),
-        background: randomTraitName(backgroundList),
-        body: randomTraitName(bodyList),
-        glasses: randomTraitName(glassesList),
-        head: randomTraitName(headList),
-    })
-
-    useEffect(() => {
-        const accessory = accessoryList.find((a) => a.name === form.accessory),
-            background = backgroundList.find((b) => b.name === form.background),
-            body = bodyList.find((b) => b.name === form.body),
-            glasses = glassesList.find((g) => g.name === form.glasses),
-            head = headList.find((h) => h.name === form.head)
-
-        if (!accessory || !background || !body || !glasses || !head) return
-
-        setSeed({
-            accessory: accessory.seed_id,
-            background: background.seed_id,
-            body: body.seed_id,
-            glasses: glasses.seed_id,
-            head: head.seed_id,
-        })
-    }, [form])
+    const randomTrait = useCallback(
+        (list: NounTrait[]) =>
+            list[Math.floor(Math.random() * list.length)].seed_id,
+        []
+    )
 
     const [seed, setSeed] = useState<NounSeed>({
         accessory: 0,
@@ -60,6 +35,22 @@ export default function DreamPageDreamForm() {
         head: 0,
     })
 
+    // useEffect(() => {
+    //     setSeed({
+    //         accessory: randomTrait(accessoryList),
+    //         background: randomTrait(backgroundList),
+    //         body: randomTrait(bodyList),
+    //         glasses: randomTrait(glassesList),
+    //         head: randomTrait(headList),
+    //     })
+    // }, [])
+
+    const backgroundColor = useMemo(() => {
+        const bg = backgroundList.find((t) => t.seed_id == seed.background)
+
+        return bg ? `#${bg.name}` : '#ffffff'
+    }, [backgroundList, seed.background])
+
     const dream = async (e: FormEvent) => {
         e.preventDefault()
 
@@ -68,19 +59,17 @@ export default function DreamPageDreamForm() {
             return
         }
 
-        const data = {
-            dreamer: address,
-            accessory_seed_id: seed.accessory,
-            background_seed_id: seed.background,
-            body_seed_id: seed.body,
-            glasses_seed_id: seed.glasses,
-            head_seed_id: seed.head,
-        }
-
         try {
-            const res = await api.post('/dream-nouns', data)
+            const { data } = await api.post('/dream-nouns', {
+                dreamer: address,
+                accessory_seed_id: seed.accessory,
+                background_seed_id: seed.background,
+                body_seed_id: seed.body,
+                glasses_seed_id: seed.glasses,
+                head_seed_id: seed.head,
+            })
 
-            if (!isDreamNounResponse(res.data)) {
+            if (!isDreamNounResponse(data)) {
                 throw new Error('Dream created but unexpected response.')
             }
 
@@ -94,7 +83,9 @@ export default function DreamPageDreamForm() {
         <div className={styles.pageContainer}>
             <div
                 className={styles.image}
-                style={{ backgroundColor: `#${form.background}` }}
+                style={{
+                    backgroundColor: backgroundColor,
+                }}
             >
                 <NounImageFromSeed seed={seed} />
             </div>
@@ -102,17 +93,20 @@ export default function DreamPageDreamForm() {
             <div className={styles.formContainer}>
                 <form className={styles.form} onSubmit={dream}>
                     {nounTraitLayers.map((layer) => (
-                        <SelectNounTrait
-                            key={layer}
-                            layer={layer}
-                            search={
-                                dimensions.viewportWidth < 768 ? false : true
-                            }
-                            selected={form[layer]}
-                            setSelected={(value) =>
-                                setForm({ ...form, [layer]: value || '' })
-                            }
-                        />
+                        <div key={layer}>
+                            <SelectNounTrait
+                                key={layer}
+                                layer={layer}
+                                selected={seed[layer]}
+                                setSelected={(value) => {
+                                    setSeed((prev) => ({
+                                        ...prev,
+                                        [layer]: value,
+                                    }))
+                                }}
+                                valueKey="seed_id"
+                            />
+                        </div>
                     ))}
 
                     <Button nativeType="submit">Dream</Button>

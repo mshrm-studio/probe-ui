@@ -11,13 +11,9 @@ type Props = {
 }
 
 const NounImage: React.FC<Props> = ({ className = '', tokenUri, noun }) => {
-    const uri = useMemo(() => {
-        return noun?.token_uri || tokenUri
-    }, [noun, tokenUri])
-
-    if (uri) {
+    if (tokenUri) {
         const prefix = 'data:application/json;base64,'
-        const jsonString = atob(uri.replace(prefix, ''))
+        const jsonString = atob(tokenUri.replace(prefix, ''))
         const jsonObject = JSON.parse(jsonString)
         const imageSource = jsonObject?.image || ''
 

@@ -1,13 +1,18 @@
+import Breadcrumb from '@/utils/dto/Breadcrumb'
+import Breadcrumbs from '@/components/Breadcrumbs/Breadcrumbs'
 import HeaderIsland from '@/components/Header/Island/Island'
-import styles from '@/app/nouns-new/_styles/header.module.css'
-import Breadcrumbs from '@/app/nouns-new/_components/Header/Breadcrumbs'
 import SpacesImage from '@/components/SpacesImage'
+import styles from '@/styles/header/catalogue.module.css'
 
-export default async function Header() {
+type Props = {
+    breadcrumbs: Breadcrumb[]
+}
+
+export default function CatalogueHeader({ breadcrumbs }: Props) {
     return (
         <header className={styles.header}>
             <div className="hidden xl:block">
-                <Breadcrumbs />
+                <Breadcrumbs breadcrumbs={breadcrumbs} />
             </div>
 
             <HeaderIsland />

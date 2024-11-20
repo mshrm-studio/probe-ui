@@ -2,54 +2,57 @@
 
 import React, { useContext, useMemo } from 'react'
 import Noun from '@/utils/dto/Noun'
-import NounImage from '@/components/Noun/Image'
-import styles from '@/app/nouns/_styles/nounList.module.css'
+import styles from '@/app/nouns/_styles/list.module.css'
 import Link from 'next/link'
-import NounListBidBage from '@/app/nouns/_components/NounList/BidBadge'
 import AuctionContext from '@/utils/contexts/AuctionContext'
 import useAuctionStatus from '@/utils/hooks/useAuctionStatus'
 import { useSearchParams } from 'next/navigation'
-import NounUnorderedList from '@/components/Noun/List/List'
-import NounListAuctionItem from '@/app/nouns/_components/NounList/AuctionItem'
+import NounList from '@/components/Noun/List/List'
+import NounListBidBage from '@/app/nouns/_components/List/BidBadge'
+import NounListAuctionItem from '@/app/nouns/_components/List/AuctionItem'
 import ProjectContext from '@/utils/contexts/ProjectContext'
+import NounImageFromSeed from '@/components/Noun/ImageFromSeed'
 
 type Props = {
-    nouns: Noun[]
+    nounList: Noun[]
 }
 
-const NounList: React.FC<Props> = ({ nouns }) => {
+const List: React.FC<Props> = ({ nounList }) => {
     const { auction } = useContext(AuctionContext)
     const { baseUrl } = useContext(ProjectContext)
     const auctionActive = useAuctionStatus(auction)
 
     const nounsWithSvgUrl = useMemo(() => {
-        return nouns.filter(
+        return nounList.filter(
             (noun): noun is Noun & { svg_url: string } =>
                 typeof noun.svg_url === 'string'
         )
-    }, [nouns])
+    }, [nounList])
 
     const auctionNounInList = useMemo(() => {
-        return nouns.find((noun) => noun.token_id == auction?.nounId)
+        return nounList.find((noun) => noun.token_id == auction?.nounId)
             ? true
             : false
-    }, [auction, nouns])
+    }, [auction, nounList])
 
     const searchParams = useSearchParams()
 
     const nounListIsFiltered = useMemo(() => {
         // Convert searchParams to an object to filter and check
         const entries = Array.from(searchParams.entries())
+
         // Check if there are any filters other than per_page, sort_property, or sort_method
         return entries.some(
             ([key]) =>
-                !['per_page', 'sort_property', 'sort_method'].includes(key)
+                !['page', 'per_page', 'sort_property', 'sort_method'].includes(
+                    key
+                )
         )
     }, [searchParams])
 
     return (
         <div className={styles.listWrapper}>
-            <NounUnorderedList>
+            <NounList>
                 {!auctionNounInList && !nounListIsFiltered && (
                     <NounListAuctionItem />
                 )}
@@ -65,7 +68,7 @@ const NounList: React.FC<Props> = ({ nouns }) => {
                                     : styles.nonAuctionedNoun
                             }`}
                         >
-                            <NounImage noun={noun} />
+                            <NounImageFromSeed seed={noun} />
 
                             <label className={styles.nounLinkLabel}>
                                 {noun.token_id}
@@ -75,9 +78,9 @@ const NounList: React.FC<Props> = ({ nouns }) => {
                         </Link>
                     </li>
                 ))}
-            </NounUnorderedList>
+            </NounList>
         </div>
     )
 }
 
-export default NounList
+export default List

@@ -6,22 +6,26 @@ import {
 } from '@/utils/dto/ApiResponse'
 
 export default interface Noun {
-    token_id: number
-    token_uri: string
-    background_name: string
-    head_name: string
-    glasses_name: string
-    body_name: string
-    accessory_name: string
-    block_number: string
-    minted_at: string
     area: number | null
-    weight: number | null
+    accessory_index: number
+    accessory_name: string
+    background_index: number
+    background_name: string
+    block_number: string
+    body_index: number
+    body_name: string
     color_histogram: Record<string, number> | null
-    svg_path: string | null
-    svg_url: string | null
+    glasses_index: number
+    glasses_name: string
+    head_index: number
+    head_name: string
+    minted_at: string
     png_path: string | null
     png_url: string | null
+    svg_path: string | null
+    svg_url: string | null
+    token_id: number
+    weight: number | null
 }
 
 export interface NounResponse {
@@ -34,7 +38,7 @@ export interface NounListResponse
 }
 
 export const isNoun = (i: unknown): i is Noun => {
-    return isObject(i) && 'token_id' in i
+    return isObject(i) && 'token_id' in i && 'accessory_index' in i
 }
 
 export const isNounList = (i: unknown): i is Noun[] => {

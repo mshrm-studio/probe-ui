@@ -1,13 +1,10 @@
-import NounListPage from '@/app/nouns/_components/NounListPage'
-import NounTraits from '@/components/NounTraits'
-import ProjectProvider from '@/components/Provider/Project'
+import NounListPage from '@/app/nouns/_components/Page'
+import SearchParams from '@/utils/dto/SearchParams'
 
-export default async function Page() {
-    return (
-        <ProjectProvider>
-            <NounTraits project="LilNouns">
-                <NounListPage project="LilNouns" />
-            </NounTraits>
-        </ProjectProvider>
-    )
+type Props = {
+    searchParams: SearchParams
+}
+
+export default async function Page({ searchParams }: Props) {
+    return <NounListPage project="LilNouns" searchParams={searchParams} />
 }

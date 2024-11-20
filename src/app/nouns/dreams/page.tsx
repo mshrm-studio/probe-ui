@@ -3,12 +3,12 @@ import ProjectProvider from '@/components/Provider/Project'
 import NounTraits from '@/components/NounTraits'
 import FilterDisplayProvider from '@/components/Provider/FilterDisplay'
 import Filters from '@/app/nouns/dreams/_components/Filters'
-import DimensionsProvider from '@/components/Provider/Dimensions'
-import Header from '@/app/nouns/dreams/_components/Header'
+import CatalogueHeader from '@/components/Header/Catalogue'
 import { unstable_cache } from 'next/cache'
 import useApi from '@/utils/hooks/v2/useApi'
 import { isDreamNounListResponse } from '@/utils/dto/DreamNoun'
 import SearchParams from '@/utils/dto/SearchParams'
+import useHref from '@/utils/hooks/useHref'
 
 async function fetchFallbackData(searchParams: SearchParams) {
     const params = await searchParams
@@ -41,23 +41,29 @@ export default async function Page({ searchParams }: Props) {
 
     const project = 'Nouns'
 
+    const { nounsLink } = useHref()
+
     return (
         <ProjectProvider>
             <NounTraits project={project}>
                 <FilterDisplayProvider>
-                    <DimensionsProvider>
-                        <div className="p-4 space-y-4">
-                            <Header />
+                    <div className="p-4 space-y-4">
+                        <CatalogueHeader
+                            breadcrumbs={[
+                                { label: 'Probe', href: '/' },
+                                { label: 'Nouns', href: nounsLink },
+                                { label: 'Dreams', href: '/nouns/dreams' },
+                            ]}
+                        />
 
-                            <main className="space-y-4">
-                                <div className="pr-2 pb-[6px]">
-                                    <Filters />
-                                </div>
+                        <main className="space-y-4">
+                            <div className="pr-2 pb-[6px]">
+                                <Filters />
+                            </div>
 
-                                <Dreams fallbackData={fallbackData} />
-                            </main>
-                        </div>
-                    </DimensionsProvider>
+                            <Dreams fallbackData={fallbackData} />
+                        </main>
+                    </div>
                 </FilterDisplayProvider>
             </NounTraits>
         </ProjectProvider>

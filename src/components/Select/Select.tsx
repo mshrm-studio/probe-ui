@@ -2,6 +2,8 @@ import SelectOption from '@/utils/dto/SelectOption'
 import SelectValue from '@/utils/dto/SelectValue'
 import styles from '@/styles/select.module.css'
 import SearchSelect from '@/components/SearchSelect/SearchSelect'
+import DimensionsContext from '@/utils/contexts/DimensionsContext'
+import { useContext } from 'react'
 
 type Props = {
     disabled?: boolean
@@ -10,7 +12,6 @@ type Props = {
     name?: string
     options: SelectOption[]
     required?: boolean
-    search?: boolean
     selected: SelectValue
     setSelected: React.Dispatch<React.SetStateAction<SelectValue>>
 }
@@ -22,7 +23,6 @@ export default function Select({
     name,
     options,
     required,
-    search,
     selected,
     setSelected,
 }: Props) {
@@ -30,7 +30,9 @@ export default function Select({
         setSelected(e.target.value === '' ? undefined : e.target.value)
     }
 
-    if (search)
+    const { dimensions } = useContext(DimensionsContext)
+
+    if (dimensions.viewportWidth > 768)
         return (
             <SearchSelect
                 disabled={disabled}

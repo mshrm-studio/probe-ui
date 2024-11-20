@@ -10,14 +10,12 @@ import ProjectContext from '@/utils/contexts/ProjectContext'
 
 type Props = {
     disabled?: boolean
-    search?: boolean
     selected: string | null | undefined
     setSelected: (value: string | undefined) => void
 }
 
 const SelectNounColor: React.FC<Props> = ({
     disabled,
-    search,
     selected,
     setSelected,
 }) => {
@@ -79,17 +77,6 @@ const SelectNounColor: React.FC<Props> = ({
             typeof selectedColor === 'string' ? selectedColor : undefined
         )
     }, [selectedColor])
-
-    if (search)
-        return (
-            <SearchSelect
-                disabled={disabled}
-                label="Color"
-                options={sortedList}
-                selected={selected}
-                setSelected={setSelectedColor}
-            />
-        )
 
     return (
         <Select
