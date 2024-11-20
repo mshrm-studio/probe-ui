@@ -41,16 +41,6 @@ export default function SearchSelect({
         options.find((option) => option.value == selected) || null
     )
 
-    useEffect(() => {
-        console.log('*****')
-        console.log('SearchSelect.tsx, useEffect[selectedOption]')
-
-        if (selectedOption?.value !== selected) {
-            console.log(`setSelected(${selectedOption?.value})`)
-            setSelected(selectedOption?.value)
-        }
-    }, [selectedOption])
-
     const filteredOptions = useMemo(() => {
         if (query === '') return options
 
@@ -67,22 +57,6 @@ export default function SearchSelect({
         return [...optionsStartingWithQuery, ...optionsIncludingQuery]
     }, [query])
 
-    useEffect(() => {
-        if (selected) {
-            const option = options.find((option) => option.value == selected)
-
-            console.log('*****')
-            console.log('SearchSelect.tsx, useEffect[selected]')
-            console.log('options', options)
-
-            if (selectedOption !== option) {
-                console.log(`setSelectedOption(${option || null})`)
-
-                setSelectedOption(option || null)
-            }
-        }
-    }, [options, selected])
-
     return (
         <Combobox
             as="div"
@@ -96,6 +70,7 @@ export default function SearchSelect({
             onChange={(option) => {
                 setQuery('')
                 setSelectedOption(option)
+                if (option) setSelected(option.value)
             }}
         >
             <div className="relative">

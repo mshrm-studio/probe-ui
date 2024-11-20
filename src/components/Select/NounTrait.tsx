@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { NounTraitLayer } from '@/utils/dto/NounTraitLayer'
 import Select from '@/components/Select/Select'
 import SelectValue from '@/utils/dto/SelectValue'
@@ -51,48 +51,19 @@ const SelectNounTrait: React.FC<Props> = ({
         }))
     }, [traits, valueKey])
 
-    const [selectedTrait, setSelectedTrait] = useState<SelectValue>(selected)
-
-    useEffect(() => {
-        console.log('*****')
-        console.log('SelectNounTrait.tsx useEffect[selected]')
-
-        if (selected !== selectedTrait) {
-            console.log(`SelectNounTrait.tsx setSelectedTrait(${selected})`)
-            setSelectedTrait(selected)
-        }
-    }, [selected])
-
-    useEffect(() => {
-        console.log('*****')
-        console.log('SelectNounTrait.tsx useEffect[selectedTrait]')
-
-        if (selected !== selectedTrait) {
-            console.log(
-                `SelectNounTrait.tsx setSelected(${
-                    typeof selectedTrait === 'string' ||
-                    typeof selectedTrait === 'number'
-                        ? selectedTrait
-                        : undefined
-                })`
-            )
-
-            setSelected(
-                typeof selectedTrait === 'string' ||
-                    typeof selectedTrait === 'number'
-                    ? selectedTrait
-                    : undefined
-            )
-        }
-    }, [selectedTrait])
-
     return (
         <Select
             disabled={disabled}
             label={startCase(layer)}
             options={options}
-            selected={selectedTrait}
-            setSelected={setSelectedTrait}
+            selected={selected}
+            setSelected={(trait) => {
+                setSelected(
+                    typeof trait === 'string' || typeof trait === 'number'
+                        ? trait
+                        : undefined
+                )
+            }}
         />
     )
 }
