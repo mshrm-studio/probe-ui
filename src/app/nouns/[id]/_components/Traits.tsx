@@ -29,26 +29,22 @@ const NounPageTraits: React.FC<Props> = ({ noun }) => {
     }, [dreamsLink, lilsLink, nounsLink, noun, pathname])
 
     const traits = useMemo(() => {
-        return nounTraitLayers
-            .map((layer) => {
-                const traitName = normalisedNoun[layer].name
+        return nounTraitLayers.map((layer) => {
+            const traitName = normalisedNoun[layer].name
 
-                if (!traitName) return null
+            const traitSeedId = normalisedNoun[layer].seedId
 
-                const traitSeedId = normalisedNoun[layer].seedId
+            const query = isDreamNoun(noun)
+                ? `${layer}_seed_id=${traitSeedId}`
+                : `${layer}=${traitName || 'trait-not-found'}`
 
-                const query = isDreamNoun(noun)
-                    ? `${layer}_seed_id=${traitSeedId}`
-                    : `${layer}=${traitName}`
-
-                return {
-                    href: `${baseHref}&${query}`,
-                    layer: layer,
-                    name: traitName,
-                    seedId: traitSeedId,
-                }
-            })
-            .filter((n) => n !== null)
+            return {
+                href: `${baseHref}&${query}`,
+                layer: layer,
+                name: traitName || 'trait-not-found',
+                seedId: traitSeedId,
+            }
+        })
     }, [baseHref, noun, normalisedNoun])
 
     return (
