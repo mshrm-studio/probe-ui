@@ -2,7 +2,7 @@
 
 import AuctionContext from '@/utils/contexts/AuctionContext'
 import { useContext } from 'react'
-import AuctionDetails from '@/app/nouns/[id]/_components/AuctionDetails'
+import AuctionDetails from '@/app/nouns/[id]/_components/Auction/Details'
 import ContractTransactionReceipt from '@/utils/dto/ContractTransactionReceipt'
 import NounSettlementProvider from '@/components/Provider/NounSettlement'
 import NounMintProvider from '@/components/Provider/NounMint'

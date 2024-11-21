@@ -47,18 +47,22 @@ export default function Nouns({ fallbackData }: Props) {
 
     const url = query ? `${apiBaseUrl}?${query}` : apiBaseUrl
 
-    const { data, error, isLoading } = useSWR(url, fetcher, {
+    const { data, error, isLoading, isValidating } = useSWR(url, fetcher, {
         fallbackData,
         revalidateOnMount: false,
     })
 
     useEffect(() => {
         if (isNounListResponse(data)) {
-            setNouns((prev) => {
-                const e = new Set(prev.map((item) => item.token_id))
-                const n = data.data.filter((item) => !e.has(item.token_id))
-                return [...prev, ...n]
-            })
+            if (data.meta.current_page === 1) {
+                setNouns(data.data)
+            } else {
+                setNouns((prev) => {
+                    const e = new Set(prev.map((item) => item.token_id))
+                    const n = data.data.filter((item) => !e.has(item.token_id))
+                    return [...prev, ...n]
+                })
+            }
         }
     }, [data])
 
@@ -67,11 +71,11 @@ export default function Nouns({ fallbackData }: Props) {
 
     return (
         <div className="space-y-4">
-            <Controls isLoading={isLoading} meta={data.meta} />
+            <Controls isLoading={isLoading || isValidating} meta={data.meta} />
 
             <List nounList={nouns} />
 
-            {isLoading && <FetchingImage />}
+            {(isLoading || isValidating) && <FetchingImage />}
         </div>
     )
 }

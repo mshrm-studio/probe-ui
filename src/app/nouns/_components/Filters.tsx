@@ -24,7 +24,7 @@ export default function Filters({ filters, setFilters }: Props) {
                 <SelectNounColor
                     selected={filters.color}
                     setSelected={(value) =>
-                        setFilters({ ...filters, color: value })
+                        setFilters({ ...filters, color: value, page: 1 })
                     }
                 />
             </div>
@@ -41,6 +41,7 @@ export default function Filters({ filters, setFilters }: Props) {
                                     typeof value === 'string'
                                         ? value
                                         : undefined,
+                                page: 1,
                             })
                         }
                         valueKey="name"

@@ -2,7 +2,7 @@
 
 import AuctionContext from '@/utils/contexts/AuctionContext'
 import { useContext, useMemo } from 'react'
-import styles from '@/app/nouns/[id]/styles/nounPage.module.css'
+import styles from '@/app/nouns/[id]/_styles/nounPage.module.css'
 import AuctionCountdown from '@/components/Auction/Countdown'
 import ContractTransactionReceipt from '@/utils/dto/ContractTransactionReceipt'
 import EtherscanLink from '@/components/EtherscanLink'
@@ -19,7 +19,7 @@ import useNounSettler from '@/utils/hooks/useNounSettler'
 import { ZeroAddress } from 'ethers'
 import Link from 'next/link'
 
-const NounPageAuctionDetails: React.FC<{
+const Details: React.FC<{
     nounId: number
     receipt?: ContractTransactionReceipt
 }> = ({ nounId, receipt }) => {
@@ -187,4 +187,4 @@ const NounPageAuctionDetails: React.FC<{
     )
 }
 
-export default NounPageAuctionDetails
+export default Details

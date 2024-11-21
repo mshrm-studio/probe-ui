@@ -3,9 +3,17 @@
 }
 
 .image {
+    position: relative;
     padding-top: calc(42px + 1rem); /* 42px header, 1rem spacer */
     display: flex;
     align-items: flex-end;
+}
+
+.randomiseBtnContainer {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 1rem;
 }
 
 .formContainer {
@@ -32,6 +40,12 @@
         .image {
             padding-top: 0;
             width: 60%;
+        }
+
+        .randomiseBtnContainer {
+            bottom: auto;
+            top: 0;
+            padding-right: 2.5rem;
         }
 
         .formContainer {

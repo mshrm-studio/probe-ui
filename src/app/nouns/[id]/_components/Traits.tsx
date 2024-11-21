@@ -1,90 +1,82 @@
 'use client'
 
 import Noun from '@/utils/dto/Noun'
-import styles from '@/app/nouns/[id]/styles/nounPage.module.css'
+import styles from '@/app/nouns/[id]/_styles/nounPage.module.css'
 import { startCase } from 'lodash'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import useHref from '@/utils/hooks/useHref'
 import { useMemo } from 'react'
+import DreamNoun, { isDreamNoun } from '@/utils/dto/DreamNoun'
+import { nounTraitLayers } from '@/utils/dto/NounTraitLayer'
+import useNormalisedNoun from '@/utils/hooks/useNormalisedNoun'
 
 type Props = {
-    noun: Noun
+    noun: Noun | DreamNoun
 }
 
 const NounPageTraits: React.FC<Props> = ({ noun }) => {
-    const { lilsLink, nounsLink } = useHref()
+    const { dreamsLink, lilsLink, nounsLink } = useHref()
     const pathname = usePathname()
+    const normalisedNoun = useNormalisedNoun(noun)
 
-    const listHref = useMemo(() => {
-        return pathname.includes('/lils') ? lilsLink : nounsLink
-    }, [pathname])
+    const baseHref = useMemo(() => {
+        return isDreamNoun(noun)
+            ? dreamsLink
+            : pathname.includes('/lils')
+            ? lilsLink
+            : nounsLink
+    }, [dreamsLink, lilsLink, nounsLink, noun, pathname])
+
+    const traits = useMemo(() => {
+        return nounTraitLayers
+            .map((layer) => {
+                const traitName = normalisedNoun[layer].name
+
+                if (!traitName) return null
+
+                const traitSeedId = normalisedNoun[layer].seedId
+
+                const query = isDreamNoun(noun)
+                    ? `${layer}_seed_id=${traitSeedId}`
+                    : `${layer}=${traitName}`
+
+                return {
+                    href: `${baseHref}&${query}`,
+                    layer: layer,
+                    name: traitName,
+                    seedId: traitSeedId,
+                }
+            })
+            .filter((n) => n !== null)
+    }, [baseHref, noun, normalisedNoun])
 
     return (
         <dl className="space-y-1">
-            <div className={styles.dlItemInline}>
-                <dt className={styles.dt}>Body:</dt>
-                <dd className={styles.dd}>
-                    <Link
-                        href={`${listHref}&body=${noun.body_name}`}
-                        className={styles.attributeLink}
-                    >
-                        {startCase(
-                            noun.body_name.replace(new RegExp(`^body-`), '')
-                        )}
-                    </Link>
-                </dd>
-            </div>
+            {traits.map((trait) => (
+                <div className={styles.dlItemInline}>
+                    <dt className={styles.dt}>{startCase(trait.layer)}:</dt>
+                    <dd className={styles.dd}>
+                        <Link
+                            href={trait.href}
+                            className={styles.attributeLink}
+                        >
+                            {trait.layer === 'background'
+                                ? trait.name.toLowerCase() === 'd5d7e1'
+                                    ? 'cool'
+                                    : 'warm'
+                                : startCase(
+                                      trait.name.replace(
+                                          new RegExp(`^body-`),
+                                          ''
+                                      )
+                                  )}
+                        </Link>
+                    </dd>
+                </div>
+            ))}
 
-            <div className={styles.dlItemInline}>
-                <dt className={styles.dt}>Accessory:</dt>
-                <dd className={styles.dd}>
-                    <Link
-                        href={`${listHref}&accessory=${noun.accessory_name}`}
-                        className={styles.attributeLink}
-                    >
-                        {startCase(
-                            noun.accessory_name.replace(
-                                new RegExp(`^accessory-`),
-                                ''
-                            )
-                        )}
-                    </Link>
-                </dd>
-            </div>
-
-            <div className={styles.dlItemInline}>
-                <dt className={styles.dt}>Head:</dt>
-                <dd className={styles.dd}>
-                    <Link
-                        href={`${listHref}&head=${noun.head_name}`}
-                        className={styles.attributeLink}
-                    >
-                        {startCase(
-                            noun.head_name.replace(new RegExp(`^head-`), '')
-                        )}
-                    </Link>
-                </dd>
-            </div>
-
-            <div className={styles.dlItemInline}>
-                <dt className={styles.dt}>Glasses:</dt>
-                <dd className={styles.dd}>
-                    <Link
-                        href={`${listHref}&glasses=${noun.glasses_name}`}
-                        className={styles.attributeLink}
-                    >
-                        {startCase(
-                            noun.glasses_name.replace(
-                                new RegExp(`^glasses-`),
-                                ''
-                            )
-                        )}
-                    </Link>
-                </dd>
-            </div>
-
-            {noun.area && (
+            {!isDreamNoun(noun) && noun.area && (
                 <div className={styles.dlItemInline}>
                     <dt className={styles.dt}>Area:</dt>
                     <dd className={styles.dd}>
@@ -94,7 +86,7 @@ const NounPageTraits: React.FC<Props> = ({ noun }) => {
                 </div>
             )}
 
-            {noun.weight && (
+            {!isDreamNoun(noun) && noun.weight && (
                 <div className={styles.dlItemInline}>
                     <dt className={styles.dt}>Brightness:</dt>
                     <dd className={styles.dd}>

@@ -1,42 +1,47 @@
 'use client'
 
 import Project from '@/utils/dto/Project'
-import { useContext, useEffect, useState } from 'react'
-import NounImage from '@/components/Noun/Image'
-import styles from '@/app/nouns/[id]/styles/nounPage.module.css'
+import { useContext, useEffect, useMemo } from 'react'
+import styles from '@/app/nouns/[id]/_styles/nounPage.module.css'
 import DimensionsContext from '@/utils/contexts/DimensionsContext'
 import Link from 'next/link'
-import NounPageAuctionDetails from '@/app/nouns/[id]/_components/AuctionDetails'
-import ContractTransactionReceipt from '@/utils/dto/ContractTransactionReceipt'
-import AuctionContext from '@/utils/contexts/AuctionContext'
-import useAuctionStatus from '@/utils/hooks/useAuctionStatus'
 import Header from '@/app/nouns/[id]/_components/Header'
-import useLiveAuction from '@/utils/hooks/useLiveAuction'
-import AuctionBid from '@/app/nouns/[id]/_components/AuctionBid'
-import NounPageColorHistogram from '@/app/nouns/[id]/_components/ColorHistogram'
-import NounPageTraits from '@/app/nouns/[id]/_components/Traits'
+import ColorHistogram from '@/app/nouns/[id]/_components/ColorHistogram'
+import Traits from '@/app/nouns/[id]/_components/Traits'
+import Dream from '@/app/nouns/[id]/_components/Dream'
 import Noun from '@/utils/dto/Noun'
+import Auction from '@/app/nouns/[id]/_components/Auction/Auction'
+import NounImageFromSeed from '@/components/Noun/ImageFromSeed'
+import DreamNoun, { isDreamNoun } from '@/utils/dto/DreamNoun'
+import useNounTraitList from '@/utils/hooks/useNounTraitList'
 
 type Props = {
     project: Project
-    noun: Noun
+    noun: Noun | DreamNoun
 }
 
 const NounPage: React.FC<Props> = ({ project, noun }) => {
-    const [receipt, setReceipt] = useState<ContractTransactionReceipt>()
-    const { auction } = useContext(AuctionContext)
-    const auctionActive = useAuctionStatus(auction)
-    useLiveAuction(noun.token_id, auction?.nounId)
+    const { backgroundList } = useNounTraitList()
+
+    const backgroundColor = useMemo(() => {
+        if (isDreamNoun(noun)) {
+            const bg = backgroundList.find(
+                (t) => t.seed_id == noun.background_seed_id
+            )
+
+            return bg ? `#${bg.name}` : '#ffffff'
+        }
+
+        return `#${noun.background_name}`
+    }, [backgroundList, noun])
 
     useEffect(() => {
-        if (!noun) return
-
-        document.body.style.backgroundColor = `#${noun.background_name}`
+        document.body.style.backgroundColor = backgroundColor
 
         return () => {
             document.body.style.backgroundColor = ''
         }
-    }, [noun])
+    }, [backgroundColor])
 
     const { dimensions } = useContext(DimensionsContext)
 
@@ -49,7 +54,6 @@ const NounPage: React.FC<Props> = ({ project, noun }) => {
                     <div
                         className={styles.imageWrapper}
                         style={{
-                            backgroundColor: `#${noun.background_name}`,
                             maxHeight:
                                 dimensions.viewportOrientation === 'Landscape'
                                     ? dimensions.viewportHeight -
@@ -57,41 +61,34 @@ const NounPage: React.FC<Props> = ({ project, noun }) => {
                                     : 'none',
                         }}
                     >
-                        <NounImage
-                            className="w-full max-w-full max-h-full"
-                            noun={noun}
-                        />
+                        <NounImageFromSeed seed={noun} />
                     </div>
 
                     <div className={styles.detailsWrapper}>
                         <h1 className={styles.heading}>
                             <span className="block text-[25.5px] leading-[.69] xl:text-[37.8px]">
-                                {project === 'LilNouns' ? 'Lil' : 'Noun'}
+                                {isDreamNoun(noun)
+                                    ? 'Dream'
+                                    : project === 'LilNouns'
+                                    ? 'Lil'
+                                    : 'Noun'}
                             </span>
 
                             <span className="block text-[105px] leading-[.69] xl:text-[156px]">
-                                {noun.token_id}
+                                {isDreamNoun(noun) ? noun.id : noun.token_id}
                             </span>
                         </h1>
 
                         <div className={styles.body}>
                             <div className={styles.content}>
-                                <section className="mb-2">
-                                    <NounPageAuctionDetails
-                                        nounId={noun.token_id}
-                                        receipt={receipt}
-                                    />
-                                </section>
+                                {!isDreamNoun(noun) && <Auction noun={noun} />}
 
-                                {project === 'Nouns' &&
-                                    auction &&
-                                    auctionActive &&
-                                    auction.nounId == noun.token_id && (
-                                        <AuctionBid setReceipt={setReceipt} />
-                                    )}
+                                {isDreamNoun(noun) && <Dream noun={noun} />}
 
                                 <div>
-                                    <NounPageColorHistogram noun={noun} />
+                                    {!isDreamNoun(noun) && (
+                                        <ColorHistogram noun={noun} />
+                                    )}
 
                                     <section>
                                         <h3 className={styles.sectionTitle}>
@@ -101,22 +98,24 @@ const NounPage: React.FC<Props> = ({ project, noun }) => {
                                             Stats
                                         </h3>
 
-                                        <NounPageTraits noun={noun} />
+                                        <Traits noun={noun} />
                                     </section>
 
-                                    <div className="mt-4 text-[13px]">
-                                        <Link
-                                            className="text-link"
-                                            href={
-                                                project === 'Nouns'
-                                                    ? `https://nouns.wtf/noun/${noun.token_id}`
-                                                    : `https://lilnouns.wtf/lilnoun/${noun.token_id}`
-                                            }
-                                            target="_blank"
-                                        >
-                                            View Activity
-                                        </Link>
-                                    </div>
+                                    {!isDreamNoun(noun) && (
+                                        <div className="mt-4 text-[13px]">
+                                            <Link
+                                                className="text-link"
+                                                href={
+                                                    project === 'Nouns'
+                                                        ? `https://nouns.wtf/noun/${noun.token_id}`
+                                                        : `https://lilnouns.wtf/lilnoun/${noun.token_id}`
+                                                }
+                                                target="_blank"
+                                            >
+                                                View Activity
+                                            </Link>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>

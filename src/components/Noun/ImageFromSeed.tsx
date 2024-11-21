@@ -35,8 +35,6 @@ const NounImageFromSeed: React.FC<Props> = ({ seed }) => {
                   }
                 : seed
 
-            console.log('data', data)
-
             const { parts, background } = getNounData(data)
 
             const response = await fetch('/api/build-svg', {

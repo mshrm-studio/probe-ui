@@ -2,13 +2,15 @@ import Dreams from '@/app/nouns/dreams/_components/Dreams'
 import ProjectProvider from '@/components/Provider/Project'
 import NounTraits from '@/components/NounTraits'
 import FilterDisplayProvider from '@/components/Provider/FilterDisplay'
-import Filters from '@/app/nouns/dreams/_components/Filters'
+import Controls from '@/app/nouns/dreams/_components/Controls'
 import CatalogueHeader from '@/components/Header/Catalogue'
 import { unstable_cache } from 'next/cache'
 import useApi from '@/utils/hooks/v2/useApi'
 import { isDreamNounListResponse } from '@/utils/dto/DreamNoun'
 import SearchParams from '@/utils/dto/SearchParams'
 import useHref from '@/utils/hooks/useHref'
+import Button from '@/components/Button'
+import Link from 'next/link'
 
 async function fetchFallbackData(searchParams: SearchParams) {
     const params = await searchParams
@@ -57,11 +59,19 @@ export default async function Page({ searchParams }: Props) {
                         />
 
                         <main className="space-y-4">
-                            <div className="pr-2 pb-[6px]">
-                                <Filters />
-                            </div>
+                            <Controls />
 
                             <Dreams fallbackData={fallbackData} />
+
+                            <div className="fixed bottom-0 right-0 pr-4 pb-4 sm:pr-10">
+                                <Link href="/nouns/dreams/create">
+                                    <span className="sr-only">
+                                        Create Dream
+                                    </span>
+
+                                    <Button nativeType="button">Dream</Button>
+                                </Link>
+                            </div>
                         </main>
                     </div>
                 </FilterDisplayProvider>

@@ -5,7 +5,7 @@ import { nounTraitLayers } from '@/utils/dto/NounTraitLayer'
 import { FormEvent, useCallback, useMemo, useState } from 'react'
 import Button from '@/components/Button'
 import NounTrait from '@/utils/dto/NounTrait'
-import styles from '@/app/nouns/dreams/create/_styles/create.module.css'
+import styles from '@/app/nouns/dreams/create/_styles/dream.module.css'
 import { useWeb3Modal, useWeb3ModalAccount } from '@web3modal/ethers/react'
 import useApi from '@/utils/hooks/v2/useApi'
 import { isDreamNounResponse } from '@/utils/dto/DreamNoun'
@@ -13,19 +13,13 @@ import NounImageFromSeed from '@/components/Noun/ImageFromSeed'
 import NounSeed from '@/utils/dto/NounSeed'
 import useNounTraitList from '@/utils/hooks/useNounTraitList'
 
-export default function DreamForm() {
+export default function Dream() {
     const { address, isConnected } = useWeb3ModalAccount()
     const { open } = useWeb3Modal()
     const api = useApi()
 
     const { accessoryList, backgroundList, bodyList, glassesList, headList } =
         useNounTraitList()
-
-    const randomTrait = useCallback(
-        (list: NounTrait[]) =>
-            list[Math.floor(Math.random() * list.length)].seed_id,
-        []
-    )
 
     const [seed, setSeed] = useState<NounSeed>({
         accessory: 0,
@@ -35,21 +29,27 @@ export default function DreamForm() {
         head: 0,
     })
 
-    // useEffect(() => {
-    //     setSeed({
-    //         accessory: randomTrait(accessoryList),
-    //         background: randomTrait(backgroundList),
-    //         body: randomTrait(bodyList),
-    //         glasses: randomTrait(glassesList),
-    //         head: randomTrait(headList),
-    //     })
-    // }, [])
-
     const backgroundColor = useMemo(() => {
         const bg = backgroundList.find((t) => t.seed_id == seed.background)
 
         return bg ? `#${bg.name}` : '#ffffff'
     }, [backgroundList, seed.background])
+
+    const randomTrait = useCallback(
+        (list: NounTrait[]) =>
+            list[Math.floor(Math.random() * list.length)].seed_id,
+        []
+    )
+
+    const randomise = () => {
+        setSeed({
+            accessory: randomTrait(accessoryList),
+            background: randomTrait(backgroundList),
+            body: randomTrait(bodyList),
+            glasses: randomTrait(glassesList),
+            head: randomTrait(headList),
+        })
+    }
 
     const dream = async (e: FormEvent) => {
         e.preventDefault()
@@ -73,9 +73,20 @@ export default function DreamForm() {
                 throw new Error('Dream created but unexpected response.')
             }
 
-            alert('Dream created!')
-        } catch (error) {
-            alert(error)
+            const response = await fetch('/api/revalidate-path', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    path: '/nouns/dreams',
+                }),
+            })
+
+            if (!response.ok) throw new Error('Failed to revalidate dreams.')
+
+            alert('Dream created.')
+        } catch (error: any) {
+            console.error(error)
+            alert(error?.response?.data?.message || error?.message || error)
         }
     }
 
@@ -88,6 +99,12 @@ export default function DreamForm() {
                 }}
             >
                 <NounImageFromSeed seed={seed} />
+
+                <div className={styles.randomiseBtnContainer}>
+                    <Button color="white" onClick={randomise}>
+                        Randomize
+                    </Button>
+                </div>
             </div>
 
             <div className={styles.formContainer}>
@@ -97,6 +114,7 @@ export default function DreamForm() {
                             <SelectNounTrait
                                 key={layer}
                                 layer={layer}
+                                required
                                 selected={seed[layer]}
                                 setSelected={(value) => {
                                     setSeed((prev) => ({

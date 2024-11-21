@@ -16,10 +16,8 @@ export default function HeaderIslandSearch({
     className: string
 }) {
     const router = useRouter()
-
-    const [showSearch, setShowSearch] = useState(false)
-
     const { traitList } = useNounTraitList()
+    const [showSearch, setShowSearch] = useState(false)
 
     const options = useMemo(() => {
         return traitList.map((trait) => ({
@@ -39,26 +37,44 @@ export default function HeaderIslandSearch({
 
     const [selected, setSelected] = useState<SelectValue>('')
 
+    const pathname = usePathname()
+
     useEffect(() => {
+        const query = new URLSearchParams(window.location.search)
+
         if (selected) {
-            router.replace(`?search=${selected}`)
+            query.set('search', String(selected))
+        } else {
+            query.delete('search')
         }
+
+        router.replace(`?${query.toString()}`)
     }, [selected])
+
+    const handleClick = () => {
+        const searchablePaths = ['/nouns', '/nouns/dreams', 'lils']
+
+        if (searchablePaths.includes(pathname)) {
+            setShowSearch((value) => !value)
+        } else {
+            const redirectMap: Record<string, string> = {
+                '/nouns/dreams/create': '/nouns/dreams',
+                '/nouns/dreams/[id]': '/nouns/dreams',
+                '/nouns/[id]': '/nouns',
+            }
+
+            router.push(redirectMap[pathname] || '/nouns')
+        }
+    }
 
     const searchRef = useRef<HTMLDivElement>(null)
 
     useOutsideClick(searchRef, () => setShowSearch(false))
 
-    const pathname = usePathname()
-
-    const searchablePaths = ['/nouns', 'lils']
-
-    if (searchablePaths.includes(pathname) === false) return null
-
     return (
         <li className={className}>
             <div ref={searchRef}>
-                <button onClick={() => setShowSearch((value) => !value)}>
+                <button onClick={handleClick}>
                     <SpacesImage src="header/search.svg" />
                 </button>
 

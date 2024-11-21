@@ -10,9 +10,17 @@ import {
     Label,
 } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import { useEffect, useMemo, useState } from 'react'
+import {
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from 'react'
 import styles from '@/styles/searchSelect.module.css'
 import SelectValue from '@/utils/dto/SelectValue'
+import DimensionsContext from '@/utils/contexts/DimensionsContext'
 
 type Props = {
     boxShadowStyle?: 'solid' | 'blurred'
@@ -41,6 +49,12 @@ export default function SearchSelect({
         options.find((option) => option.value == selected) || null
     )
 
+    useEffect(() => {
+        setSelectedOption(
+            options.find((option) => option.value == selected) || null
+        )
+    }, [selected])
+
     const filteredOptions = useMemo(() => {
         if (query === '') return options
 
@@ -57,6 +71,18 @@ export default function SearchSelect({
         return [...optionsStartingWithQuery, ...optionsIncludingQuery]
     }, [query])
 
+    const optionsRef = useRef<HTMLDivElement>(null)
+
+    const calculateMaxHeight = useCallback(() => {
+        if (!optionsRef.current) return
+        const rect = optionsRef.current.getBoundingClientRect()
+        const availableHeight = window.innerHeight - rect.top - 16 // 16px for margin
+        optionsRef.current.style.setProperty(
+            '--dropdown-max-height',
+            `${availableHeight}px`
+        )
+    }, [optionsRef])
+
     return (
         <Combobox
             as="div"
@@ -70,7 +96,7 @@ export default function SearchSelect({
             onChange={(option) => {
                 setQuery('')
                 setSelectedOption(option)
-                if (option) setSelected(option.value)
+                setSelected(option?.value)
             }}
         >
             <div className="relative">
@@ -89,17 +115,22 @@ export default function SearchSelect({
                             ? option.label
                             : ''
                     }
+                    onFocus={() => setTimeout(() => calculateMaxHeight(), 50)}
                     onBlur={() => setQuery('')}
                     onChange={(event) => setQuery(event.target.value)}
                     placeholder="None"
                     required={required}
                 />
+
                 <ComboboxButton className="absolute inset-y-0 right-0 flex items-center px-4 focus:outline-none">
                     <ChevronDownIcon className="h-5 w-5" />
                 </ComboboxButton>
 
                 {filteredOptions.length > 0 && (
-                    <ComboboxOptions className={styles.searchSelectOptions}>
+                    <ComboboxOptions
+                        ref={optionsRef}
+                        className={styles.searchSelectOptions}
+                    >
                         {filteredOptions.map((option) => (
                             <ComboboxOption
                                 key={option.value}

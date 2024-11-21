@@ -10,6 +10,7 @@ import { startCase } from 'lodash'
 type Props = {
     disabled?: boolean
     layer: NounTraitLayer
+    required?: boolean
     selected: SelectValue
     setSelected: (value: number | string | undefined) => void
     valueKey?: 'name' | 'seed_id'
@@ -18,6 +19,7 @@ type Props = {
 const SelectNounTrait: React.FC<Props> = ({
     disabled,
     layer,
+    required,
     selected,
     setSelected,
     valueKey = 'name',
@@ -56,6 +58,7 @@ const SelectNounTrait: React.FC<Props> = ({
             disabled={disabled}
             label={startCase(layer)}
             options={options}
+            required={required}
             selected={selected}
             setSelected={(trait) => {
                 setSelected(

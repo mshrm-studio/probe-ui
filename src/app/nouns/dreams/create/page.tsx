@@ -1,7 +1,7 @@
-import DreamForm from '@/app/nouns/dreams/create/_components/DreamForm'
+import Dream from '@/app/nouns/dreams/create/_components/Dream'
 import NounTraits from '@/components/NounTraits'
 import ProjectProvider from '@/components/Provider/Project'
-import Header from '@/components/Header/Noun'
+import Header from '@/app/nouns/dreams/create/_components/Header'
 
 export default async function Page() {
     return (
@@ -10,7 +10,7 @@ export default async function Page() {
                 <Header />
 
                 <main>
-                    <DreamForm />
+                    <Dream />
                 </main>
             </NounTraits>
         </ProjectProvider>

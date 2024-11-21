@@ -8,19 +8,20 @@ import { useCallback, useContext, useEffect, useState } from 'react'
 import styles from '@/app/nouns/dreams/_styles/filters.module.css'
 import FilterDisplayContext from '@/utils/contexts/FilterDisplayContext'
 
-export default function Filters() {
+export default function Controls() {
     const router = useRouter()
     const searchParams = useSearchParams()
 
     const initializeFilters = useCallback(
         () => ({
             accessory_seed_id:
-                Number(searchParams.get('accessory')) || undefined,
+                Number(searchParams.get('accessory_seed_id')) || undefined,
             background_seed_id:
-                Number(searchParams.get('background')) || undefined,
-            body_seed_id: Number(searchParams.get('body')) || undefined,
-            glasses_seed_id: Number(searchParams.get('glasses')) || undefined,
-            head_seed_id: Number(searchParams.get('head')) || undefined,
+                Number(searchParams.get('background_seed_id')) || undefined,
+            body_seed_id: Number(searchParams.get('body_seed_id')) || undefined,
+            glasses_seed_id:
+                Number(searchParams.get('glasses_seed_id')) || undefined,
+            head_seed_id: Number(searchParams.get('head_seed_id')) || undefined,
         }),
         [searchParams]
     )
@@ -38,7 +39,7 @@ export default function Filters() {
             }
         })
 
-        router.push(`?${params.toString()}`)
+        router.replace(`?${params.toString()}`)
     }, [filters, router, searchParams])
 
     const mappedNounTraitLayers = nounTraitLayers.map((layer) => ({

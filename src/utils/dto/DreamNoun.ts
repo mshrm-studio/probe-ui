@@ -14,6 +14,7 @@ export default interface DreamNoun {
     background?: NounTrait | null
     body_seed_id: number | null
     body?: NounTrait | null
+    created_at: string
     dreamer: string
     glasses_seed_id: number | null
     glasses?: NounTrait | null
