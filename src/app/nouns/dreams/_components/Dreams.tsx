@@ -12,6 +12,7 @@ import FetchingImage from '@/components/FetchingImage'
 import { useEffect, useState } from 'react'
 import { debounce } from 'lodash'
 import List from '@/app/nouns/dreams/_components/List'
+import Controls from '@/app/nouns/dreams/_components/Controls'
 
 type Props = {
     fallbackData: DreamNounListResponse
@@ -42,7 +43,7 @@ export default function Dreams({ fallbackData }: Props) {
 
     const url = query ? `/dream-nouns?${query}` : '/dream-nouns'
 
-    const { data, error, isLoading } = useSWR(url, fetcher, {
+    const { data, error, isLoading, isValidating } = useSWR(url, fetcher, {
         fallbackData,
         revalidateOnMount: false,
     })
@@ -52,5 +53,17 @@ export default function Dreams({ fallbackData }: Props) {
     if (!isDreamNounListResponse(data) || error)
         return <StaticAlert>{error?.message || 'Internal Error'}</StaticAlert>
 
-    return <List list={data.data} />
+    return (
+        <div className="space-y-4">
+            <Controls />
+
+            <List list={data.data} />
+
+            {isLoading || isValidating ? (
+                <FetchingImage />
+            ) : (
+                <p className="text-center text-xs">{data.data.length} Dreams</p>
+            )}
+        </div>
+    )
 }

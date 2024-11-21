@@ -22,7 +22,7 @@ type Props = {
 
 export default function Nouns({ fallbackData }: Props) {
     const api = useApi()
-    const { apiBaseUrl } = useContext(ProjectContext)
+    const { project, apiBaseUrl } = useContext(ProjectContext)
     const searchParams = useSearchParams()
     const [nouns, setNouns] = useState<Noun[]>(fallbackData.data)
     const [query, setQuery] = useState(searchParams.toString())
@@ -75,7 +75,13 @@ export default function Nouns({ fallbackData }: Props) {
 
             <List nounList={nouns} />
 
-            {(isLoading || isValidating) && <FetchingImage />}
+            {isLoading || isValidating ? (
+                <FetchingImage />
+            ) : (
+                <p className="text-center text-xs">
+                    {nouns.length} {project === 'LilNouns' ? 'Lils' : 'Nouns'}
+                </p>
+            )}
         </div>
     )
 }

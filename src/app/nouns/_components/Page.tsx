@@ -47,14 +47,17 @@ type Props = {
 export default async function NounsPage({ project, searchParams }: Props) {
     const fallbackData = await fetchFallbackData(project, searchParams)
 
-    const { nounsLink } = useHref()
+    const { lilsLink, nounsLink } = useHref()
 
     return (
         <div className="p-4 space-y-4">
             <CatalogueHeader
                 breadcrumbs={[
                     { label: 'Probe', href: '/' },
-                    { label: 'Nouns', href: nounsLink },
+                    {
+                        label: project === 'LilNouns' ? 'Lils' : 'Nouns',
+                        href: project === 'LilNouns' ? lilsLink : nounsLink,
+                    },
                 ]}
             />
 

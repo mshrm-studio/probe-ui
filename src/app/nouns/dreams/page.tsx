@@ -2,7 +2,6 @@ import Dreams from '@/app/nouns/dreams/_components/Dreams'
 import ProjectProvider from '@/components/Provider/Project'
 import NounTraits from '@/components/NounTraits'
 import FilterDisplayProvider from '@/components/Provider/FilterDisplay'
-import Controls from '@/app/nouns/dreams/_components/Controls'
 import CatalogueHeader from '@/components/Header/Catalogue'
 import { unstable_cache } from 'next/cache'
 import useApi from '@/utils/hooks/v2/useApi'
@@ -59,8 +58,6 @@ export default async function Page({ searchParams }: Props) {
                         />
 
                         <main className="space-y-4">
-                            <Controls />
-
                             <Dreams fallbackData={fallbackData} />
 
                             <div className="fixed bottom-0 right-0 pr-4 pb-4 sm:pr-10">
