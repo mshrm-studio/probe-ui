@@ -52,7 +52,7 @@ export default function HeaderIslandSearch({
     }, [selected])
 
     const handleClick = () => {
-        const searchablePaths = ['/nouns', '/nouns/dreams', 'lils']
+        const searchablePaths = ['/nouns', '/nouns/dreams', '/lils']
 
         if (searchablePaths.includes(pathname)) {
             setShowSearch((value) => !value)
