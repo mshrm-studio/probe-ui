@@ -1,26 +1,51 @@
-import NounPage from '@/components/NounPage/NounPage'
+import NounPage from '@/app/nouns/[id]/_components/NounPage'
 import type { Metadata } from 'next'
 import NounMintProvider from '@/components/Provider/NounMint'
 import NounSettlementProvider from '@/components/Provider/NounSettlement'
+import useApi from '@/utils/hooks/v2/useApi'
+import { isNounResponse } from '@/utils/dto/Noun'
+import { unstable_cache } from 'next/cache'
 
-type PageProps = {
-    params: { id: string }
+type Params = Promise<{ id: string }>
+
+async function fetchFallbackData(id: string) {
+    const fetchFn = unstable_cache(
+        async () => {
+            const api = useApi()
+
+            const { data } = await api.get(`/nouns/${id}`)
+
+            if (!isNounResponse(data)) throw new Error('Invalid data')
+
+            return data
+        },
+        [`nouns-${id}`],
+        { revalidate: 43200, tags: [`nouns-${id}`] }
+    )
+
+    return fetchFn()
 }
 
-export default function Page({ params }: PageProps) {
+type PageProps = {
+    params: Params
+}
+
+export default async function Page(props: PageProps) {
+    const { id } = await props.params
+
+    const data = await fetchFallbackData(id)
+
     return (
-        <NounSettlementProvider nounId={Number(params.id)}>
-            <NounMintProvider nounId={Number(params.id)}>
-                <NounPage project="Nouns" nounId={Number(params.id)} />
+        <NounSettlementProvider nounId={Number(id)}>
+            <NounMintProvider nounId={Number(id)}>
+                <NounPage project="Nouns" noun={data.data} />
             </NounMintProvider>
         </NounSettlementProvider>
     )
 }
 
-export async function generateMetadata({
-    params,
-}: PageProps): Promise<Metadata> {
-    const id = params.id
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
+    const { id } = await props.params
     const title = `Noun ${id}`
     const description = `Probe the colors and stats for Noun ${id}.`
     const pageUrl = `https://probe.wtf/nouns/${id}`
@@ -35,7 +60,7 @@ export async function generateMetadata({
     return {
         title: title,
         description: description,
-        keywords: ['Nouns', 'Lil Nouns'],
+        keywords: ['Nouns'],
         openGraph: {
             url: pageUrl,
             siteName: 'probe.wtf',

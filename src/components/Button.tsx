@@ -1,10 +1,10 @@
 'use client'
 
-import styles from '@/utils/styles/button.module.css'
+import styles from '@/styles/button.module.css'
 
 type Props = {
     children: React.ReactNode
-    color?: 'yellow'
+    color?: 'yellow' | 'white'
     disabled?: boolean
     nativeType?: 'button' | 'submit'
     onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void

@@ -1,0 +1,7 @@
+@media screen and (min-width: theme('screens.xl')) {
+    .header {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        align-items: center;
+    }
+}

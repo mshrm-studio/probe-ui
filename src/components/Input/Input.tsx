@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import styles from '@/utils/styles/input.module.css'
+import styles from '@/styles/input.module.css'
 
 type Props = {
     autocomplete?: 'off'

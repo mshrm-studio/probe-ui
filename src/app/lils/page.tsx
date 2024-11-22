@@ -1,7 +1,10 @@
-'use client'
+import NounListPage from '@/app/nouns/_components/Page'
+import SearchParams from '@/utils/dto/SearchParams'
 
-import NounListPage from '@/components/NounListPage/NounListPage'
+type Props = {
+    searchParams: SearchParams
+}
 
-export default function Page() {
-    return <NounListPage project="LilNouns" />
+export default async function Page({ searchParams }: Props) {
+    return <NounListPage project="LilNouns" searchParams={searchParams} />
 }

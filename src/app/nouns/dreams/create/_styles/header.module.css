@@ -1,0 +1,18 @@
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding-top: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    z-index: 9999;
+}
+
+@media (min-width: theme('screens.sm')) and (orientation: landscape) {
+    .header {
+        width: 40%;
+        padding-left: 2.5rem;
+        padding-right: 2.5rem;
+    }
+}

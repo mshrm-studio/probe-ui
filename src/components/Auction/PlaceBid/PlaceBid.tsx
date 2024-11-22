@@ -9,7 +9,7 @@ import {
     useWeb3ModalProvider,
 } from '@web3modal/ethers/react'
 import ContractTransactionReceipt from '@/utils/dto/ContractTransactionReceipt'
-import useAuctionStatus from '@/utils/services/useAuctionStatus'
+import useAuctionStatus from '@/utils/hooks/useAuctionStatus'
 import AuctionHouseContractContext from '@/utils/contexts/AuctionHouseContractContext'
 
 const AuctionPlaceBid: React.FC<{
@@ -92,8 +92,6 @@ const AuctionPlaceBid: React.FC<{
 
             setReceipt(receipt)
         } catch (error: any) {
-            console.log('error', error)
-
             alert(error?.info?.error?.message || error.code || 'Unknown Error')
         }
     }

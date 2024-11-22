@@ -1,0 +1,27 @@
+.button {
+    box-shadow: 8px 6px 0px 0px #000000;
+    border: 2px;
+    height: 35px;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    font-size: theme('fontSize.xl');
+    font-weight: theme('fontWeight.bold');
+}
+
+.button:global(.yellow) {
+    background-color: #ffef2e;
+    border-color: #ffef2e;
+}
+
+.button:global(.white) {
+    background-color: #ffffff;
+    border-color: #ffffff;
+}
+
+.button:disabled {
+    cursor: not-allowed;
+}
+
+.button:not(:disabled):active {
+    box-shadow: none;
+}

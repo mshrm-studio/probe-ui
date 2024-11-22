@@ -1,20 +1,11 @@
 import { isObject } from 'lodash'
 
-export interface SelectOptionStringValue {
+type SelectOption = {
     label: string
-    value: string
+    value: string | number
     imgSrc?: string | null
     colorHex?: string | null
 }
-
-export interface SelectOptionNumberValue {
-    label: string
-    value: number
-    imgSrc?: string | null
-    colorHex?: string | null
-}
-
-type SelectOption = SelectOptionStringValue | SelectOptionNumberValue
 
 export default SelectOption
 

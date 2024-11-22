@@ -1,8 +1,5 @@
-'use client'
-
-import NounMintContext from '@/utils/contexts/NounMintContext'
-import { DateTime } from 'luxon'
-import { useContext } from 'react'
+import { DateTime as Luxon } from 'luxon'
+import DateTime from '@/components/DateTime'
 
 type Props = {
     className?: string
@@ -14,16 +11,18 @@ const NounMintDate: React.FC<Props> = ({ className, mintedAt }) => {
 
     if (typeof mintedAt === 'string') {
         return (
-            <span className={className}>
-                {DateTime.fromISO(mintedAt).toFormat(dateTimeFormat)}
-            </span>
+            <DateTime
+                className={className}
+                format={dateTimeFormat}
+                iso={mintedAt}
+            />
         )
     }
 
     if (typeof mintedAt === 'number') {
         return (
             <span className={className}>
-                {DateTime.fromSeconds(mintedAt, {
+                {Luxon.fromSeconds(mintedAt, {
                     zone: 'utc',
                 })
                     .toLocal()

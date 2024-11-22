@@ -9,75 +9,104 @@ import {
     ComboboxOptions,
     Label,
 } from '@headlessui/react'
-import { ChevronUpDownIcon } from '@heroicons/react/20/solid'
-import { useEffect, useState } from 'react'
-import styles from '@/utils/styles/searchSelect.module.css'
+import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import {
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from 'react'
+import styles from '@/styles/searchSelect.module.css'
+import SelectValue from '@/utils/dto/SelectValue'
+import DimensionsContext from '@/utils/contexts/DimensionsContext'
 
 type Props = {
+    boxShadowStyle?: 'solid' | 'blurred'
     disabled?: boolean
     label?: string
     options: SelectOption[]
-    selected?: string | number | null
-    setSelected: React.Dispatch<
-        React.SetStateAction<string | number | null | undefined>
-    >
+    required?: boolean
+    selected: SelectValue
+    setSelected: React.Dispatch<React.SetStateAction<SelectValue>>
 }
 
 export default function SearchSelect({
+    boxShadowStyle = 'solid',
     disabled,
     label,
     options,
+    required,
     selected,
     setSelected,
 }: Props) {
     const [query, setQuery] = useState('')
 
-    type SelectedOption = SelectOption | null | undefined
+    type SelectedOption = SelectOption | null
 
-    const [selectedOption, setSelectedOption] = useState<SelectedOption>(null)
-
-    useEffect(() => {
-        setSelected(selectedOption?.value || null)
-    }, [selectedOption])
-
-    const filteredOptions =
-        query === ''
-            ? options
-            : options.filter((option) => {
-                  return option.label
-                      .toLowerCase()
-                      .includes(query.toLowerCase())
-              })
+    const [selectedOption, setSelectedOption] = useState<SelectedOption>(
+        options.find((option) => option.value == selected) || null
+    )
 
     useEffect(() => {
-        if (selected) {
-            const option = options.find((option) => option.value === selected)
-
-            setSelectedOption(option)
-        }
+        setSelectedOption(
+            options.find((option) => option.value == selected) || null
+        )
     }, [selected])
+
+    const filteredOptions = useMemo(() => {
+        if (query === '') return options
+
+        const optionsStartingWithQuery = options.filter((option) =>
+            option.label.toLowerCase().startsWith(query.toLowerCase())
+        )
+
+        const optionsIncludingQuery = options.filter(
+            (option) =>
+                option.label.toLowerCase().includes(query.toLowerCase()) &&
+                !optionsStartingWithQuery.includes(option)
+        )
+
+        return [...optionsStartingWithQuery, ...optionsIncludingQuery]
+    }, [query])
+
+    const optionsRef = useRef<HTMLDivElement>(null)
+
+    const calculateMaxHeight = useCallback(() => {
+        if (!optionsRef.current) return
+        const rect = optionsRef.current.getBoundingClientRect()
+        const availableHeight = window.innerHeight - rect.top - 16 // 16px for margin
+        optionsRef.current.style.setProperty(
+            '--dropdown-max-height',
+            `${availableHeight}px`
+        )
+    }, [optionsRef])
 
     return (
         <Combobox
             as="div"
-            className={styles.searchSelectWrapper}
+            className={`${styles.searchSelectWrapper} ${
+                boxShadowStyle === 'blurred'
+                    ? styles.blurredBoxShadow
+                    : styles.solidBoxShadow
+            }`}
+            immediate
             value={selectedOption}
             onChange={(option) => {
                 setQuery('')
                 setSelectedOption(option)
+                setSelected(option?.value)
             }}
         >
             <div className="relative">
                 {label && (
                     <Label className={styles.searchSelectLabel}>{label}</Label>
                 )}
+
                 <ComboboxInput
                     className={styles.searchSelectInput}
                     disabled={disabled}
-                    onChange={(event) => {
-                        setQuery(event.target.value)
-                    }}
-                    onBlur={() => setQuery('')}
                     displayValue={(option) =>
                         typeof option === 'object' &&
                         option &&
@@ -86,14 +115,22 @@ export default function SearchSelect({
                             ? option.label
                             : ''
                     }
+                    onFocus={() => setTimeout(() => calculateMaxHeight(), 50)}
+                    onBlur={() => setQuery('')}
+                    onChange={(event) => setQuery(event.target.value)}
                     placeholder="None"
+                    required={required}
                 />
-                <ComboboxButton className="absolute inset-y-0 right-0 flex items-center px-2 focus:outline-none">
-                    <ChevronUpDownIcon className="h-5 w-5" aria-hidden="true" />
+
+                <ComboboxButton className="absolute inset-y-0 right-0 flex items-center px-4 focus:outline-none">
+                    <ChevronDownIcon className="h-5 w-5" />
                 </ComboboxButton>
 
                 {filteredOptions.length > 0 && (
-                    <ComboboxOptions className={styles.searchSelectOptions}>
+                    <ComboboxOptions
+                        ref={optionsRef}
+                        className={styles.searchSelectOptions}
+                    >
                         {filteredOptions.map((option) => (
                             <ComboboxOption
                                 key={option.value}
@@ -104,7 +141,7 @@ export default function SearchSelect({
                                     {option.imgSrc && (
                                         <img
                                             src={option.imgSrc}
-                                            alt=""
+                                            alt={option.label}
                                             className={
                                                 styles.searchSelectOptionImg
                                             }

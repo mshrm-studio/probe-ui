@@ -1,0 +1,7 @@
+.projectSwitcherLink {
+    font-size: 13px;
+}
+
+.projectSwitcherLink[data-state='inactive'] {
+    color: #6c6c6c;
+}
