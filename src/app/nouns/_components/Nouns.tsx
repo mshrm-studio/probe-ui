@@ -11,6 +11,7 @@ import List from '@/app/nouns/_components/List/List'
 import Controls from '@/app/nouns/_components/Controls'
 import ProjectContext from '@/utils/contexts/ProjectContext'
 import FetchingImage from '@/components/FetchingImage'
+import { isApiPaginationMeta } from '@/utils/dto/ApiPaginationMeta'
 
 export default function Nouns() {
     const api = useApi()
@@ -39,7 +40,7 @@ export default function Nouns() {
 
     const url = query ? `${apiBaseUrl}?${query}` : apiBaseUrl
 
-    const { data, error, isLoading, isValidating } = useSWR(url, fetcher)
+    const { data, error, isLoading } = useSWR(url, fetcher)
 
     useEffect(() => {
         if (isNounListResponse(data)) {
@@ -55,16 +56,18 @@ export default function Nouns() {
         }
     }, [data])
 
-    if (!isNounList(nouns) || error)
+    if (error)
         return <StaticAlert>{error?.message || 'Internal Error'}</StaticAlert>
 
     return (
         <div className="space-y-4">
-            <Controls isLoading={isLoading || isValidating} meta={data.meta} />
+            {isNounListResponse(data) && (
+                <Controls isLoading={isLoading} meta={data.meta} />
+            )}
 
             <List nounList={nouns} />
 
-            {isLoading || isValidating ? (
+            {isLoading ? (
                 <FetchingImage />
             ) : (
                 <p className="text-center text-xs">
