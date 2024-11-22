@@ -3,11 +3,7 @@
 import { useSearchParams } from 'next/navigation'
 import useSWR from 'swr'
 import StaticAlert from '@/components/StaticAlert'
-import Noun, {
-    NounListResponse,
-    isNounList,
-    isNounListResponse,
-} from '@/utils/dto/Noun'
+import Noun, { isNounList, isNounListResponse } from '@/utils/dto/Noun'
 import useApi from '@/utils/hooks/v2/useApi'
 import { useContext, useEffect, useState } from 'react'
 import { debounce } from 'lodash'
@@ -16,15 +12,11 @@ import Controls from '@/app/nouns/_components/Controls'
 import ProjectContext from '@/utils/contexts/ProjectContext'
 import FetchingImage from '@/components/FetchingImage'
 
-type Props = {
-    fallbackData: NounListResponse
-}
-
-export default function Nouns({ fallbackData }: Props) {
+export default function Nouns() {
     const api = useApi()
     const { project, apiBaseUrl } = useContext(ProjectContext)
     const searchParams = useSearchParams()
-    const [nouns, setNouns] = useState<Noun[]>(fallbackData.data)
+    const [nouns, setNouns] = useState<Noun[]>([])
     const [query, setQuery] = useState(searchParams.toString())
 
     useEffect(() => {
@@ -47,10 +39,7 @@ export default function Nouns({ fallbackData }: Props) {
 
     const url = query ? `${apiBaseUrl}?${query}` : apiBaseUrl
 
-    const { data, error, isLoading, isValidating } = useSWR(url, fetcher, {
-        fallbackData,
-        revalidateOnMount: false,
-    })
+    const { data, error, isLoading, isValidating } = useSWR(url, fetcher)
 
     useEffect(() => {
         if (isNounListResponse(data)) {
