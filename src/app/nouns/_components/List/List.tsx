@@ -12,6 +12,7 @@ import NounListBidBage from '@/app/nouns/_components/List/BidBadge'
 import NounListAuctionItem from '@/app/nouns/_components/List/AuctionItem'
 import ProjectContext from '@/utils/contexts/ProjectContext'
 import NounImageFromSeed from '@/components/Noun/ImageFromSeed'
+import NounImage from '@/components/Noun/Image'
 
 type Props = {
     nounList: Noun[]
@@ -19,7 +20,7 @@ type Props = {
 
 const List: React.FC<Props> = ({ nounList }) => {
     const { auction } = useContext(AuctionContext)
-    const { baseUrl } = useContext(ProjectContext)
+    const { baseUrl, project } = useContext(ProjectContext)
     const auctionActive = useAuctionStatus(auction)
 
     const nounsWithSvgUrl = useMemo(() => {
@@ -68,7 +69,11 @@ const List: React.FC<Props> = ({ nounList }) => {
                                     : styles.nonAuctionedNoun
                             }`}
                         >
-                            <NounImageFromSeed seed={noun} />
+                            {project === 'LilNouns' ? (
+                                <NounImage noun={noun} />
+                            ) : (
+                                <NounImageFromSeed seed={noun} />
+                            )}
 
                             <label className={styles.nounLinkLabel}>
                                 {noun.token_id}

@@ -1,6 +1,5 @@
 'use client'
 
-import React, { useMemo } from 'react'
 import Noun from '@/utils/dto/Noun'
 import SpacesImage from '@/components/SpacesImage'
 

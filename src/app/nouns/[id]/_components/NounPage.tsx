@@ -14,6 +14,7 @@ import Auction from '@/app/nouns/[id]/_components/Auction/Auction'
 import NounImageFromSeed from '@/components/Noun/ImageFromSeed'
 import DreamNoun, { isDreamNoun } from '@/utils/dto/DreamNoun'
 import useNounTraitList from '@/utils/hooks/useNounTraitList'
+import NounImage from '@/components/Noun/Image'
 
 type Props = {
     project: Project
@@ -61,7 +62,11 @@ const NounPage: React.FC<Props> = ({ project, noun }) => {
                                     : 'none',
                         }}
                     >
-                        <NounImageFromSeed seed={noun} />
+                        {project === 'LilNouns' && !isDreamNoun(noun) ? (
+                            <NounImage noun={noun} />
+                        ) : (
+                            <NounImageFromSeed seed={noun} />
+                        )}
                     </div>
 
                     <div className={styles.detailsWrapper}>
