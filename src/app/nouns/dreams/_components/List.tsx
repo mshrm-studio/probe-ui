@@ -4,8 +4,6 @@ import NounUnorderedList from '@/components/Noun/List/List'
 import Link from 'next/link'
 
 export default function DreamList({ list }: { list: DreamNoun[] }) {
-    if (list.length === 0) return <p>0 Dreams</p>
-
     return (
         <NounUnorderedList>
             {list.map((dream) => (

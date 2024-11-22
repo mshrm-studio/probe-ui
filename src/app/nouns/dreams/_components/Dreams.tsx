@@ -48,8 +48,6 @@ export default function Dreams({ fallbackData }: Props) {
         revalidateOnMount: false,
     })
 
-    if (isLoading) return <FetchingImage />
-
     if (!isDreamNounListResponse(data) || error)
         return <StaticAlert>{error?.message || 'Internal Error'}</StaticAlert>
 
