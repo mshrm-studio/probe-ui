@@ -25,7 +25,7 @@ const SelectNounColor: React.FC<Props> = ({
     useEffect(() => {
         const debouncedFetch = debounce(() => {
             fetchNounColorList()
-        }, 500)
+        }, 300)
 
         debouncedFetch()
 
@@ -64,27 +64,15 @@ const SelectNounColor: React.FC<Props> = ({
             .sort((a, b) => a.hue - b.hue)
     }, [colorListWithHue])
 
-    const [selectedColor, setSelectedColor] = useState<
-        string | number | null | undefined
-    >(selected)
-
-    useEffect(() => {
-        setSelectedColor(selected)
-    }, [selected])
-
-    useEffect(() => {
-        setSelected(
-            typeof selectedColor === 'string' ? selectedColor : undefined
-        )
-    }, [selectedColor])
-
     return (
         <Select
             disabled={disabled}
             label="Color"
             options={sortedList}
             selected={selected}
-            setSelected={setSelectedColor}
+            setSelected={(color) => {
+                setSelected(typeof color === 'string' ? color : undefined)
+            }}
         />
     )
 }
