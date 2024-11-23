@@ -3,7 +3,7 @@
 import { useSearchParams } from 'next/navigation'
 import useSWR from 'swr'
 import StaticAlert from '@/components/StaticAlert'
-import Noun, { isNounList, isNounListResponse } from '@/utils/dto/Noun'
+import Noun, { isNounListResponse } from '@/utils/dto/Noun'
 import useApi from '@/utils/hooks/v2/useApi'
 import { useContext, useEffect, useState } from 'react'
 import { debounce } from 'lodash'
@@ -11,7 +11,6 @@ import List from '@/app/nouns/_components/List/List'
 import Controls from '@/app/nouns/_components/Controls'
 import ProjectContext from '@/utils/contexts/ProjectContext'
 import FetchingImage from '@/components/FetchingImage'
-import { isApiPaginationMeta } from '@/utils/dto/ApiPaginationMeta'
 
 export default function Nouns() {
     const api = useApi()

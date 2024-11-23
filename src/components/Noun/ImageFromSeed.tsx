@@ -2,17 +2,18 @@
 
 import DreamNoun, { isDreamNoun } from '@/utils/dto/DreamNoun'
 import { getNounData } from '@nouns/assets'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import styles from '@/styles/nounImage/fromSeed.module.css'
 import NounSeed from '@/utils/dto/NounSeed'
 import Noun, { isNoun } from '@/utils/dto/Noun'
-import { debounce } from 'lodash'
+import NounImage from '@/components/Noun/Image'
 
 type Props = {
     seed: NounSeed | DreamNoun | Noun
 }
 
 const NounImageFromSeed: React.FC<Props> = ({ seed }) => {
+    const [failed, setFailed] = useState(false)
     const [generatedSvg, setGeneratedSvg] = useState('')
 
     const generate = async () => {
@@ -46,7 +47,10 @@ const NounImageFromSeed: React.FC<Props> = ({ seed }) => {
                 }),
             })
 
-            if (!response.ok) throw new Error('Failed to generate SVG')
+            if (!response.ok) {
+                setFailed(true)
+                throw new Error('Failed to generate SVG')
+            }
 
             const { svg } = await response.json()
 
@@ -59,6 +63,10 @@ const NounImageFromSeed: React.FC<Props> = ({ seed }) => {
     useEffect(() => {
         generate()
     }, [seed])
+
+    if (failed && isNoun(seed)) {
+        return <NounImage noun={seed} />
+    }
 
     return (
         <div

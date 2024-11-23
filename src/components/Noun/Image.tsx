@@ -1,8 +1,8 @@
 'use client'
 
-import React, { useMemo } from 'react'
 import Noun from '@/utils/dto/Noun'
 import SpacesImage from '@/components/SpacesImage'
+import { useMemo } from 'react'
 
 type Props = {
     className?: string
@@ -11,9 +11,13 @@ type Props = {
 }
 
 const NounImage: React.FC<Props> = ({ className = '', tokenUri, noun }) => {
-    if (tokenUri) {
+    const uri = useMemo(() => {
+        return tokenUri || noun?.token_uri
+    }, [tokenUri, noun])
+
+    if (uri) {
         const prefix = 'data:application/json;base64,'
-        const jsonString = atob(tokenUri.replace(prefix, ''))
+        const jsonString = atob(uri.replace(prefix, ''))
         const jsonObject = JSON.parse(jsonString)
         const imageSource = jsonObject?.image || ''
 

@@ -25,6 +25,7 @@ export default interface Noun {
     svg_path: string | null
     svg_url: string | null
     token_id: number
+    token_uri?: string | null
     weight: number | null
 }
 
