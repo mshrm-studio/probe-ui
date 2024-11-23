@@ -6,7 +6,7 @@ import Sorters from '@/app/nouns/_components/Sorters'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import NounFilters from '@/utils/dto/NounFilters'
 import ApiPaginationMeta from '@/utils/dto/ApiPaginationMeta'
-import { debounce } from 'lodash'
+import { throttle } from 'lodash'
 
 type Props = {
     isLoading: boolean
@@ -75,7 +75,7 @@ export default function Controls({ isLoading, meta }: Props) {
 
     // useEffect to manage scroll, get next page when near bottom
     useEffect(() => {
-        const handleScroll = debounce(() => {
+        const handleScroll = throttle(() => {
             if (isLoadingRef.current) return
 
             const tolerance = 300
@@ -96,7 +96,7 @@ export default function Controls({ isLoading, meta }: Props) {
                     page: Math.max(1, page) + 1,
                 }))
             }
-        }, 50)
+        }, 1000)
 
         window.addEventListener('scroll', handleScroll)
 
