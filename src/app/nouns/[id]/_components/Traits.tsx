@@ -29,7 +29,6 @@ const NounPageTraits: React.FC<Props> = ({ noun }) => {
     }, [dreamsLink, lilsLink, nounsLink, noun, pathname])
 
     const traits = useMemo(() => {
-        console.log('normalisedNoun', normalisedNoun)
         return nounTraitLayers.map((layer) => {
             const traitName = normalisedNoun[layer].name
 
