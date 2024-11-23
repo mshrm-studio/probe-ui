@@ -19,8 +19,8 @@ async function fetchFallbackData(id: string) {
 
             return data
         },
-        [`nouns-${id}`],
-        { revalidate: 43200, tags: [`nouns-${id}`] }
+        [`nouns-${id}-v2`],
+        { revalidate: 3600, tags: [`nouns-${id}-v2`] }
     )
 
     return fetchFn()
