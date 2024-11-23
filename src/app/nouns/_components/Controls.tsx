@@ -52,7 +52,7 @@ export default function Controls({ isLoading, meta }: Props) {
         })
 
         router.replace(`?${params.toString()}`, { scroll: false })
-    }, [filters, router])
+    }, [filters])
 
     // Refs to hold the latest values of dependencies
     const filtersRef = useRef(filters)
@@ -96,7 +96,7 @@ export default function Controls({ isLoading, meta }: Props) {
                     page: Math.max(1, page) + 1,
                 }))
             }
-        }, 250)
+        }, 50)
 
         window.addEventListener('scroll', handleScroll)
 
