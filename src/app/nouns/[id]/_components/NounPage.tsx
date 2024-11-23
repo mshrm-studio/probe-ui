@@ -22,6 +22,8 @@ type Props = {
 }
 
 const NounPage: React.FC<Props> = ({ project, noun }) => {
+    console.log('NounPage', { project, noun })
+
     const { backgroundList } = useNounTraitList()
 
     const backgroundColor = useMemo(() => {
