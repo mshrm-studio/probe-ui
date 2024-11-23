@@ -22,7 +22,7 @@ export default function Nouns() {
     useEffect(() => {
         const updateQuery = debounce(() => {
             setQuery(searchParams.toString())
-        }, 300)
+        }, 100)
 
         updateQuery()
 
@@ -39,7 +39,7 @@ export default function Nouns() {
 
     const url = query ? `${apiBaseUrl}?${query}` : apiBaseUrl
 
-    const { data, error, isLoading } = useSWR(url, fetcher)
+    const { data, error, isLoading, isValidating } = useSWR(url, fetcher)
 
     useEffect(() => {
         if (isNounListResponse(data)) {
@@ -61,12 +61,15 @@ export default function Nouns() {
     return (
         <div className="space-y-4">
             {isNounListResponse(data) && (
-                <Controls isLoading={isLoading} meta={data.meta} />
+                <Controls
+                    isLoading={isLoading || isValidating}
+                    meta={data.meta}
+                />
             )}
 
             <List nounList={nouns} />
 
-            {isLoading ? (
+            {isLoading || isValidating ? (
                 <FetchingImage />
             ) : (
                 <p className="text-center text-xs">
