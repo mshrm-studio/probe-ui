@@ -65,7 +65,7 @@ const NounImageFromSeed: React.FC<Props> = ({ seed }) => {
     }, [seed])
 
     if (failed && isNoun(seed)) {
-        return <NounImage noun={seed} />
+        return <NounImage className="w-full h-full" noun={seed} />
     }
 
     return (
