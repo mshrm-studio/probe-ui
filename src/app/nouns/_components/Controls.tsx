@@ -35,7 +35,6 @@ export default function Controls({ isLoading, meta }: Props) {
     )
 
     const [filters, setFilters] = useState<NounFilters>(initializeFilters())
-    const lastScrollTop = useRef(0)
 
     useEffect(() => {
         setFilters(initializeFilters())
@@ -55,27 +54,43 @@ export default function Controls({ isLoading, meta }: Props) {
         router.replace(`?${params.toString()}`, { scroll: false })
     }, [filters, router])
 
+    // Refs to hold the latest values of dependencies
+    const filtersRef = useRef(filters)
+    const isLoadingRef = useRef(isLoading)
+    const metaRef = useRef(meta)
+    const lastScrollTop = useRef(0)
+
+    // Update refs whenever the values change
+    useEffect(() => {
+        filtersRef.current = filters
+    }, [filters])
+
+    useEffect(() => {
+        isLoadingRef.current = isLoading
+    }, [isLoading])
+
+    useEffect(() => {
+        metaRef.current = meta
+    }, [meta])
+
     // useEffect to manage scroll, get next page when near bottom
     useEffect(() => {
         const handleScroll = debounce(() => {
-            if (isLoading) return
+            if (isLoadingRef.current) return
 
-            const tolerance = 100
+            const tolerance = 300
             const scrollTop = document.documentElement.scrollTop
             const scrolled = window.innerHeight + scrollTop
             const totalHeight = document.documentElement.offsetHeight
 
             const isNearBottom = totalHeight - scrolled <= tolerance
             const isScrollingDown = scrollTop > lastScrollTop.current
-            lastScrollTop.current = scrollTop // Use ref to track last scroll position
+            lastScrollTop.current = scrollTop
 
-            const page = filters.page === undefined ? 1 : filters.page
+            const page = filtersRef.current.page || 1
+            const lastPage = metaRef.current?.last_page || 1
 
-            if (
-                isScrollingDown &&
-                isNearBottom &&
-                (meta === undefined || page < meta.last_page)
-            ) {
+            if (isScrollingDown && isNearBottom && page < lastPage) {
                 setFilters((prev) => ({
                     ...prev,
                     page: Math.max(1, page) + 1,
@@ -89,7 +104,7 @@ export default function Controls({ isLoading, meta }: Props) {
             window.removeEventListener('scroll', handleScroll)
             handleScroll.cancel()
         }
-    }, [filters.page, isLoading, meta])
+    }, [])
 
     return (
         <div className="space-y-4">
