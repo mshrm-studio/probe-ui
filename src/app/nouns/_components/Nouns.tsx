@@ -6,6 +6,7 @@ import StaticAlert from '@/components/StaticAlert'
 import Noun, { isNounListResponse } from '@/utils/dto/Noun'
 import useApi from '@/utils/hooks/v2/useApi'
 import { useContext, useEffect, useState } from 'react'
+import { debounce } from 'lodash'
 import List from '@/app/nouns/_components/List/List'
 import Controls from '@/app/nouns/_components/Controls'
 import ProjectContext from '@/utils/contexts/ProjectContext'
@@ -16,6 +17,19 @@ export default function Nouns() {
     const { project, apiBaseUrl } = useContext(ProjectContext)
     const searchParams = useSearchParams()
     const [nouns, setNouns] = useState<Noun[]>([])
+    const [query, setQuery] = useState(searchParams.toString())
+
+    useEffect(() => {
+        const updateQuery = debounce(() => {
+            setQuery(searchParams.toString())
+        }, 250)
+
+        updateQuery()
+
+        return () => {
+            updateQuery.cancel()
+        }
+    }, [searchParams])
 
     const fetcher = async (url: string) => {
         const { data } = await api.get(url)
@@ -23,7 +37,7 @@ export default function Nouns() {
         return data
     }
 
-    const url = searchParams ? `${apiBaseUrl}?${searchParams}` : apiBaseUrl
+    const url = query ? `${apiBaseUrl}?${query}` : apiBaseUrl
 
     const { data, error, isLoading } = useSWR(url, fetcher)
 

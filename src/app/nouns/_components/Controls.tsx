@@ -75,7 +75,12 @@ export default function Controls({ isLoading, meta }: Props) {
     // useEffect to manage scroll, get next page when near bottom
     useEffect(() => {
         const handleScroll = () => {
-            if (isLoadingRef.current) return
+            if (
+                isLoadingRef.current ||
+                !metaRef.current ||
+                !filtersRef.current.page
+            )
+                return
 
             const tolerance = 300
             const scrollTop = document.documentElement.scrollTop
@@ -86,10 +91,13 @@ export default function Controls({ isLoading, meta }: Props) {
             const isScrollingDown = scrollTop > lastScrollTop.current
             lastScrollTop.current = scrollTop
 
-            const page = filtersRef.current.page || 1
-            const lastPage = metaRef.current?.last_page || 1
+            if (!isNearBottom || !isScrollingDown) return
 
-            if (isScrollingDown && isNearBottom && page < lastPage) {
+            const page = filtersRef.current.page
+            const lastPage = metaRef.current.last_page
+            const currentPage = metaRef.current.current_page
+
+            if (page <= currentPage && page < lastPage) {
                 setFilters((prev) => ({
                     ...prev,
                     page: Math.max(1, page) + 1,
