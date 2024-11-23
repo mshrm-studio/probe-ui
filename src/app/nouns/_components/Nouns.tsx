@@ -22,7 +22,7 @@ export default function Nouns() {
     useEffect(() => {
         const updateQuery = debounce(() => {
             setQuery(searchParams.toString())
-        }, 250)
+        }, 100)
 
         updateQuery()
 
