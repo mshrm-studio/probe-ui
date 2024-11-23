@@ -10,7 +10,11 @@ type Props = {
     tokenUri?: string
 }
 
-const NounImage: React.FC<Props> = ({ className = '', tokenUri, noun }) => {
+const NounImage: React.FC<Props> = ({
+    className = 'w-full h-full',
+    tokenUri,
+    noun,
+}) => {
     const uri = useMemo(() => {
         return tokenUri || noun?.token_uri
     }, [tokenUri, noun])
