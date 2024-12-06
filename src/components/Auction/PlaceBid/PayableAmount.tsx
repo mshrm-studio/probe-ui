@@ -36,6 +36,7 @@ const AuctionPlaceBidPayableAmount: React.FC<{ disabled?: boolean }> = ({
             min={0}
             nativeType="number"
             placeholder={placeholder}
+            step="any"
         />
     )
 }
