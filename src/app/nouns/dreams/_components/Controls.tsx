@@ -22,6 +22,8 @@ export default function Controls() {
             glasses_seed_id:
                 Number(searchParams.get('glasses_seed_id')) || undefined,
             head_seed_id: Number(searchParams.get('head_seed_id')) || undefined,
+            page: Number(searchParams.get('page')) || 1,
+            per_page: Number(searchParams.get('per_page')) || 180,
         }),
         [searchParams]
     )

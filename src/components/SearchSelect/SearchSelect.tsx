@@ -10,17 +10,9 @@ import {
     Label,
 } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import {
-    useCallback,
-    useContext,
-    useEffect,
-    useMemo,
-    useRef,
-    useState,
-} from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styles from '@/styles/searchSelect.module.css'
 import SelectValue from '@/utils/dto/SelectValue'
-import DimensionsContext from '@/utils/contexts/DimensionsContext'
 
 type Props = {
     boxShadowStyle?: 'solid' | 'blurred'
@@ -69,7 +61,7 @@ export default function SearchSelect({
         )
 
         return [...optionsStartingWithQuery, ...optionsIncludingQuery]
-    }, [query])
+    }, [options, query])
 
     const optionsRef = useRef<HTMLDivElement>(null)
 
@@ -122,7 +114,10 @@ export default function SearchSelect({
                     required={required}
                 />
 
-                <ComboboxButton className="absolute inset-y-0 right-0 flex items-center px-4 focus:outline-none">
+                <ComboboxButton
+                    className="absolute inset-y-0 right-0 flex items-center px-4 focus:outline-none"
+                    onClick={() => setTimeout(() => calculateMaxHeight(), 50)}
+                >
                     <ChevronDownIcon className="h-5 w-5" />
                 </ComboboxButton>
 
