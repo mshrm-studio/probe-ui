@@ -27,6 +27,7 @@ export default function Controls({ isLoading, meta }: Props) {
             page: Number(searchParams.get('page')) || 1,
             per_page: Number(searchParams.get('per_page')) || 180,
             search: searchParams.get('search') || '',
+            settler: searchParams.get('settler') || '',
             sort_property: searchParams.get('sort_property') || 'token_id',
             sort_method: searchParams.get('sort_method') || 'desc',
         }),

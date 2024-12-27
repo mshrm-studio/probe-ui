@@ -42,7 +42,7 @@ export default async function Page({ searchParams }: Props) {
 
     const project = 'Nouns'
 
-    const { nounsLink } = useHref()
+    const { dreamsLink, nounsLink } = useHref()
 
     return (
         <ProjectProvider>
@@ -53,7 +53,7 @@ export default async function Page({ searchParams }: Props) {
                             breadcrumbs={[
                                 { label: 'Probe', href: '/' },
                                 { label: 'Nouns', href: nounsLink },
-                                { label: 'Dreams', href: '/nouns/dreams' },
+                                { label: 'Dreams', href: dreamsLink },
                             ]}
                         />
 

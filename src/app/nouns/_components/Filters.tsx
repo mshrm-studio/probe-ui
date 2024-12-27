@@ -6,6 +6,7 @@ import { useContext } from 'react'
 import styles from '@/app/nouns/_styles/filters.module.css'
 import FilterDisplayContext from '@/utils/contexts/FilterDisplayContext'
 import SelectNounColor from '@/components/Select/NounColor'
+import SelectNounSettler from '@/components/Select/NounSettler'
 import NounFilters from '@/utils/dto/NounFilters'
 
 type Props = {
@@ -25,6 +26,15 @@ export default function Filters({ filters, setFilters }: Props) {
                     selected={filters.color}
                     setSelected={(value) =>
                         setFilters({ ...filters, color: value, page: 1 })
+                    }
+                />
+            </div>
+
+            <div className={styles.filter}>
+                <SelectNounSettler
+                    selected={filters.settler}
+                    setSelected={(value) =>
+                        setFilters({ ...filters, settler: value, page: 1 })
                     }
                 />
             </div>
