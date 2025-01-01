@@ -40,6 +40,8 @@ const SelectNounColor: React.FC<Props> = ({
             : []
     }, [nounSettlerList])
 
+    if (options.length === 0) return null
+
     return (
         <Select
             disabled={disabled}

@@ -30,7 +30,7 @@ const EthAddress: React.FC<{ address: string; shorten?: boolean }> = ({
     const textToDisplay = useMemo(() => {
         if (ensName)
             return ensName.length > 11
-                ? `${ensName.slice(0, 4)}...${ensName.slice(-4)}`
+                ? `${ensName.slice(0, 8)}..${ensName.slice(-4)}`
                 : ensName
 
         if (!shorten) return address
