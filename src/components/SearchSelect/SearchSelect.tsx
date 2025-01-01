@@ -13,13 +13,11 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styles from '@/styles/searchSelect.module.css'
 import SelectValue from '@/utils/dto/SelectValue'
-import EthAddress from '@/components/EthAddress'
 
 type Props = {
     boxShadowStyle?: 'solid' | 'blurred'
     disabled?: boolean
     label?: string
-    optionlabelIsEthAddress?: boolean
     options: SelectOption[]
     required?: boolean
     selected: SelectValue
@@ -30,7 +28,6 @@ export default function SearchSelect({
     boxShadowStyle = 'solid',
     disabled,
     label,
-    optionlabelIsEthAddress,
     options,
     required,
     selected,
@@ -147,13 +144,7 @@ export default function SearchSelect({
                                     )}
 
                                     <span className="ml-3 truncate">
-                                        {optionlabelIsEthAddress ? (
-                                            <EthAddress
-                                                address={option.label}
-                                            />
-                                        ) : (
-                                            option.label
-                                        )}
+                                        {option.label}
                                     </span>
                                 </div>
                             </ComboboxOption>
