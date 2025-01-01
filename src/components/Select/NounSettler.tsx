@@ -46,6 +46,7 @@ const SelectNounColor: React.FC<Props> = ({
         <Select
             disabled={disabled}
             label="Settler"
+            optionlabelIsEthAddress
             options={options}
             selected={selected}
             setSelected={(settler) => {

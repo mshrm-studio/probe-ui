@@ -4,12 +4,14 @@ import styles from '@/styles/select.module.css'
 import SearchSelect from '@/components/SearchSelect/SearchSelect'
 import DimensionsContext from '@/utils/contexts/DimensionsContext'
 import { useContext } from 'react'
+import EthAddress from '@/components/EthAddress'
 
 type Props = {
     disabled?: boolean
     id?: string
     label?: string
     name?: string
+    optionlabelIsEthAddress?: boolean
     options: SelectOption[]
     required?: boolean
     selected: SelectValue
@@ -21,6 +23,7 @@ export default function Select({
     id,
     label,
     name,
+    optionlabelIsEthAddress,
     options,
     required,
     selected,
@@ -37,6 +40,7 @@ export default function Select({
             <SearchSelect
                 disabled={disabled}
                 label={label}
+                optionlabelIsEthAddress={optionlabelIsEthAddress}
                 options={options}
                 required={required}
                 selected={selected}
@@ -67,7 +71,11 @@ export default function Select({
 
                 {options.map((option) => (
                     <option key={option.value} value={option.value}>
-                        {option.label}
+                        {optionlabelIsEthAddress ? (
+                            <EthAddress address={option.label} />
+                        ) : (
+                            option.label
+                        )}
                     </option>
                 ))}
             </select>
