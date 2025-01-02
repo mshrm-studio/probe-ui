@@ -63,7 +63,7 @@ const NounPageTraits: React.FC<Props> = ({ noun }) => {
                                     : 'warm'
                                 : startCase(
                                       trait.name.replace(
-                                          new RegExp(`^body-`),
+                                          new RegExp(`^${trait.layer}-`),
                                           ''
                                       )
                                   )}
