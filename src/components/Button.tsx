@@ -4,7 +4,7 @@ import styles from '@/styles/button.module.css'
 
 type Props = {
     children: React.ReactNode
-    color?: 'yellow' | 'white'
+    color?: 'purple' | 'yellow' | 'white'
     disabled?: boolean
     nativeType?: 'button' | 'submit'
     onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void
