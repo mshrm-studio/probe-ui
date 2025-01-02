@@ -77,7 +77,13 @@ export default function SearchSelect({
     const calculateMaxHeight = useCallback(() => {
         if (!optionsRef.current) return
         const rect = optionsRef.current.getBoundingClientRect()
-        const availableHeight = dimensions.viewportHeight - rect.top - 16 // 16px for margin
+        console.log(
+            'calculateMaxHeight, rect.top:',
+            rect.top,
+            ' dimensions.viewportHeight:',
+            dimensions.viewportHeight
+        )
+        const availableHeight = dimensions.viewportHeight - rect.top
         optionsRef.current.style.setProperty(
             '--dropdown-max-height',
             `${availableHeight}px`
@@ -116,7 +122,7 @@ export default function SearchSelect({
                             ? option.label
                             : ''
                     }
-                    onFocus={() => setTimeout(() => calculateMaxHeight(), 250)}
+                    onFocus={() => calculateMaxHeight()}
                     onBlur={() => setQuery('')}
                     onChange={(event) => setQuery(event.target.value)}
                     placeholder="None"
@@ -125,7 +131,7 @@ export default function SearchSelect({
 
                 <ComboboxButton
                     className="absolute inset-y-0 right-0 flex items-center px-4 focus:outline-none"
-                    onClick={() => setTimeout(() => calculateMaxHeight(), 250)}
+                    onClick={() => calculateMaxHeight()}
                 >
                     <ChevronDownIcon className="h-5 w-5" />
                 </ComboboxButton>
