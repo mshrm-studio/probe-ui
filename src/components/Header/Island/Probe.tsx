@@ -18,12 +18,12 @@ export default function HeaderIslandProbe({
 
     useOutsideClick(probeRef, () => setShowProbeMenu(false))
 
-    const { nounsLink, lilsLink } = useHref()
+    const { dreamsLink, nounsLink, lilsLink } = useHref()
 
     const menu = [
         { href: nounsLink, text: 'Nouns' },
         { href: lilsLink, text: 'Lils' },
-        { href: '/nouns/dreams/create', text: 'Dream' },
+        { href: dreamsLink, text: 'Dreams' },
     ]
 
     return (

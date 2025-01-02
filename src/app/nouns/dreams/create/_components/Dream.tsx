@@ -12,11 +12,15 @@ import { isDreamNounResponse } from '@/utils/dto/DreamNoun'
 import NounImageFromSeed from '@/components/Noun/ImageFromSeed'
 import NounSeed from '@/utils/dto/NounSeed'
 import useNounTraitList from '@/utils/hooks/useNounTraitList'
+import { useRouter } from 'next/navigation'
+import useHref from '@/utils/hooks/useHref'
 
 export default function Dream() {
     const { address, isConnected } = useWeb3ModalAccount()
     const { open } = useWeb3Modal()
     const api = useApi()
+    const router = useRouter()
+    const { dreamsLink } = useHref()
 
     const { accessoryList, backgroundList, bodyList, glassesList, headList } =
         useNounTraitList()
@@ -84,6 +88,8 @@ export default function Dream() {
             if (!response.ok) throw new Error('Failed to revalidate dreams.')
 
             alert('Dream created.')
+
+            router.push(dreamsLink)
         } catch (error: any) {
             console.error(error)
             alert(error?.response?.data?.message || error?.message || error)
