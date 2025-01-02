@@ -10,9 +10,17 @@ import {
     Label,
 } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import {
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from 'react'
 import styles from '@/styles/searchSelect.module.css'
 import SelectValue from '@/utils/dto/SelectValue'
+import DimensionsContext from '@/utils/contexts/DimensionsContext'
 
 type Props = {
     boxShadowStyle?: 'solid' | 'blurred'
@@ -34,6 +42,7 @@ export default function SearchSelect({
     setSelected,
 }: Props) {
     const [query, setQuery] = useState('')
+    const { dimensions } = useContext(DimensionsContext)
 
     type SelectedOption = SelectOption | null
 
@@ -68,12 +77,12 @@ export default function SearchSelect({
     const calculateMaxHeight = useCallback(() => {
         if (!optionsRef.current) return
         const rect = optionsRef.current.getBoundingClientRect()
-        const availableHeight = window.innerHeight - rect.top - 16 // 16px for margin
+        const availableHeight = dimensions.viewportHeight - rect.top - 16 // 16px for margin
         optionsRef.current.style.setProperty(
             '--dropdown-max-height',
             `${availableHeight}px`
         )
-    }, [optionsRef])
+    }, [dimensions.viewportHeight, optionsRef])
 
     return (
         <Combobox
@@ -107,7 +116,7 @@ export default function SearchSelect({
                             ? option.label
                             : ''
                     }
-                    onFocus={() => setTimeout(() => calculateMaxHeight(), 50)}
+                    onFocus={() => setTimeout(() => calculateMaxHeight(), 250)}
                     onBlur={() => setQuery('')}
                     onChange={(event) => setQuery(event.target.value)}
                     placeholder="None"
@@ -116,7 +125,7 @@ export default function SearchSelect({
 
                 <ComboboxButton
                     className="absolute inset-y-0 right-0 flex items-center px-4 focus:outline-none"
-                    onClick={() => setTimeout(() => calculateMaxHeight(), 50)}
+                    onClick={() => setTimeout(() => calculateMaxHeight(), 250)}
                 >
                     <ChevronDownIcon className="h-5 w-5" />
                 </ComboboxButton>

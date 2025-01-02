@@ -2,7 +2,7 @@
 
 import SelectNounTrait from '@/components/Select/NounTrait'
 import { nounTraitLayers } from '@/utils/dto/NounTraitLayer'
-import { FormEvent, useCallback, useMemo, useState } from 'react'
+import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import Button from '@/components/Button'
 import NounTrait from '@/utils/dto/NounTrait'
 import styles from '@/app/nouns/dreams/create/_styles/dream.module.css'
@@ -14,6 +14,7 @@ import NounSeed from '@/utils/dto/NounSeed'
 import useNounTraitList from '@/utils/hooks/useNounTraitList'
 import { useRouter } from 'next/navigation'
 import useHref from '@/utils/hooks/useHref'
+import { NounBitMap } from '@/components/Noun/BitMap'
 
 export default function Dream() {
     const { address, isConnected } = useWeb3ModalAccount()
@@ -87,7 +88,9 @@ export default function Dream() {
 
             if (!response.ok) throw new Error('Failed to revalidate dreams.')
 
-            alert('Dream created.')
+            alert(
+                'Dream created. Please give it a few moments to appear in the gallery.'
+            )
 
             router.push(dreamsLink)
         } catch (error: any) {
@@ -118,7 +121,6 @@ export default function Dream() {
                     {nounTraitLayers.map((layer) => (
                         <div key={layer}>
                             <SelectNounTrait
-                                key={layer}
                                 layer={layer}
                                 required
                                 selected={seed[layer]}
