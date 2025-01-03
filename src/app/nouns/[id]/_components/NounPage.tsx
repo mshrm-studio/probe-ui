@@ -97,10 +97,7 @@ const NounPage: React.FC<Props> = ({ project, noun }) => {
 
                                     <section>
                                         <h3 className={styles.sectionTitle}>
-                                            {project === 'LilNouns'
-                                                ? 'Lil Noun'
-                                                : 'Noun'}{' '}
-                                            Stats
+                                            About
                                         </h3>
 
                                         <Traits noun={noun} />
