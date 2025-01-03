@@ -1,8 +1,8 @@
 import Breadcrumb from '@/utils/dto/Breadcrumb'
 import Breadcrumbs from '@/components/Breadcrumbs/Breadcrumbs'
 import HeaderIsland from '@/components/Header/Island/Island'
-import SpacesImage from '@/components/SpacesImage'
 import styles from '@/styles/header/catalogue.module.css'
+import CopyToClipboard from '@/components/CopyToClipboard'
 
 type Props = {
     breadcrumbs: Breadcrumb[]
@@ -17,12 +17,8 @@ export default function CatalogueHeader({ breadcrumbs }: Props) {
 
             <HeaderIsland />
 
-            <div className="hidden xl:block">
-                <SpacesImage
-                    className="ml-auto mr-0"
-                    src="header/noun-glasses.png"
-                    alt="Noun Glasses"
-                />
+            <div className="hidden xl:flex xl:items-center xl:justify-end">
+                <CopyToClipboard content="⌐◨-◨">⌐◨-◨</CopyToClipboard>
             </div>
         </header>
     )
