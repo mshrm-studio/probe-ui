@@ -122,7 +122,7 @@ export default function SearchSelect({
                             ? option.label
                             : ''
                     }
-                    onFocus={() => calculateMaxHeight()}
+                    onFocus={() => setTimeout(() => calculateMaxHeight(), 250)}
                     onBlur={() => setQuery('')}
                     onChange={(event) => setQuery(event.target.value)}
                     placeholder="None"
