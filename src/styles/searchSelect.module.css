@@ -47,8 +47,8 @@
 .searchSelectOptions {
     position: absolute;
     z-index: 10;
-    margin-top: 0.5rem;
-    max-height: var(--dropdown-max-height, 30rem);
+    max-height: var(--dropdown-max-height, 15rem) !important;
+    max-width: var(--input-width, 15rem) !important;
     width: 100%;
     overflow: auto;
     background-color: #fff;

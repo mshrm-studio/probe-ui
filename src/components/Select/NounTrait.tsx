@@ -8,6 +8,7 @@ import useNounTraitList from '@/utils/hooks/useNounTraitList'
 import { startCase } from 'lodash'
 
 type Props = {
+    anchorTo?: 'bottom' | 'right'
     disabled?: boolean
     layer: NounTraitLayer
     required?: boolean
@@ -17,6 +18,7 @@ type Props = {
 }
 
 const SelectNounTrait: React.FC<Props> = ({
+    anchorTo,
     disabled,
     layer,
     required,
@@ -55,6 +57,7 @@ const SelectNounTrait: React.FC<Props> = ({
 
     return (
         <Select
+            anchorTo={anchorTo}
             disabled={disabled}
             label={startCase(layer)}
             options={options}

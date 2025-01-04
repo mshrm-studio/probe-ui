@@ -253,6 +253,7 @@ export default function Dream() {
                             .map((layer) => (
                                 <div key={layer}>
                                     <SelectNounTrait
+                                        anchorTo="right"
                                         layer={layer}
                                         required
                                         selected={seed[layer]}
