@@ -2,7 +2,14 @@
 
 import SelectNounTrait from '@/components/Select/NounTrait'
 import { NounTraitLayer, nounTraitLayers } from '@/utils/dto/NounTraitLayer'
-import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react'
+import {
+    FormEvent,
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useState,
+} from 'react'
 import Button from '@/components/Button'
 import NounTrait from '@/utils/dto/NounTrait'
 import styles from '@/app/nouns/dreams/create/_styles/dream.module.css'
@@ -16,10 +23,12 @@ import useHref from '@/utils/hooks/useHref'
 import { NounBitMap } from '@/components/Noun/BitMap'
 import SelectTraitType from '@/components/Select/SelectTraitType'
 import inputStyles from '@/styles/input/file.module.css'
+import DimensionsContext from '@/utils/contexts/DimensionsContext'
 
 export default function Dream() {
     const { address, isConnected } = useWeb3ModalAccount()
     const { open } = useWeb3Modal()
+    const { dimensions } = useContext(DimensionsContext)
     const api = useApi()
     const router = useRouter()
     const { dreamsLink } = useHref()
@@ -30,6 +39,12 @@ export default function Dream() {
     const [traitCanvas, setTraitCanvas] = useState<HTMLCanvasElement | null>(
         null
     )
+
+    const traitAnchorTo = useMemo(() => {
+        if (dimensions.viewportWidth >= 640) return 'right'
+
+        return 'bottom'
+    }, [dimensions.viewportWidth])
 
     const handleTraitUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
@@ -253,7 +268,7 @@ export default function Dream() {
                             .map((layer) => (
                                 <div key={layer}>
                                     <SelectNounTrait
-                                        anchorTo="right"
+                                        anchorTo={traitAnchorTo}
                                         layer={layer}
                                         required
                                         selected={seed[layer]}
