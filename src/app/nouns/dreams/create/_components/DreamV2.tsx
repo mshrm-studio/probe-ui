@@ -219,23 +219,25 @@ export default function Dream() {
                             setSelected={(value) => setTraitLayer(value)}
                         />
 
-                        <div>
-                            <label
-                                htmlFor="file-upload"
-                                className={inputStyles.input}
-                            >
-                                <span>Add Trait</span>
+                        {traitLayer && (
+                            <div>
+                                <label
+                                    htmlFor="file-upload"
+                                    className={inputStyles.input}
+                                >
+                                    <span>Add Trait</span>
 
-                                <input
-                                    id="file-upload"
-                                    name="file-upload"
-                                    accept="image/png"
-                                    type="file"
-                                    className="sr-only"
-                                    onChange={handleTraitUpload}
-                                />
-                            </label>
-                        </div>
+                                    <input
+                                        id="file-upload"
+                                        name="file-upload"
+                                        accept="image/png"
+                                        type="file"
+                                        className="sr-only"
+                                        onChange={handleTraitUpload}
+                                    />
+                                </label>
+                            </div>
+                        )}
 
                         <canvas
                             ref={setTraitCanvas}
