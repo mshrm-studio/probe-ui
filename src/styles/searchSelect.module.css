@@ -44,6 +44,37 @@
     padding-top: 1rem;
 }
 
+.searchSelectButton {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.searchSelectButton:focus {
+    outline: none;
+}
+
+.searchSelectButton .searchSelectChevron {
+    height: 1.25rem;
+    width: 1.25rem;
+    transition: transform 0.3s ease;
+}
+
+.searchSelectButton[data-open]
+    .searchSelectChevron[data-options-anchored-to='bottom'] {
+    transform: rotate(-180deg);
+}
+
+.searchSelectButton[data-open]
+    .searchSelectChevron[data-options-anchored-to='right'] {
+    transform: rotate(-90deg);
+}
+
 .searchSelectOptions {
     position: absolute;
     z-index: 10;

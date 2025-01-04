@@ -105,8 +105,11 @@ export default function SearchSelect({
                     required={required}
                 />
 
-                <ComboboxButton className="absolute inset-y-0 right-0 flex items-center px-4 focus:outline-none">
-                    <ChevronDownIcon className="h-5 w-5" />
+                <ComboboxButton className={styles.searchSelectButton}>
+                    <ChevronDownIcon
+                        className={styles.searchSelectChevron}
+                        data-options-anchored-to={anchorTo}
+                    />
                 </ComboboxButton>
 
                 {filteredOptions.length > 0 && (
