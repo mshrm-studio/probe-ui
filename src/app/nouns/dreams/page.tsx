@@ -3,7 +3,6 @@ import ProjectProvider from '@/components/Provider/Project'
 import NounTraits from '@/components/NounTraits'
 import FilterDisplayProvider from '@/components/Provider/FilterDisplay'
 import CatalogueHeader from '@/components/Header/Catalogue'
-import { unstable_cache } from 'next/cache'
 import useApi from '@/utils/hooks/v2/useApi'
 import { isDreamNounListResponse } from '@/utils/dto/DreamNoun'
 import SearchParams from '@/utils/dto/SearchParams'
@@ -16,21 +15,13 @@ async function fetchFallbackData(searchParams: SearchParams) {
 
     const query = new URLSearchParams(params)
 
-    const fetchFn = unstable_cache(
-        async () => {
-            const api = useApi()
+    const api = useApi()
 
-            const { data } = await api.get(`/dream-nouns?${query.toString()}`)
+    const { data } = await api.get(`/dream-nouns?${query.toString()}`)
 
-            if (!isDreamNounListResponse(data)) throw new Error('Invalid data')
+    if (!isDreamNounListResponse(data)) throw new Error('Invalid data')
 
-            return data
-        },
-        ['dream-nouns', query.toString()],
-        { revalidate: 43200, tags: ['dream-nouns'] }
-    )
-
-    return fetchFn()
+    return data
 }
 
 type Props = {
@@ -61,7 +52,7 @@ export default async function Page({ searchParams }: Props) {
                             <Dreams fallbackData={fallbackData} />
 
                             <div className="fixed bottom-0 right-0 pr-4 pb-4 sm:pr-10">
-                                <Link href="/nouns/dreams/create">
+                                <Link href="/nouns/dreams/create-v2">
                                     <span className="sr-only">
                                         Create Dream
                                     </span>

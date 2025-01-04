@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 // Decode RLE Data Hook
 export const useTraitBitMap = (
     layer: 'heads' | 'bodies' | 'accessories' | 'glasses',
-    trait: number | ImageBitmap // Supports either seed ID or uploaded bitmap
+    trait: number | ImageBitmap | string // Supports either seed ID, uploaded bitmap or DO storage URL
 ) => {
     const { images, palette } = ImageData
     const [bitmap, setBitmap] = useState<ImageBitmap | null>(null)
@@ -15,6 +15,20 @@ export const useTraitBitMap = (
                 // If it's already an ImageBitmap (uploaded image), use it directly
                 if (trait instanceof ImageBitmap) {
                     setBitmap(trait)
+                    return
+                }
+
+                if (typeof trait === 'string') {
+                    const response = await fetch(
+                        `/api/proxy?url=${encodeURIComponent(trait)}`
+                    )
+
+                    console.log('response', response)
+                    const blob = await response.blob()
+                    console.log('blob', blob)
+                    const imageBitmap = await createImageBitmap(blob)
+                    console.log('imageBitmap', imageBitmap)
+                    setBitmap(imageBitmap)
                     return
                 }
 
@@ -88,17 +102,6 @@ export const useTraitBitMap = (
                         parseInt(hexColor.substring(2, 4), 16),
                         parseInt(hexColor.substring(4, 6), 16),
                     ]
-
-                    console.log(
-                        'hexColor:',
-                        hexColor,
-                        'r:',
-                        r,
-                        'g:',
-                        g,
-                        'b:',
-                        b
-                    )
 
                     for (let i = 0; i < length; i++) {
                         const offset = (y * width + x) * 4

@@ -4,26 +4,17 @@ import NounMintProvider from '@/components/Provider/NounMint'
 import NounSettlementProvider from '@/components/Provider/NounSettlement'
 import useApi from '@/utils/hooks/v2/useApi'
 import { isNounResponse } from '@/utils/dto/Noun'
-import { unstable_cache } from 'next/cache'
 
 type Params = Promise<{ id: string }>
 
 async function fetchFallbackData(id: string) {
-    const fetchFn = unstable_cache(
-        async () => {
-            const api = useApi()
+    const api = useApi()
 
-            const { data } = await api.get(`/nouns/${id}`)
+    const { data } = await api.get(`/nouns/${id}`)
 
-            if (!isNounResponse(data)) throw new Error('Invalid data')
+    if (!isNounResponse(data)) throw new Error('Invalid data')
 
-            return data
-        },
-        [`nouns-${id}-v2`],
-        { revalidate: 3600, tags: [`nouns-${id}-v2`] }
-    )
-
-    return fetchFn()
+    return data
 }
 
 type PageProps = {

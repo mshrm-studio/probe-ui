@@ -3,31 +3,19 @@ import { NounTraitLayer } from '@/utils/dto/NounTraitLayer'
 import useApi from '@/utils/hooks/v2/useApi'
 import NounTraitsProvider from '@/components/Provider/NounTraits'
 import Project from '@/utils/dto/Project'
-import { unstable_cache } from 'next/cache'
 
 async function fetchTraits(project: Project, layer: NounTraitLayer) {
-    const fetchFn = unstable_cache(
-        async () => {
-            const api = useApi()
+    const api = useApi()
 
-            const path =
-                project === 'LilNouns' ? `/lil-noun-traits` : `/noun-traits`
+    const path = project === 'LilNouns' ? `/lil-noun-traits` : `/noun-traits`
 
-            const params = `?layer=${layer}&per_page=300`
+    const params = `?layer=${layer}&per_page=300`
 
-            const { data } = await api
-                .get(path + params)
-                .then((res) => res.data)
+    const { data } = await api.get(path + params).then((res) => res.data)
 
-            if (!isNounTraitList(data)) throw new Error('Invalid data')
+    if (!isNounTraitList(data)) throw new Error('Invalid data')
 
-            return data
-        },
-        ['noun-traits', layer],
-        { revalidate: 43200, tags: [`${layer}-noun-traits`] }
-    )
-
-    return fetchFn()
+    return data
 }
 
 type Props = {

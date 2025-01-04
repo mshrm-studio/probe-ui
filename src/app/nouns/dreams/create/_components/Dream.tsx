@@ -2,7 +2,7 @@
 
 import SelectNounTrait from '@/components/Select/NounTrait'
 import { nounTraitLayers } from '@/utils/dto/NounTraitLayer'
-import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react'
+import { FormEvent, useCallback, useMemo, useState } from 'react'
 import Button from '@/components/Button'
 import NounTrait from '@/utils/dto/NounTrait'
 import styles from '@/app/nouns/dreams/create/_styles/dream.module.css'

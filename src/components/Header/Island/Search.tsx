@@ -58,6 +58,7 @@ export default function HeaderIslandSearch({
             setShowSearch((value) => !value)
         } else {
             const redirectMap: Record<string, string> = {
+                '/nouns/dreams/create-v2': '/nouns/dreams',
                 '/nouns/dreams/create': '/nouns/dreams',
                 '/nouns/dreams/[id]': '/nouns/dreams',
                 '/nouns/[id]': '/nouns',

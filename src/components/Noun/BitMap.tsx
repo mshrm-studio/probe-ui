@@ -1,59 +1,98 @@
-import { useEffect, useState } from 'react'
+'use client'
+
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTraitBitMap } from '@/utils/hooks/useTraitBitMap'
+import useNounTraitList from '@/utils/hooks/useNounTraitList'
 
 interface Props {
-    glasses: number | ImageBitmap
-    head: number | ImageBitmap
-    accessory: number | ImageBitmap
-    body: number | ImageBitmap
-    background: string
-    margin?: number
-    size: number
+    accessory: number | ImageBitmap | string
+    background: number | string
+    body: number | ImageBitmap | string
     circleCrop?: boolean
+    glasses: number | ImageBitmap | string
+    head: number | ImageBitmap | string
+    margin?: number
+    size?: number
 }
 
 export const NounBitMap: React.FC<Props> = ({
+    accessory,
+    background,
+    body,
+    circleCrop = false,
     glasses,
     head,
-    accessory,
-    body,
-    background,
-    size,
-    circleCrop = false,
     margin = 0,
+    size,
 }) => {
-    const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null)
+    const { backgroundList } = useNounTraitList()
+
+    const canvasRef = useRef<HTMLCanvasElement | null>(null)
+    const [inheritedSize, setInheritedSize] = useState<number | null>(null)
 
     const glassesBitmap = useTraitBitMap('glasses', glasses)
     const headBitmap = useTraitBitMap('heads', head)
     const accessoryBitmap = useTraitBitMap('accessories', accessory)
     const bodyBitmap = useTraitBitMap('bodies', body)
 
+    // Get size from parent if size is not provided
+    useEffect(() => {
+        if (!size && canvasRef.current) {
+            // Observe parent element size
+            const observer = new ResizeObserver(([entry]) => {
+                const parentHeight = entry.contentRect.height
+                const parentWidth = entry.contentRect.width
+                setInheritedSize(Math.min(parentHeight, parentWidth))
+            })
+
+            observer.observe(canvasRef.current.parentElement!) // Observe parent size
+
+            return () => observer.disconnect() // Cleanup observer
+        }
+    }, [size])
+
+    const canvasSize = useMemo(() => {
+        return size || inheritedSize || 100
+    }, [inheritedSize, size])
+
+    const backgroundColor = useMemo(() => {
+        if (typeof background === 'string') return background
+
+        const bg = backgroundList.find((t) => t.seed_id == background)
+
+        return bg ? `#${bg.name}` : '#ffffff'
+    }, [backgroundList, background])
+
     // Draw on canvas when bitmaps are ready
     useEffect(() => {
-        if (
-            !canvas ||
-            !bodyBitmap ||
-            !accessoryBitmap ||
-            !headBitmap ||
-            !glassesBitmap
-        )
-            return
+        const canvas = canvasRef.current
 
-        canvas.width = size + margin * 2
-        canvas.height = size + margin * 2
+        if (!canvas) return
 
         const ctx = canvas.getContext('2d')!
+
+        if (!accessoryBitmap || !bodyBitmap || !headBitmap || !glassesBitmap) {
+            canvas.style.width = '100%'
+            canvas.style.height = '100%'
+            ctx.clearRect(0, 0, canvas.width, canvas.height) // Clear any existing content
+            return
+        }
+
+        canvas.style.width = ''
+        canvas.style.height = ''
+        canvas.width = canvasSize + margin * 2
+        canvas.height = canvasSize + margin * 2
+
         ctx.imageSmoothingEnabled = false
-        ctx.clearRect(margin, margin, size, size)
-        ctx.fillStyle = background
-        ctx.fillRect(margin, margin, size, size)
+        ctx.clearRect(margin, margin, canvasSize, canvasSize)
+        ctx.fillStyle = backgroundColor
+        ctx.fillRect(margin, margin, canvasSize, canvasSize)
 
         // Draw images once all bitmaps are loaded
-        ctx.drawImage(bodyBitmap, margin, margin, size, size)
-        ctx.drawImage(accessoryBitmap, margin, margin, size, size)
-        ctx.drawImage(headBitmap, margin, margin, size, size)
-        ctx.drawImage(glassesBitmap, margin, margin, size, size)
+        ctx.drawImage(bodyBitmap, margin, margin, canvasSize, canvasSize)
+        ctx.drawImage(accessoryBitmap, margin, margin, canvasSize, canvasSize)
+        ctx.drawImage(headBitmap, margin, margin, canvasSize, canvasSize)
+        ctx.drawImage(glassesBitmap, margin, margin, canvasSize, canvasSize)
 
         if (circleCrop) {
             ctx.globalCompositeOperation = 'destination-in'
@@ -61,7 +100,7 @@ export const NounBitMap: React.FC<Props> = ({
             ctx.arc(
                 canvas.width / 2,
                 canvas.height / 2,
-                size / 2,
+                canvasSize / 2,
                 0,
                 Math.PI * 2
             )
@@ -70,16 +109,16 @@ export const NounBitMap: React.FC<Props> = ({
             ctx.globalCompositeOperation = 'source-over'
         }
     }, [
-        margin,
-        canvas,
-        glassesBitmap,
-        headBitmap,
         accessoryBitmap,
+        backgroundColor,
         bodyBitmap,
+        canvasRef,
+        canvasSize,
         circleCrop,
-        background,
-        size,
+        headBitmap,
+        glassesBitmap,
+        margin,
     ])
 
-    return <canvas ref={setCanvas} />
+    return <canvas ref={canvasRef} />
 }

@@ -12,9 +12,13 @@ import Dream from '@/app/nouns/[id]/_components/Dream'
 import Noun from '@/utils/dto/Noun'
 import Auction from '@/app/nouns/[id]/_components/Auction/Auction'
 import NounImageFromSeed from '@/components/Noun/ImageFromSeed'
-import DreamNoun, { isDreamNoun } from '@/utils/dto/DreamNoun'
+import DreamNoun, {
+    isDreamNoun,
+    isDreamNounWithCustomTrait,
+} from '@/utils/dto/DreamNoun'
 import useNounTraitList from '@/utils/hooks/useNounTraitList'
 import NounImage from '@/components/Noun/Image'
+import { NounBitMap } from '@/components/Noun/BitMap'
 
 type Props = {
     project: Project
@@ -51,7 +55,12 @@ const NounPage: React.FC<Props> = ({ project, noun }) => {
             <Header />
 
             <main>
-                <div className={styles.pageWrapper}>
+                <div
+                    className={styles.pageWrapper}
+                    style={{
+                        minHeight: `calc(100vh - ${dimensions.headerHeight}px)`,
+                    }}
+                >
                     <div
                         className={styles.imageWrapper}
                         style={{
@@ -64,6 +73,32 @@ const NounPage: React.FC<Props> = ({ project, noun }) => {
                     >
                         {project === 'LilNouns' && !isDreamNoun(noun) ? (
                             <NounImage noun={noun} />
+                        ) : isDreamNounWithCustomTrait(noun) ? (
+                            <div className="h-full w-full">
+                                <NounBitMap
+                                    accessory={
+                                        noun.custom_trait_layer === 'accessory'
+                                            ? noun.custom_trait_image_url
+                                            : noun.accessory_seed_id || 0
+                                    }
+                                    background={noun.background_seed_id || 0}
+                                    body={
+                                        noun.custom_trait_layer === 'body'
+                                            ? noun.custom_trait_image_url
+                                            : noun.body_seed_id || 0
+                                    }
+                                    glasses={
+                                        noun.custom_trait_layer === 'glasses'
+                                            ? noun.custom_trait_image_url
+                                            : noun.glasses_seed_id || 0
+                                    }
+                                    head={
+                                        noun.custom_trait_layer === 'head'
+                                            ? noun.custom_trait_image_url
+                                            : noun.head_seed_id || 0
+                                    }
+                                />
+                            </div>
                         ) : (
                             <NounImageFromSeed seed={noun} />
                         )}
