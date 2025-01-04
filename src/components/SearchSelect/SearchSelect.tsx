@@ -76,19 +76,27 @@ export default function SearchSelect({
 
     const calculateMaxHeight = useCallback(() => {
         if (!optionsRef.current) return
+
         const rect = optionsRef.current.getBoundingClientRect()
-        console.log(
-            'calculateMaxHeight, rect.top:',
-            rect.top,
-            ' dimensions.viewportHeight:',
-            dimensions.viewportHeight
-        )
+
         const availableHeight = dimensions.viewportHeight - rect.top
+
+        console.log(
+            `calculateMaxHeight(): rect.top = ${rect.top}, dimensions.viewportHeight = ${dimensions.viewportHeight}, availableHeight = ${availableHeight}`
+        )
+
         optionsRef.current.style.setProperty(
             '--dropdown-max-height',
             `${availableHeight}px`
         )
     }, [dimensions.viewportHeight, optionsRef])
+
+    const defensiveMaxHeightRecalculation = () => {
+        calculateMaxHeight()
+        setTimeout(() => calculateMaxHeight(), 250)
+        setTimeout(() => calculateMaxHeight(), 500)
+        setTimeout(() => calculateMaxHeight(), 750)
+    }
 
     return (
         <Combobox
@@ -122,7 +130,7 @@ export default function SearchSelect({
                             ? option.label
                             : ''
                     }
-                    onFocus={() => setTimeout(() => calculateMaxHeight(), 250)}
+                    onFocus={defensiveMaxHeightRecalculation}
                     onBlur={() => setQuery('')}
                     onChange={(event) => setQuery(event.target.value)}
                     placeholder="None"
@@ -131,7 +139,7 @@ export default function SearchSelect({
 
                 <ComboboxButton
                     className="absolute inset-y-0 right-0 flex items-center px-4 focus:outline-none"
-                    onClick={() => calculateMaxHeight()}
+                    onClick={defensiveMaxHeightRecalculation}
                 >
                     <ChevronDownIcon className="h-5 w-5" />
                 </ComboboxButton>
