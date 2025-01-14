@@ -27,6 +27,13 @@ export default function NounListPageSorters({ filters, setFilters }: Props) {
                 ? 'Biggest'
                 : 'Smallest'
 
+        const colorfulnessLabel =
+            searchParams?.get('sort_property') !== 'colorfulness'
+                ? 'Most Colorful'
+                : searchParams?.get('sort_method') === 'asc'
+                ? 'Most Colorful'
+                : 'Least Colorful'
+
         const tokenIdLabel =
             searchParams?.get('sort_property') !== 'token_id'
                 ? 'Most Recent'
@@ -46,6 +53,11 @@ export default function NounListPageSorters({ filters, setFilters }: Props) {
                 label: areaLabel,
                 property: 'area',
                 method: areaLabel === 'Biggest' ? 'desc' : 'asc',
+            },
+            {
+                label: colorfulnessLabel,
+                property: 'colorfulness',
+                method: colorfulnessLabel === 'Most Colorful' ? 'desc' : 'asc',
             },
             {
                 label: tokenIdLabel,
