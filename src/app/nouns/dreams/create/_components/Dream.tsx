@@ -2,7 +2,7 @@
 
 import SelectNounTrait from '@/components/Select/NounTrait'
 import { nounTraitLayers } from '@/utils/dto/NounTraitLayer'
-import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react'
+import { FormEvent, useCallback, useContext, useMemo, useState } from 'react'
 import Button from '@/components/Button'
 import NounTrait from '@/utils/dto/NounTrait'
 import styles from '@/app/nouns/dreams/create/_styles/dream.module.css'
@@ -15,6 +15,7 @@ import useNounTraitList from '@/utils/hooks/useNounTraitList'
 import { useRouter } from 'next/navigation'
 import useHref from '@/utils/hooks/useHref'
 import { NounBitMap } from '@/components/Noun/BitMap'
+import DimensionsContext from '@/utils/contexts/DimensionsContext'
 
 export default function Dream() {
     const { address, isConnected } = useWeb3ModalAccount()
@@ -33,6 +34,14 @@ export default function Dream() {
         glasses: 0,
         head: 0,
     })
+
+    const { dimensions } = useContext(DimensionsContext)
+
+    const traitAnchorTo = useMemo(() => {
+        if (dimensions.viewportWidth >= 640) return 'right'
+
+        return 'bottom'
+    }, [dimensions.viewportWidth])
 
     const backgroundColor = useMemo(() => {
         const bg = backgroundList.find((t) => t.seed_id == seed.background)
@@ -121,6 +130,7 @@ export default function Dream() {
                     {nounTraitLayers.map((layer) => (
                         <div key={layer}>
                             <SelectNounTrait
+                                anchorTo={traitAnchorTo}
                                 layer={layer}
                                 required
                                 selected={seed[layer]}

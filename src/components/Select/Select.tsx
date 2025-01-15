@@ -6,6 +6,7 @@ import DimensionsContext from '@/utils/contexts/DimensionsContext'
 import { useContext } from 'react'
 
 type Props = {
+    anchorTo?: 'bottom' | 'right'
     disabled?: boolean
     id?: string
     label?: string
@@ -17,6 +18,7 @@ type Props = {
 }
 
 export default function Select({
+    anchorTo,
     disabled,
     id,
     label,
@@ -35,6 +37,7 @@ export default function Select({
     if (dimensions.viewportWidth > 768)
         return (
             <SearchSelect
+                anchorTo={anchorTo}
                 disabled={disabled}
                 label={label}
                 options={options}

@@ -5,6 +5,7 @@ import {
     isPaginatedModelListResponse,
     PaginatedModelListResponse,
 } from '@/utils/dto/ApiResponse'
+import { isNounTraitLayer, NounTraitLayer } from '@/utils/dto/NounTraitLayer'
 
 export default interface DreamNoun {
     id: number
@@ -15,11 +16,23 @@ export default interface DreamNoun {
     body_seed_id: number | null
     body?: NounTrait | null
     created_at: string
+    custom_trait_image: string | null
+    custom_trait_image_url?: string | null
+    custom_trait_layer: Exclude<NounTraitLayer, 'background'> | null
     dreamer: string
     glasses_seed_id: number | null
     glasses?: NounTrait | null
     head_seed_id: number | null
     head?: NounTrait | null
+}
+
+export type DreamNounWithCustomTrait = Omit<
+    DreamNoun,
+    'custom_trait_layer' | 'custom_trait_image'
+> & {
+    custom_trait_layer: Exclude<NounTraitLayer, 'background'>
+    custom_trait_image: string
+    custom_trait_image_url: string
 }
 
 export interface DreamNounResponse {
@@ -33,6 +46,17 @@ export interface DreamNounListResponse
 
 export const isDreamNoun = (i: unknown): i is DreamNoun => {
     return isObject(i) && 'dreamer' in i
+}
+
+export const isDreamNounWithCustomTrait = (
+    i: unknown
+): i is DreamNounWithCustomTrait => {
+    return (
+        isDreamNoun(i) &&
+        isNounTraitLayer(i.custom_trait_layer) &&
+        typeof i.custom_trait_image === 'string' &&
+        typeof i.custom_trait_image_url === 'string'
+    )
 }
 
 export const isDreamNounList = (i: unknown): i is DreamNoun[] => {

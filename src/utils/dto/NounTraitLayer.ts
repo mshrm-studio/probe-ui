@@ -1,11 +1,11 @@
 import { isString } from 'lodash'
 
 const NounTraitLayers = [
-    'background',
     'head',
-    'body',
-    'accessory',
     'glasses',
+    'accessory',
+    'body',
+    'background',
 ] as const
 
 export type NounTraitLayer = (typeof NounTraitLayers)[number]

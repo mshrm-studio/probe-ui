@@ -14,17 +14,29 @@ const EthAddress: React.FC<{ address: string; shorten?: boolean }> = ({
     useEffect(() => {
         if (!httpProvider || !address) return
 
-        const fetchEnsName = async () => {
-            try {
-                const name = await httpProvider.lookupAddress(address)
+        const storageKey = `ensNameFor_${address.toLowerCase()}`
 
-                setEnsName(name)
-            } catch (error) {
-                console.error('Error fetching ENS name:', error)
+        const cachedEnsName = localStorage.getItem(storageKey)
+
+        if (cachedEnsName) {
+            setEnsName(cachedEnsName)
+        } else {
+            const fetchEnsName = async () => {
+                try {
+                    const name = await httpProvider.lookupAddress(address)
+
+                    if (name) {
+                        localStorage.setItem(storageKey, name)
+
+                        setEnsName(name)
+                    }
+                } catch (error) {
+                    console.error('Error fetching ENS name:', error)
+                }
             }
-        }
 
-        fetchEnsName()
+            fetchEnsName()
+        }
     }, [address, httpProvider])
 
     const textToDisplay = useMemo(() => {

@@ -2,7 +2,14 @@
 
 import SelectNounTrait from '@/components/Select/NounTrait'
 import { NounTraitLayer, nounTraitLayers } from '@/utils/dto/NounTraitLayer'
-import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react'
+import {
+    FormEvent,
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useState,
+} from 'react'
 import Button from '@/components/Button'
 import NounTrait from '@/utils/dto/NounTrait'
 import styles from '@/app/nouns/dreams/create/_styles/dream.module.css'
@@ -15,10 +22,13 @@ import { useRouter } from 'next/navigation'
 import useHref from '@/utils/hooks/useHref'
 import { NounBitMap } from '@/components/Noun/BitMap'
 import SelectTraitType from '@/components/Select/SelectTraitType'
+import inputStyles from '@/styles/input/file.module.css'
+import DimensionsContext from '@/utils/contexts/DimensionsContext'
 
 export default function Dream() {
     const { address, isConnected } = useWeb3ModalAccount()
     const { open } = useWeb3Modal()
+    const { dimensions } = useContext(DimensionsContext)
     const api = useApi()
     const router = useRouter()
     const { dreamsLink } = useHref()
@@ -29,6 +39,12 @@ export default function Dream() {
     const [traitCanvas, setTraitCanvas] = useState<HTMLCanvasElement | null>(
         null
     )
+
+    const traitAnchorTo = useMemo(() => {
+        if (dimensions.viewportWidth >= 640) return 'right'
+
+        return 'bottom'
+    }, [dimensions.viewportWidth])
 
     const handleTraitUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
@@ -112,14 +128,38 @@ export default function Dream() {
         }
 
         try {
-            const { data } = await api.post('/dream-nouns', {
-                dreamer: address,
-                accessory_seed_id: seed.accessory,
-                background_seed_id: seed.background,
-                body_seed_id: seed.body,
-                glasses_seed_id: seed.glasses,
-                head_seed_id: seed.head,
-            })
+            const { data } = await api.post(
+                '/dream-nouns',
+                (() => {
+                    const formData = new FormData()
+
+                    formData.append('accessory_seed_id', String(seed.accessory))
+                    formData.append(
+                        'background_seed_id',
+                        String(seed.background)
+                    )
+                    formData.append('body_seed_id', String(seed.body))
+
+                    if (traitFile) {
+                        formData.append('custom_trait_image', traitFile)
+                    }
+
+                    if (traitLayer) {
+                        formData.append('custom_trait_layer', traitLayer)
+                    }
+
+                    formData.append('dreamer', String(address))
+                    formData.append('glasses_seed_id', String(seed.glasses))
+                    formData.append('head_seed_id', String(seed.head))
+
+                    return formData
+                })(),
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            )
 
             if (!isDreamNounResponse(data)) {
                 throw new Error('Dream created but unexpected response.')
@@ -154,7 +194,6 @@ export default function Dream() {
                     backgroundColor: backgroundColor,
                 }}
             >
-                {/* TODO: Set Size Properly */}
                 <NounBitMap
                     accessory={
                         traitLayer === 'accessory' && traitBitmap
@@ -166,7 +205,7 @@ export default function Dream() {
                             ? traitBitmap
                             : seed.body
                     }
-                    background={backgroundColor}
+                    background={seed.background}
                     glasses={
                         traitLayer === 'glasses' && traitBitmap
                             ? traitBitmap
@@ -177,7 +216,6 @@ export default function Dream() {
                             ? traitBitmap
                             : seed.head
                     }
-                    size={200}
                 />
 
                 <div className={styles.randomiseBtnContainer}>
@@ -189,25 +227,38 @@ export default function Dream() {
 
             <div className={styles.formContainer}>
                 {showUploadForm ? (
-                    <form action={styles.form}>
+                    <form className={styles.form}>
                         <SelectTraitType
+                            exclude={['background']}
                             selected={traitLayer}
                             setSelected={(value) => setTraitLayer(value)}
                         />
 
-                        <div>
-                            <input
-                                type="file"
-                                accept="image/png"
-                                onChange={handleTraitUpload}
-                            />
-                        </div>
+                        {traitLayer && (
+                            <div>
+                                <label
+                                    htmlFor="file-upload"
+                                    className={inputStyles.input}
+                                >
+                                    <span>Add Trait</span>
+
+                                    <input
+                                        id="file-upload"
+                                        name="file-upload"
+                                        accept="image/png"
+                                        type="file"
+                                        className="sr-only"
+                                        onChange={handleTraitUpload}
+                                    />
+                                </label>
+                            </div>
+                        )}
 
                         <canvas
                             ref={setTraitCanvas}
                             width={32}
                             height={32}
-                            style={{ display: !traitFile ? 'none' : undefined }}
+                            className="opacity-0"
                         />
                     </form>
                 ) : (
@@ -217,6 +268,7 @@ export default function Dream() {
                             .map((layer) => (
                                 <div key={layer}>
                                     <SelectNounTrait
+                                        anchorTo={traitAnchorTo}
                                         layer={layer}
                                         required
                                         selected={seed[layer]}
@@ -231,13 +283,15 @@ export default function Dream() {
                                 </div>
                             ))}
 
-                        <Button
-                            color="purple"
-                            nativeType="button"
-                            onClick={() => setShowUploadForm(true)}
-                        >
-                            Upload Trait
-                        </Button>
+                        {traitFile === null && (
+                            <Button
+                                color="purple"
+                                nativeType="button"
+                                onClick={() => setShowUploadForm(true)}
+                            >
+                                Upload Trait
+                            </Button>
+                        )}
 
                         <Button nativeType="submit">Dream</Button>
                     </form>

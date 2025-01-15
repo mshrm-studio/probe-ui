@@ -1,27 +1,18 @@
 import NounPage from '@/app/nouns/[id]/_components/NounPage'
 import type { Metadata } from 'next'
 import useApi from '@/utils/hooks/v2/useApi'
-import { unstable_cache } from 'next/cache'
 import { isDreamNounResponse } from '@/utils/dto/DreamNoun'
 
 type Params = Promise<{ id: string }>
 
 async function fetchFallbackData(id: string) {
-    const fetchFn = unstable_cache(
-        async () => {
-            const api = useApi()
+    const api = useApi()
 
-            const { data } = await api.get(`/dream-nouns/${id}`)
+    const { data } = await api.get(`/dream-nouns/${id}`)
 
-            if (!isDreamNounResponse(data)) throw new Error('Invalid data')
+    if (!isDreamNounResponse(data)) throw new Error('Invalid data')
 
-            return data
-        },
-        [`dream-nouns-${id}`],
-        { revalidate: 43200, tags: [`dream-nouns-${id}`] }
-    )
-
-    return fetchFn()
+    return data
 }
 
 type PageProps = {
