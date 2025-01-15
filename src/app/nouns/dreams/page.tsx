@@ -52,7 +52,7 @@ export default async function Page({ searchParams }: Props) {
                             <Dreams fallbackData={fallbackData} />
 
                             <div className="fixed bottom-0 right-0 pr-4 pb-4 sm:pr-10">
-                                <Link href="/nouns/dreams/create-v2">
+                                <Link href="/nouns/dreams/create">
                                     <span className="sr-only">
                                         Create Dream
                                     </span>
