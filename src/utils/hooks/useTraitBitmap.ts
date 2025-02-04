@@ -2,7 +2,7 @@ import { ImageData } from '@nouns/assets'
 import { useEffect, useState } from 'react'
 
 // Decode RLE Data Hook
-export const useTraitBitMap = (
+export const useTraitBitmap = (
     layer: 'heads' | 'bodies' | 'accessories' | 'glasses',
     trait: number | ImageBitmap | string // Supports either seed ID, uploaded bitmap or DO storage URL
 ) => {
@@ -23,12 +23,12 @@ export const useTraitBitMap = (
                         `/api/proxy?url=${encodeURIComponent(trait)}`
                     )
 
-                    console.log('response', response)
                     const blob = await response.blob()
-                    console.log('blob', blob)
+
                     const imageBitmap = await createImageBitmap(blob)
-                    console.log('imageBitmap', imageBitmap)
+
                     setBitmap(imageBitmap)
+
                     return
                 }
 
