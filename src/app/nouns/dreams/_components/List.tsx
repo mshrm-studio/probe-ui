@@ -2,7 +2,7 @@ import DreamNoun, { isDreamNounWithCustomTrait } from '@/utils/dto/DreamNoun'
 import NounImageFromSeed from '@/components/Noun/ImageFromSeed'
 import NounUnorderedList from '@/components/Noun/List/List'
 import Link from 'next/link'
-import { NounBitMap } from '@/components/Noun/BitMap'
+import { NounBitMap } from '@/components/Noun/Bitmap'
 
 export default function DreamList({ list }: { list: DreamNoun[] }) {
     return (

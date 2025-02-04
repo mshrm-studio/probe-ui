@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useTraitBitMap } from '@/utils/hooks/useTraitBitMap'
+import { useTraitBitmap } from '@/utils/hooks/useTraitBitmap'
 import useNounTraitList from '@/utils/hooks/useNounTraitList'
 
 interface Props {
@@ -30,10 +30,10 @@ export const NounBitMap: React.FC<Props> = ({
     const canvasRef = useRef<HTMLCanvasElement | null>(null)
     const [inheritedSize, setInheritedSize] = useState<number | null>(null)
 
-    const glassesBitmap = useTraitBitMap('glasses', glasses)
-    const headBitmap = useTraitBitMap('heads', head)
-    const accessoryBitmap = useTraitBitMap('accessories', accessory)
-    const bodyBitmap = useTraitBitMap('bodies', body)
+    const glassesBitmap = useTraitBitmap('glasses', glasses)
+    const headBitmap = useTraitBitmap('heads', head)
+    const accessoryBitmap = useTraitBitmap('accessories', accessory)
+    const bodyBitmap = useTraitBitmap('bodies', body)
 
     // Get size from parent if size is not provided
     useEffect(() => {

@@ -20,10 +20,11 @@ import NounSeed from '@/utils/dto/NounSeed'
 import useNounTraitList from '@/utils/hooks/useNounTraitList'
 import { useRouter } from 'next/navigation'
 import useHref from '@/utils/hooks/useHref'
-import { NounBitMap } from '@/components/Noun/BitMap'
+import { NounBitMap } from '@/components/Noun/Bitmap'
 import SelectTraitType from '@/components/Select/SelectTraitType'
 import inputStyles from '@/styles/input/file.module.css'
 import DimensionsContext from '@/utils/contexts/DimensionsContext'
+import useImageBitmap from '@/utils/hooks/useImageBitmap'
 
 export default function Dream() {
     const { address, isConnected } = useWeb3ModalAccount()
@@ -35,10 +36,11 @@ export default function Dream() {
     const [showUploadForm, setShowUploadForm] = useState(false)
     const [traitFile, setTraitFile] = useState<File | null>(null)
     const [traitLayer, setTraitLayer] = useState<NounTraitLayer>()
-    const [traitBitmap, setTraitBitmap] = useState<ImageBitmap | null>(null)
+    // const [traitBitmap, setTraitBitmap] = useState<ImageBitmap | null>(null)
     const [traitCanvas, setTraitCanvas] = useState<HTMLCanvasElement | null>(
         null
     )
+    const traitBitmap = useImageBitmap(traitCanvas, traitFile)
 
     const traitAnchorTo = useMemo(() => {
         if (dimensions.viewportWidth >= 640) return 'right'
@@ -55,36 +57,36 @@ export default function Dream() {
         }
     }
 
-    useEffect(() => {
-        if (!traitFile || !traitCanvas) return
+    // useEffect(() => {
+    //     if (!traitFile || !traitCanvas) return
 
-        const reader = new FileReader()
+    //     const reader = new FileReader()
 
-        reader.onload = () => {
-            const img = new Image()
+    //     reader.onload = () => {
+    //         const img = new Image()
 
-            img.onload = async () => {
-                const ctx = traitCanvas.getContext('2d')
+    //         img.onload = async () => {
+    //             const ctx = traitCanvas.getContext('2d')
 
-                if (!ctx) return
+    //             if (!ctx) return
 
-                ctx.imageSmoothingEnabled = false
-                ctx.clearRect(0, 0, 32, 32) // Clear the canvas
-                ctx.drawImage(img, 0, 0, 32, 32)
+    //             ctx.imageSmoothingEnabled = false
+    //             ctx.clearRect(0, 0, 32, 32) // Clear the canvas
+    //             ctx.drawImage(img, 0, 0, 32, 32)
 
-                // Generate the bitmap
-                const bitmap = await createImageBitmap(
-                    ctx.getImageData(0, 0, 32, 32)
-                )
+    //             // Generate the bitmap
+    //             const bitmap = await createImageBitmap(
+    //                 ctx.getImageData(0, 0, 32, 32)
+    //             )
 
-                setTraitBitmap(bitmap) // Store the bitmap
-            }
+    //             setTraitBitmap(bitmap) // Store the bitmap
+    //         }
 
-            img.src = reader.result as string
-        }
+    //         img.src = reader.result as string
+    //     }
 
-        reader.readAsDataURL(traitFile)
-    }, [traitFile, traitCanvas])
+    //     reader.readAsDataURL(traitFile)
+    // }, [traitFile, traitCanvas])
 
     const { accessoryList, backgroundList, bodyList, glassesList, headList } =
         useNounTraitList()

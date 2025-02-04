@@ -18,7 +18,7 @@ import DreamNoun, {
 } from '@/utils/dto/DreamNoun'
 import useNounTraitList from '@/utils/hooks/useNounTraitList'
 import NounImage from '@/components/Noun/Image'
-import { NounBitMap } from '@/components/Noun/BitMap'
+import { NounBitMap } from '@/components/Noun/Bitmap'
 
 type Props = {
     project: Project
