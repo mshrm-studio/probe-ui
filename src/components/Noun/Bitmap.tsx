@@ -15,7 +15,7 @@ interface Props {
     size?: number
 }
 
-export const NounBitMap: React.FC<Props> = ({
+export const NounBitmap: React.FC<Props> = ({
     accessory,
     background,
     body,

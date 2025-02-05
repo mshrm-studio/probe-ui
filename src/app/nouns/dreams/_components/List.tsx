@@ -2,7 +2,7 @@ import DreamNoun, { isDreamNounWithCustomTrait } from '@/utils/dto/DreamNoun'
 import NounImageFromSeed from '@/components/Noun/ImageFromSeed'
 import NounUnorderedList from '@/components/Noun/List/List'
 import Link from 'next/link'
-import { NounBitMap } from '@/components/Noun/Bitmap'
+import { NounBitmap } from '@/components/Noun/Bitmap'
 
 export default function DreamList({ list }: { list: DreamNoun[] }) {
     return (
@@ -14,7 +14,7 @@ export default function DreamList({ list }: { list: DreamNoun[] }) {
                         className="block h-full w-full"
                     >
                         {isDreamNounWithCustomTrait(dream) ? (
-                            <NounBitMap
+                            <NounBitmap
                                 accessory={
                                     dream.custom_trait_layer === 'accessory'
                                         ? dream.custom_trait_image_url

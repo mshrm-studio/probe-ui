@@ -1,4 +1,9 @@
-import { bytesToHex, encodeAbiParameters, hexToBytes } from 'viem'
+import {
+    bytesToHex,
+    decodeAbiParameters,
+    encodeAbiParameters,
+    hexToBytes,
+} from 'viem'
 import HexColor from '@/utils/dto/HexColor'
 import Palette from '@/utils/dto/Palette'
 import { colord } from 'colord'
@@ -29,6 +34,15 @@ type EncodedCompressedParts = [
     itemCount: bigint,
 ]
 
+type DecodedArtwork = {
+    paletteIndex: number
+    top: number
+    right: number
+    bottom: number
+    left: number
+    pixels: number[]
+}
+
 const useArtworkEncoding = () => {
     const compressAndEncodeTrait = (
         traitColorIndexes: number[],
@@ -52,6 +66,32 @@ const useArtworkEncoding = () => {
         const itemCount = BigInt(encodedArtwork.length)
 
         return [encodedCompressedArtwork, originalLength, itemCount]
+    }
+
+    const decodeArtwork = (encoded: EncodedArtwork): DecodedArtwork => {
+        const hexData = encoded.startsWith('0x') ? encoded.slice(2) : encoded
+
+        const paletteIndex = parseInt(hexData.slice(0, 2), 16)
+        const top = parseInt(hexData.slice(2, 4), 16)
+        const right = parseInt(hexData.slice(4, 6), 16)
+        const bottom = parseInt(hexData.slice(6, 8), 16)
+        const left = parseInt(hexData.slice(8, 10), 16)
+
+        const rleData = hexData.slice(10)
+
+        const pixels = []
+        for (let i = 0; i < rleData.length; i += 4) {
+            const countHex = rleData.slice(i, i + 2)
+            const colorHex = rleData.slice(i + 2, i + 4)
+            const count = parseInt(countHex, 16)
+            const colorIndex = parseInt(colorHex, 16)
+
+            for (let j = 0; j < count; j++) {
+                pixels.push(colorIndex)
+            }
+        }
+
+        return { paletteIndex, top, right, bottom, left, pixels }
     }
 
     const decimalToHex = (decimal: number) =>
@@ -193,6 +233,33 @@ const useArtworkEncoding = () => {
         }
     }
 
+    const unboundPixels = (
+        boundedPixels: number[],
+        {
+            top,
+            right,
+            bottom,
+            left,
+        }: Pick<DecodedArtwork, 'top' | 'right' | 'bottom' | 'left'>,
+        width: number,
+        height: number
+    ): number[] => {
+        const output = new Array(width * height).fill(0)
+        const boundedWidth = right - left
+        const boundedHeight = bottom - top + 1
+
+        for (let row = 0; row < boundedHeight; row++) {
+            for (let col = 0; col < boundedWidth; col++) {
+                const pixelIndex = row * boundedWidth + col
+                const fullRow = top + row
+                const fullCol = left + col
+                output[fullRow * width + fullCol] = boundedPixels[pixelIndex]
+            }
+        }
+
+        return output
+    }
+
     const rgbaToHex = ([r, g, b, a]: [
         number,
         number,
@@ -236,6 +303,52 @@ const useArtworkEncoding = () => {
 
     const toHexByte = (n: number): string => n.toString(16).padStart(2, '0')
 
+    const verifyTrait = (
+        originalPixels: number[],
+        [
+            encodedCompressedArtwork,
+            originalLength,
+            itemCount,
+        ]: EncodedCompressedParts
+    ) => {
+        const compressedBytes = hexToBytes(encodedCompressedArtwork)
+        const decompressedBytes = pako.inflateRaw(compressedBytes)
+
+        if (BigInt(decompressedBytes.length) !== originalLength) {
+            throw new Error(
+                'Decompressed length does not match `originalLength`'
+            )
+        }
+
+        const [decodedBytesArray] = decodeAbiParameters(
+            [{ type: 'bytes[]' }],
+            decompressedBytes
+        ) as [`0x${string}`[]]
+
+        if (BigInt(decodedBytesArray.length) !== itemCount) {
+            throw new Error(
+                'Decoded artwork item count does not match `itemCount`'
+            )
+        }
+
+        for (let i = 0; i < decodedBytesArray.length; i++) {
+            const decoded = decodeArtwork(decodedBytesArray[i])
+            const unbounded = unboundPixels(decoded.pixels, decoded, 32, 32)
+
+            const isSame = unbounded.every(
+                (val, idx) => val === originalPixels[idx]
+            )
+
+            if (!isSame) {
+                throw new Error(
+                    `Decoded pixel array does not match the original at index ${i}`
+                )
+            }
+        }
+
+        return true
+    }
+
     return {
         compressAndEncodeTrait,
         compressEncodedArtwork,
@@ -244,6 +357,7 @@ const useArtworkEncoding = () => {
         getPaletteIndex,
         getTraitColors,
         rleEncode,
+        verifyTrait,
     }
 }
 

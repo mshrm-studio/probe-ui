@@ -14,7 +14,6 @@ import NounSeed from '@/utils/dto/NounSeed'
 import useNounTraitList from '@/utils/hooks/useNounTraitList'
 import { useRouter } from 'next/navigation'
 import useHref from '@/utils/hooks/useHref'
-import { NounBitMap } from '@/components/Noun/Bitmap'
 import DimensionsContext from '@/utils/contexts/DimensionsContext'
 
 export default function Dream() {

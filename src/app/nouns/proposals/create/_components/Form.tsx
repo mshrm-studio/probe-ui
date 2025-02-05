@@ -17,36 +17,57 @@ import Palette from '@/utils/dto/Palette'
 import { encodeFunctionData, getAbiItem } from 'viem'
 import { formatAbiItem } from 'viem/utils'
 import { nounsDescriptorContractABI } from '@/utils/contracts/NounsDescriptorContractABI'
+import { nounsTokenContractABI } from '@/utils/contracts/NounsTokenContractABI'
+import Markdown from 'react-markdown'
+import { NounTraitLayer } from '@/utils/dto/NounTraitLayer'
+import styles from '@/app/nouns/proposals/create/_styles/proposal.module.css'
+import Button from '@/components/Button'
 
-type TraitFile = File | null
-type TraitCanvas = HTMLCanvasElement | null
+interface Props {
+    traitCanvas: HTMLCanvasElement | null
+    traitFile: File | null
+    traitLayer: NounTraitLayer
+    setTraitFile: React.Dispatch<React.SetStateAction<File | null>>
+    setTraitLayer: React.Dispatch<React.SetStateAction<NounTraitLayer>>
+}
 
-interface Props {}
-
-const CreateProposalCandidateExample: React.FC<Props> = () => {
+const Form: React.FC<Props> = ({
+    traitCanvas,
+    traitFile,
+    traitLayer,
+    setTraitFile,
+    setTraitLayer,
+}) => {
     const { httpDataProxyContract } = useContext(DataProxyContractContext)
     const { walletProvider } = useWeb3ModalProvider()
     const { address } = useWeb3ModalAccount()
 
-    const [functionName, setFunctionName] = useState('addHeads')
+    const functionName = useMemo(() => {
+        if (traitLayer === 'head') return 'addHeads'
+        if (traitLayer === 'accessory') return 'addAccessories'
+        if (traitLayer === 'body') return 'addBodies'
+        if (traitLayer === 'glasses') return 'addGlasses'
+        return null
+    }, [traitLayer])
 
-    const [traitFile, setTraitFile] = useState<TraitFile>(null)
-    const [traitCanvas, setTraitCanvas] = useState<TraitCanvas>(null)
+    const traitFileNameWithoutExtension = useMemo(
+        () => traitFile?.name.replace(/\.[^/.]+$/, ''),
+        [traitFile]
+    )
     const traitBitmap = useImageBitmap(traitCanvas, traitFile)
     const {
         compressAndEncodeTrait,
         getColorIndexes,
         getPaletteIndex,
         getTraitColors,
+        verifyTrait,
     } = useArtworkEncoding()
 
     const artworkContributionAgreementMessage = useMemo(() => {
-        return `
-            I, ${address}, hereby waive all copyright and related or neighboring rights together with all associated claims and causes of action with respect to this work to the extent possible under the law.
-            I have read and understand the terms and intended legal effect of the Nouns Art Contribution Agreement, available at https://z5pvlzj323gcssdd3bua3hjqckxbcsydr4ksukoidh3l46fhet4q.arweave.net/z19V5TvWzClIY9hoDZ0wEq4RSwOPFSopyBn2vninJPk, and hereby voluntarily elect to apply it to this contribution.
-            Contribution name: test-name heads.
-            Contribution specification: data:image/png;base64,iVBORw0KGgoAA....`
-    }, [address])
+        return `I, the individual controlling Ethereum address ${address}, hereby waive all copyright and all related or neighboring rights, together with any associated claims or causes of action, to the extent permitted by law. I have read and understand the terms and intended legal effect of the Nouns Art Contribution Agreement, available at https://z5pvlzj323gcssdd3bua3hjqckxbcsydr4ksukoidh3l46fhet4q.arweave.net/z19V5TvWzClIY9hoDZ0wEq4RSwOPFSopyBn2vninJPk, and hereby voluntarily elect to apply it to this contribution. Contribution name: ${traitFileNameWithoutExtension}. Contribution specification: ${traitCanvas?.toDataURL(
+            'image/png'
+        )}.`
+    }, [address, traitCanvas, traitFileNameWithoutExtension])
     const [
         artworkContributionAgreementSignature,
         setArtworkContributionAgreementSignature,
@@ -54,6 +75,7 @@ const CreateProposalCandidateExample: React.FC<Props> = () => {
     const { generate: generateProposalContent } = useProposalContent()
 
     const handleTraitUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        console.log('e.target.files:', e.target.files)
         const file = e.target.files?.[0]
 
         if (file) {
@@ -87,7 +109,13 @@ const CreateProposalCandidateExample: React.FC<Props> = () => {
     }
 
     const proposalContent = useMemo(() => {
-        if (!address || !artworkContributionAgreementSignature) return null
+        if (
+            !address ||
+            !artworkContributionAgreementSignature ||
+            !traitCanvas ||
+            !traitFileNameWithoutExtension
+        )
+            return null
 
         return generateProposalContent({
             artContributionAgreement: {
@@ -96,8 +124,9 @@ const CreateProposalCandidateExample: React.FC<Props> = () => {
                 signer: address,
             },
             trait: {
-                layer: 'head',
-                name: 'Symbit',
+                image: traitCanvas.toDataURL('image/png'),
+                layer: traitLayer,
+                name: traitFileNameWithoutExtension,
             },
         })
     }, [
@@ -105,6 +134,9 @@ const CreateProposalCandidateExample: React.FC<Props> = () => {
         artworkContributionAgreementMessage,
         artworkContributionAgreementSignature,
         generateProposalContent,
+        traitCanvas,
+        traitFileNameWithoutExtension,
+        traitLayer,
     ])
 
     const traitColors = useMemo(() => {
@@ -151,16 +183,16 @@ const CreateProposalCandidateExample: React.FC<Props> = () => {
     }, [traitColorIndexes, paletteIndex])
 
     const calldatas = useMemo(() => {
-        if (!compressedEncodedArtwork) return null
+        if (!compressedEncodedArtwork || !functionName) return null
 
-        // NOT CORRECT BUT SOMETHING LIKE THIS TO REQUEST A NOUN
+        // ADD THIS WHEN REQUESTING A NOUN
         // encodeFunctionData({
         //     abi: nounsTokenContractABI,
         //     functionName: 'safeTransferFrom',
         //     args: [
         //         process.env.NEXT_PUBLIC_NOUNS_TOKEN_CONTRACT_ADDRESS,
         //         address,
-        //         BigInt(0), // tokenId
+        //         0, // TOKENID
         //     ],
         // })
 
@@ -171,20 +203,17 @@ const CreateProposalCandidateExample: React.FC<Props> = () => {
                 functionName,
                 args: compressedEncodedArtwork,
             }).substring(10),
-            // 2) Empty for requesting ETH (no function call),
+            // 2) when requesting ETH, leave empty,
             '',
             // 3) Empty for array harmony
             '',
         ].map((calldata) => `0x${calldata}` as `0x${string}`)
     }, [compressedEncodedArtwork, functionName])
 
-    // const createCandidateCost = useMemo(() => {
-    //     return parseEther('0.1')
-    // }, [])
-
     const signatures = useMemo(() => {
-        if (!nounsDescriptorContractABI) return null
+        if (!functionName || !nounsDescriptorContractABI) return null
 
+        // BELOW REQUIRED IF REQUESTING A NOUN
         // safeTransferFrom(address,address,uint256)
 
         // return ['addHeads(bytes,uint80,uint16)', '', '']
@@ -202,6 +231,18 @@ const CreateProposalCandidateExample: React.FC<Props> = () => {
     async function handleCreateProposalCandidate(event: React.FormEvent) {
         event.preventDefault()
 
+        if (!traitColorIndexes || !compressedEncodedArtwork) return
+
+        try {
+            const okay = await verifyTrait(
+                traitColorIndexes,
+                compressedEncodedArtwork
+            )
+            console.log('Trait encoding verified:', okay)
+        } catch (err) {
+            console.error('Verification failed', err)
+        }
+
         if (!address) {
             alert('No address found')
             return
@@ -218,6 +259,12 @@ const CreateProposalCandidateExample: React.FC<Props> = () => {
         }
 
         try {
+            const createCandidateCost =
+                await httpDataProxyContract.createCandidateCost()
+            // returns 10000000000000000n
+
+            console.log('createCandidateCost:', createCandidateCost)
+
             const targets = [
                 process.env.NEXT_PUBLIC_NOUNS_DESCRIPTOR_CONTRACT_ADDRESS,
                 process.env.NEXT_PUBLIC_NOUNS_TOKEN_CONTRACT_ADDRESS,
@@ -236,16 +283,11 @@ const CreateProposalCandidateExample: React.FC<Props> = () => {
                 signer
             ) as Contract
 
-            // const createCandidateCost =
-            //     await contractWithSigner.createCandidateCost()
-
-            // console.log('createCandidateCost:', createCandidateCost)
-
-            console.log('signatures:', signatures)
             console.log('targets:', targets)
             console.log('values:', values)
+            console.log('signatures:', signatures)
             console.log('calldatas:', calldatas)
-            // console.log('description:', description)
+            console.log('description:', description)
             console.log('slug:', slug)
             console.log('proposalIdToUpdate:', proposalIdToUpdate)
 
@@ -259,7 +301,7 @@ const CreateProposalCandidateExample: React.FC<Props> = () => {
                     slug,
                     proposalIdToUpdate,
                     {
-                        value: parseEther('0.01'),
+                        value: createCandidateCost,
                     }
                 )
 
@@ -275,7 +317,7 @@ const CreateProposalCandidateExample: React.FC<Props> = () => {
                 slug,
                 proposalIdToUpdate,
                 {
-                    value: parseEther('0.01'),
+                    value: createCandidateCost,
                     gasLimit,
                 }
             )
@@ -298,110 +340,58 @@ const CreateProposalCandidateExample: React.FC<Props> = () => {
     if (!httpDataProxyContract) return <p>Contract not loaded.</p>
 
     return (
-        <div className="space-y-8">
+        <div className={styles.formContainer}>
             <div>
-                <label htmlFor="file-upload" className={inputStyles.input}>
-                    <span>Add Trait</span>
+                {!traitFile && (
+                    <form className={styles.form}>
+                        <label
+                            htmlFor="file-upload"
+                            className={inputStyles.input}
+                        >
+                            <span>Add Trait</span>
 
-                    <input
-                        id="file-upload"
-                        name="file-upload"
-                        accept="image/png"
-                        type="file"
-                        className="sr-only"
-                        onChange={handleTraitUpload}
-                    />
-                </label>
+                            <input
+                                id="file-upload"
+                                name="file-upload"
+                                accept="image/png"
+                                type="file"
+                                className="sr-only"
+                                onChange={handleTraitUpload}
+                            />
+                        </label>
+                    </form>
+                )}
+
+                {traitFile && !artworkContributionAgreementSignature && (
+                    <form
+                        onSubmit={handleArtworkContributionSigning}
+                        className={styles.form}
+                    >
+                        <Button nativeType="submit">
+                            Sign Artwork Contribution Agreement
+                        </Button>
+                    </form>
+                )}
+
+                {artworkContributionAgreementSignature && (
+                    <form
+                        onSubmit={handleCreateProposalCandidate}
+                        className={styles.form}
+                    >
+                        {/* <img src={traitCanvas?.toDataURL('image/png')} alt="" />
+
+                        <div className="break-words font-mono normal-case">
+                            <Markdown>{proposalContent}</Markdown>
+                        </div> */}
+
+                        <Button nativeType="submit">
+                            Create Proposal Candidate
+                        </Button>
+                    </form>
+                )}
             </div>
-
-            <div>
-                <canvas ref={setTraitCanvas} width={32} height={32} />
-            </div>
-
-            {!artworkContributionAgreementSignature ? (
-                <form
-                    onSubmit={handleArtworkContributionSigning}
-                    className="space-y-6"
-                >
-                    <p>
-                        I, {address}, hereby waive all copyright and related or
-                        neighboring rights together with all associated claims
-                        and causes of action with respect to this work to the
-                        extent possible under the law. I have read and
-                        understand the terms and intended legal effect of the
-                        Nouns Art Contribution Agreement, available at
-                        https://z5pvlzj323gcssdd3bua3hjqckxbcsydr4ksukoidh3l46fhet4q.arweave.net/z19V5TvWzClIY9hoDZ0wEq4RSwOPFSopyBn2vninJPk,
-                        and hereby voluntarily elect to apply it to this
-                        contribution. <br />
-                        Contribution name: test-name heads. <br />
-                        Contribution specification: EX
-                        data:image/png;base64,iVBORw0KGgoAA....
-                    </p>
-
-                    <button type="submit">
-                        Sign Artwork Contribution Agreement
-                    </button>
-                </form>
-            ) : (
-                <form
-                    onSubmit={handleCreateProposalCandidate}
-                    className="space-y-6"
-                >
-                    <p>
-                        Artwork contribution agreement signature:{' '}
-                        {artworkContributionAgreementSignature}
-                    </p>
-
-                    <p>Proposal content: {proposalContent}</p>
-
-                    <p>
-                        Trait colors:{' '}
-                        {traitColors ? traitColors.join(', ') : 'NONE'}
-                    </p>
-
-                    <p>
-                        ImageData.palette:{' '}
-                        {ImageData.palette
-                            ? ImageData.palette
-                                  .filter((color) => color !== '')
-                                  .map((color) => `#${color}`)
-                                  .join(', ')
-                            : 'NONE'}
-                    </p>
-
-                    <p>
-                        ImageData.palette:{' '}
-                        {ImageData.palette
-                            ? ImageData.palette.join(', ')
-                            : 'NONE'}
-                    </p>
-
-                    <p>Palette index: {paletteIndex}</p>
-
-                    <p>Trait color indexes: {traitColorIndexes}</p>
-
-                    <p>
-                        Compressed encoded artwork:{' '}
-                        {compressedEncodedArtwork
-                            ? compressedEncodedArtwork[0]
-                            : 'NONE'}
-                    </p>
-
-                    <p>
-                        Call data: {calldatas ? calldatas.join(', ') : 'None'}
-                    </p>
-
-                    {/* <p>
-                        Create candidate cost: {createCandidateCost.toString()}
-                    </p> */}
-
-                    <p>Signatures: {JSON.stringify(signatures)}</p>
-
-                    <button type="submit">Create Proposal Candidate</button>
-                </form>
-            )}
         </div>
     )
 }
 
-export default CreateProposalCandidateExample
+export default Form

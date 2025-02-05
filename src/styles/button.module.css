@@ -1,7 +1,7 @@
 .button {
     box-shadow: 8px 6px 0px 0px #000000;
     border: 2px;
-    height: 35px;
+    min-height: 35px;
     padding-left: 1.5rem;
     padding-right: 1.5rem;
     font-size: theme('fontSize.xl');

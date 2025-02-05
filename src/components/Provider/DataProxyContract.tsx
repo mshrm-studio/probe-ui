@@ -20,7 +20,7 @@ const DataProxyContractProvider: React.FC<Props> = ({ children }) => {
         // ONLY AVAILABLE FOR NOUNS (NOT LILS)
 
         const dataProxyContractAddress = process.env
-            .NEXT_PUBLIC_NOUNS_AUCTION_HOUSE_CONTRACT_ADDRESS as string
+            .NEXT_PUBLIC_NOUNS_DATA_PROXY_CONTRACT_ADDRESS as string
 
         const dataProxyContractABI = nounsDataProxyContractABI
 

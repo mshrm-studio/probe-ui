@@ -18,7 +18,7 @@ import DreamNoun, {
 } from '@/utils/dto/DreamNoun'
 import useNounTraitList from '@/utils/hooks/useNounTraitList'
 import NounImage from '@/components/Noun/Image'
-import { NounBitMap } from '@/components/Noun/Bitmap'
+import { NounBitmap } from '@/components/Noun/Bitmap'
 
 type Props = {
     project: Project
@@ -75,7 +75,7 @@ const NounPage: React.FC<Props> = ({ project, noun }) => {
                             <NounImage noun={noun} />
                         ) : isDreamNounWithCustomTrait(noun) ? (
                             <div className="h-full w-full">
-                                <NounBitMap
+                                <NounBitmap
                                     accessory={
                                         noun.custom_trait_layer === 'accessory'
                                             ? noun.custom_trait_image_url

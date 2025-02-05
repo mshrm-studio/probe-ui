@@ -16,18 +16,8 @@ export const nounsDataProxyContractABI = [
     { inputs: [], name: 'InvalidSignature', type: 'error' },
     { inputs: [], name: 'InvalidSupportValue', type: 'error' },
     { inputs: [], name: 'MustBeNounerOrPaySufficientFee', type: 'error' },
-    { inputs: [], name: 'MustProvideActions', type: 'error' },
-    { inputs: [], name: 'OnlyProposerCanCreateUpdateCandidate', type: 'error' },
-    { inputs: [], name: 'ProposalInfoArityMismatch', type: 'error' },
-    { inputs: [], name: 'ProposalToUpdateMustBeUpdatable', type: 'error' },
     { inputs: [], name: 'SlugAlreadyUsed', type: 'error' },
     { inputs: [], name: 'SlugDoesNotExist', type: 'error' },
-    { inputs: [], name: 'TooManyActions', type: 'error' },
-    {
-        inputs: [],
-        name: 'UpdateProposalCandidatesOnlyWorkWithProposalsBySigs',
-        type: 'error',
-    },
     {
         anonymous: false,
         inputs: [

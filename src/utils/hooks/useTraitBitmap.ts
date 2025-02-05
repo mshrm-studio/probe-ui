@@ -131,7 +131,7 @@ export const useTraitBitmap = (
         }
 
         loadBitmap()
-    }, [layer, trait]) // Dependencies
+    }, [layer, trait])
 
     return bitmap
 }
