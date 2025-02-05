@@ -6,10 +6,8 @@ import {
     useWeb3ModalAccount,
     useWeb3ModalProvider,
 } from '@web3modal/ethers/react'
-import CryptoWalletConnect from '@/components/CryptoWallet/Connect'
 import DataProxyContractContext from '@/utils/contexts/DataProxyContractContext'
 import useProposalContent from '@/utils/hooks/useProposalContent'
-import inputStyles from '@/styles/input/file.module.css'
 import useImageBitmap from '@/utils/hooks/useImageBitmap'
 import useArtworkEncoding from '@/utils/hooks/useArtworkEncoding'
 import { ImageData } from '@nouns/assets'
@@ -18,29 +16,42 @@ import { encodeFunctionData, getAbiItem } from 'viem'
 import { formatAbiItem } from 'viem/utils'
 import { nounsDescriptorContractABI } from '@/utils/contracts/NounsDescriptorContractABI'
 import { nounsTokenContractABI } from '@/utils/contracts/NounsTokenContractABI'
-import Markdown from 'react-markdown'
 import { NounTraitLayer } from '@/utils/dto/NounTraitLayer'
 import styles from '@/app/nouns/proposals/create/_styles/proposal.module.css'
+import inputStyles from '@/styles/input/input.module.css'
 import Button from '@/components/Button'
+import { useWeb3Modal } from '@web3modal/ethers/react'
+import ArtworkContributionForm from '@/app/nouns/proposals/create/_components/ArtworkContributionForm'
+import TraitForm from '@/app/nouns/proposals/create/_components/TraitForm'
+import ArtworkContributionAgreement from '@/utils/dto/ArtworkContributionAgreement'
+import NounSeed from '@/utils/dto/NounSeed'
 
 interface Props {
+    seed: NounSeed
     traitCanvas: HTMLCanvasElement | null
     traitFile: File | null
     traitLayer: NounTraitLayer
+    setSeed: React.Dispatch<React.SetStateAction<NounSeed>>
     setTraitFile: React.Dispatch<React.SetStateAction<File | null>>
     setTraitLayer: React.Dispatch<React.SetStateAction<NounTraitLayer>>
 }
 
 const Form: React.FC<Props> = ({
+    seed,
     traitCanvas,
     traitFile,
     traitLayer,
+    setSeed,
     setTraitFile,
     setTraitLayer,
 }) => {
+    const { open } = useWeb3Modal()
+
     const { httpDataProxyContract } = useContext(DataProxyContractContext)
     const { walletProvider } = useWeb3ModalProvider()
     const { address } = useWeb3ModalAccount()
+    const [propose, setPropose] = useState(false)
+    const [ethRequested, setEthRequested] = useState(0)
 
     const functionName = useMemo(() => {
         if (traitLayer === 'head') return 'addHeads'
@@ -63,66 +74,21 @@ const Form: React.FC<Props> = ({
         verifyTrait,
     } = useArtworkEncoding()
 
-    const artworkContributionAgreementMessage = useMemo(() => {
-        return `I, the individual controlling Ethereum address ${address}, hereby waive all copyright and all related or neighboring rights, together with any associated claims or causes of action, to the extent permitted by law. I have read and understand the terms and intended legal effect of the Nouns Art Contribution Agreement, available at https://z5pvlzj323gcssdd3bua3hjqckxbcsydr4ksukoidh3l46fhet4q.arweave.net/z19V5TvWzClIY9hoDZ0wEq4RSwOPFSopyBn2vninJPk, and hereby voluntarily elect to apply it to this contribution. Contribution name: ${traitFileNameWithoutExtension}. Contribution specification: ${traitCanvas?.toDataURL(
-            'image/png'
-        )}.`
-    }, [address, traitCanvas, traitFileNameWithoutExtension])
-    const [
-        artworkContributionAgreementSignature,
-        setArtworkContributionAgreementSignature,
-    ] = useState('')
+    const [artworkContributionAgreement, setArtworkContributionAgreement] =
+        useState<ArtworkContributionAgreement | null>(null)
     const { generate: generateProposalContent } = useProposalContent()
-
-    const handleTraitUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log('e.target.files:', e.target.files)
-        const file = e.target.files?.[0]
-
-        if (file) {
-            setTraitFile(file)
-        }
-    }
-
-    async function handleArtworkContributionSigning(event: React.FormEvent) {
-        event.preventDefault()
-
-        if (!address) {
-            alert('No address found')
-            return
-        }
-
-        if (!walletProvider) {
-            alert('No wallet provider found')
-            return
-        }
-
-        const provider = new BrowserProvider(walletProvider)
-        const signer = await provider.getSigner()
-
-        const signature = await signer.signMessage(
-            artworkContributionAgreementMessage
-        )
-
-        console.log('signature:', signature)
-
-        setArtworkContributionAgreementSignature(signature)
-    }
 
     const proposalContent = useMemo(() => {
         if (
             !address ||
-            !artworkContributionAgreementSignature ||
+            !artworkContributionAgreement ||
             !traitCanvas ||
             !traitFileNameWithoutExtension
         )
             return null
 
         return generateProposalContent({
-            artContributionAgreement: {
-                message: artworkContributionAgreementMessage,
-                signature: artworkContributionAgreementSignature,
-                signer: address,
-            },
+            artContributionAgreement: artworkContributionAgreement,
             trait: {
                 image: traitCanvas.toDataURL('image/png'),
                 layer: traitLayer,
@@ -131,8 +97,7 @@ const Form: React.FC<Props> = ({
         })
     }, [
         address,
-        artworkContributionAgreementMessage,
-        artworkContributionAgreementSignature,
+        artworkContributionAgreement,
         generateProposalContent,
         traitCanvas,
         traitFileNameWithoutExtension,
@@ -271,7 +236,7 @@ const Form: React.FC<Props> = ({
                 address,
             ]
 
-            const values = ['0', parseEther('1'), '0']
+            const values = ['0', parseEther(String(ethRequested)), '0']
 
             const description = proposalContent
             const slug = `my-test-proposal-${Date.now()}`
@@ -335,59 +300,65 @@ const Form: React.FC<Props> = ({
         }
     }
 
-    if (!address) return <CryptoWalletConnect>Connect</CryptoWalletConnect>
-
-    if (!httpDataProxyContract) return <p>Contract not loaded.</p>
+    if (!httpDataProxyContract)
+        return (
+            <div className={styles.formContainer}>
+                <p>Contract not loaded.</p>
+            </div>
+        )
 
     return (
         <div className={styles.formContainer}>
             <div>
-                {!traitFile && (
-                    <form className={styles.form}>
-                        <label
-                            htmlFor="file-upload"
-                            className={inputStyles.input}
-                        >
-                            <span>Add Trait</span>
+                {!propose && (
+                    <TraitForm
+                        seed={seed}
+                        traitFile={traitFile}
+                        traitLayer={traitLayer}
+                        setPropose={setPropose}
+                        setSeed={setSeed}
+                        setTraitFile={setTraitFile}
+                        setTraitLayer={setTraitLayer}
+                    />
+                )}
 
-                            <input
-                                id="file-upload"
-                                name="file-upload"
-                                accept="image/png"
-                                type="file"
-                                className="sr-only"
-                                onChange={handleTraitUpload}
-                            />
+                {propose && traitFile && (
+                    <div className="space-y-4">
+                        <label className="block" htmlFor="ethRequested">
+                            ETH Requested
                         </label>
-                    </form>
-                )}
 
-                {traitFile && !artworkContributionAgreementSignature && (
-                    <form
-                        onSubmit={handleArtworkContributionSigning}
-                        className={styles.form}
-                    >
-                        <Button nativeType="submit">
-                            Sign Artwork Contribution Agreement
-                        </Button>
-                    </form>
-                )}
+                        <input
+                            className={inputStyles.input}
+                            id="ethRequested"
+                            type="number"
+                            placeholder="Specify ETH Amount"
+                            value={ethRequested}
+                            onChange={(e) =>
+                                setEthRequested(Number(e.target.value))
+                            }
+                        />
 
-                {artworkContributionAgreementSignature && (
-                    <form
-                        onSubmit={handleCreateProposalCandidate}
-                        className={styles.form}
-                    >
-                        {/* <img src={traitCanvas?.toDataURL('image/png')} alt="" />
+                        <ArtworkContributionForm
+                            agreement={artworkContributionAgreement}
+                            setAgreement={setArtworkContributionAgreement}
+                            traitCanvas={traitCanvas}
+                            traitFileName={traitFileNameWithoutExtension}
+                        />
 
-                        <div className="break-words font-mono normal-case">
-                            <Markdown>{proposalContent}</Markdown>
-                        </div> */}
-
-                        <Button nativeType="submit">
-                            Create Proposal Candidate
-                        </Button>
-                    </form>
+                        <form
+                            onSubmit={handleCreateProposalCandidate}
+                            className={styles.form}
+                        >
+                            <Button
+                                color="purple"
+                                disabled={artworkContributionAgreement === null}
+                                nativeType="submit"
+                            >
+                                Submit (0.1 ETH)
+                            </Button>
+                        </form>
+                    </div>
                 )}
             </div>
         </div>

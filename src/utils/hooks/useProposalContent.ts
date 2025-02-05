@@ -1,11 +1,8 @@
 import { NounTraitLayer } from '@/utils/dto/NounTraitLayer'
+import ArtworkContributionAgreement from '@/utils/dto/ArtworkContributionAgreement'
 
 interface ProposalGenerationProps {
-    artContributionAgreement: {
-        message: string
-        signature: string
-        signer: string
-    }
+    artContributionAgreement: ArtworkContributionAgreement
     trait: {
         image: string
         layer: NounTraitLayer
