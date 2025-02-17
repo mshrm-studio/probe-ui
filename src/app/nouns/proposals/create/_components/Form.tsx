@@ -15,7 +15,7 @@ import Palette from '@/utils/dto/Palette'
 import { encodeFunctionData, getAbiItem } from 'viem'
 import { formatAbiItem } from 'viem/utils'
 import { nounsDescriptorContractABI } from '@/utils/contracts/NounsDescriptorContractABI'
-import { nounsTokenContractABI } from '@/utils/contracts/NounsTokenContractABI'
+// import { nounsTokenContractABI } from '@/utils/contracts/NounsTokenContractABI'
 import { NounTraitLayer } from '@/utils/dto/NounTraitLayer'
 import styles from '@/app/nouns/proposals/create/_styles/proposal.module.css'
 import inputStyles from '@/styles/input/input.module.css'
@@ -121,10 +121,7 @@ const Form: React.FC<Props> = ({
             paletteAsHexColors as Palette,
         ])
 
-        // this uses palettes call of descriptor contract that only contains 1 palette
-        // so default to 0
-        // TODO: all colors from image cannot be found in palette
-        return idx ? idx : 0
+        return idx
     }, [ImageData.palette, traitColors, getPaletteIndex])
 
     const traitColorIndexes = useMemo(() => {
@@ -190,7 +187,11 @@ const Form: React.FC<Props> = ({
 
         if (!item) return null
 
-        return [formatAbiItem(item), '', '']
+        if (ethRequested > 0) {
+            return [formatAbiItem(item), '']
+        }
+
+        return [formatAbiItem(item)]
     }, [functionName, nounsDescriptorContractABI])
 
     async function handleCreateProposalCandidate(event: React.FormEvent) {
@@ -203,6 +204,7 @@ const Form: React.FC<Props> = ({
                 traitColorIndexes,
                 compressedEncodedArtwork
             )
+
             console.log('Trait encoding verified:', okay)
         } catch (err) {
             console.error('Verification failed', err)
@@ -232,11 +234,14 @@ const Form: React.FC<Props> = ({
 
             const targets = [
                 process.env.NEXT_PUBLIC_NOUNS_DESCRIPTOR_CONTRACT_ADDRESS,
-                process.env.NEXT_PUBLIC_NOUNS_TOKEN_CONTRACT_ADDRESS,
-                address,
             ]
 
-            const values = ['0', parseEther(String(ethRequested)), '0']
+            const values: (BigInt | string)[] = ['0']
+
+            if (ethRequested > 0) {
+                targets.push(address)
+                values.push(parseEther(String(ethRequested)))
+            }
 
             const description = proposalContent
             const slug = `my-test-proposal-${Date.now()}`
@@ -355,7 +360,7 @@ const Form: React.FC<Props> = ({
                                 disabled={artworkContributionAgreement === null}
                                 nativeType="submit"
                             >
-                                Submit (0.1 ETH)
+                                Submit (0.01 ETH)
                             </Button>
                         </form>
                     </div>
